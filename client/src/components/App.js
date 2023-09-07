@@ -7,7 +7,6 @@ import NavBar from "./NavBar";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const [goblins, setGoblins] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -18,19 +17,6 @@ function App() {
         console.log({ users, userArray });
       });
   }, []);
-
-  // useEffect(() => {
-  //   async function fetchGoblins() {
-  //     try {
-  //       const response = await fetch("http://127.0.0.1:5555/goblins");
-  //       const goblinArray = await response.json();
-  //       setGoblins(goblinArray);
-  //     } catch (error) {
-  //       console.error("Error fetching goblin data:", error);
-  //     }
-  //   }
-  //   fetchGoblins();
-  // }, []);
 
   const handleAddUser = (newUser) => {
     const updatedUserArray = [...users, newUser];
@@ -71,21 +57,20 @@ function App() {
 
   return (
     <BrowserRouter>
-      <main>
-        <NavBar currentUser={currentUser} />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/login">
-            <Login
-              users={users}
-              handleAddUser={handleAddUser}
-              handleLogin={handleLogin}
-            />
-          </Route>
-        </Switch>
-      </main>
+      {/* <main> */}
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route exact path="/login">
+          <Login
+            users={users}
+            handleAddUser={handleAddUser}
+            handleLogin={handleLogin}
+          />
+        </Route>
+      </Switch>
+      {/* </main> */}
     </BrowserRouter>
   );
 }

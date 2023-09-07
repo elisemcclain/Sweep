@@ -14,6 +14,7 @@ class User(db.Model, SerializerMixin):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), nullable=False)
+    hash = db.Column(db.String)
     password = db.Column(db.String(120), nullable=False)
 
     serialize_rules = ('-location', '-crimereport',)
