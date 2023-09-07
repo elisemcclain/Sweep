@@ -14,44 +14,32 @@ class User(db.Model, SerializerMixin):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    password = db.Column(db.String(128), nullable=False)
-    saved_address = db.Column(db.String, nullable=False)
-    
-    crime_reports = db.relationship('CrimeReport', cascade='all, delete-orphan', backref='crime_reports', lazy='dynamic')
-    
-    serialize_rules = ('-crime_reports.user',)
+    password = db.Column(db.String(120), nullable=False)
+
+    serialize_rules = ('-location', '-crimereport',)
+
 
 class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations'
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     address = db.Column(db.String(120), nullable=False)
 
-    reported_crimes = db.relationship('Crime', backref='crime_location')
+    users = db.relationship('User', backref='location', lazy=True)
 
-    serialize_rules = ('-reported_crimes.location',)
-
-class Crime(db.Model, SerializerMixin):
-    __tablename__ = 'crimes'
-
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(80), nullable=False)
-    desc = db.Column(db.String(120), nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
-    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
-
-    crime_location = db.relationship('Location', backref='reported_crimes')
-
-    serialize_rules = ('-crime_location.crime',)
+    serialize_rules = ('-users.location',)
 
 class CrimeReport(db.Model, SerializerMixin):
     __tablename__ = 'crime_reports'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    crime_id = db.Column(db.Integer, db.ForeignKey('crimes.id'), nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
     desc = db.Column(db.String(255), nullable=False)
-    date_reported = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     
-    reporter = db.relationship('User', backref='crime_reports')
-    reported_crime = db.relationship('Location', backref='crime_reports')
+    users = db.relationship('User', backref='crimereport', lazy=True)
+    locations = db.relationship('Location', backref='crimereport', lazy=True)
+
+    serialize_rules = ('-users.crimereport', '-locations.crimereport',)

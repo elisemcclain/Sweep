@@ -1,62 +1,48 @@
-from config import db  # Import your SQLAlchemy instance from your Flask app
+# from config import db  # Import your SQLAlchemy instance from your Flask app
+from app import app, db
+from models import User, Location, CrimeReport
+from random import randint, choice as rc
 from datetime import datetime
-from models import User, Location, Crime, CrimeReport
-from app import app
+from faker import Faker
 
-def seed_data():
-    # Users
-    user1 = User(
-        first_name='John',
-        last_name='Doe',
-        email='john@example.com',
-        password='hashed_password#1',
-        saved_address='123 Main St'
-    )
-    user2 = User(
-        first_name='Jane',
-        last_name='Smith',
-        email='jane@example.com',
-        password='hashed_password#2',
-        saved_address='456 Elm St'
-    )
 
-    # Locations
-    location1 = Location(address='123 First Ave')
-    location2 = Location(address='456 Second Ave')
+def create_users():
+    users = [
+        User(first_name='Jason', last_name='Bateman', email='user1@example.com', password='password1'),
+        User(first_name='Clarice', last_name='Muchachas', email='user2@example.com', password='password2'),
+        User(first_name='Benjamin', last_name='Button', email='user3@example.com', password='password3'),
 
-    # Crimes
-    crime1 = Crime(
-        type='Theft',
-        desc='Stolen property',
-        date=datetime.utcnow(),
-        crime_location=location1
-    )
-    crime2 = Crime(
-        type='Assault',
-        desc='Physical altercation',
-        date=datetime.utcnow(),
-        crime_location=location2
-    )
+    ]
+    db.session.bulk_save_objects(users)
+    db.session.commit()
 
-    # Crime reports
-    report1 = CrimeReport(
-        user=user1,
-        reported_crime=location1,
-        desc='Theft report',
-        date_reported=datetime.utcnow()
-    )
-    report2 = CrimeReport(
-        user=user2,
-        reported_crime=location2,
-        desc='Assault report',
-        date_reported=datetime.utcnow()
-    )
 
-    db.session.add_all([user1, user2, location1, location2, crime1, crime2, report1, report2])
+def create_locations():
+    locations = [
+        Location(user_id=1, address='23 First Ave'),
+        Location(user_id=2, address='456 Second Ave'),
+        Location(user_id=3, address='1769 Belluga Ave'),
+
+    ]
+    db.session.bulk_save_objects(locations)
+    db.session.commit()
+
+def create_crime_reports():
+    crime_reports = [
+        CrimeReport(user_id=1, location_id=1, desc='Burglary', date=datetime(2023, 9, 7, 14, 30, 0)),
+        CrimeReport(user_id=2, location_id=2, desc='Assault', date=datetime(2023, 9, 7, 14, 30, 0)),
+        CrimeReport(user_id=3, location_id=3, desc='Public Annoyance', date=datetime(2023, 9, 7, 14, 30, 0)),
+
+    ]
+
+    db.session.bulk_save_objects(crime_reports)
     db.session.commit()
 
 if __name__ == '__main__':
-    seed_data()
+    with app.app_context():
+        create_users()
+        create_locations()
+        create_crime_reports()
 
 
 # if __name__ == '__main__':
