@@ -1,13 +1,93 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
+import Home from "./Home";
+import Login from "./Login";
+import NavBar from "./NavBar";
+
 function App() {
-  console.log("hello");
+  const [users, setUsers] = useState([]);
+  const [goblins, setGoblins] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:5555/users")
+      .then((r) => r.json())
+      .then((userArray) => {
+        setUsers(userArray);
+        console.log({ users, userArray });
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   async function fetchGoblins() {
+  //     try {
+  //       const response = await fetch("http://127.0.0.1:5555/goblins");
+  //       const goblinArray = await response.json();
+  //       setGoblins(goblinArray);
+  //     } catch (error) {
+  //       console.error("Error fetching goblin data:", error);
+  //     }
+  //   }
+  //   fetchGoblins();
+  // }, []);
+
+  const handleAddUser = (newUser) => {
+    const updatedUserArray = [...users, newUser];
+    setUsers(updatedUserArray);
+    setCurrentUser(newUser);
+  };
+
+  const handleLogin = (user) => {
+    console.log(user);
+    setCurrentUser(user);
+  };
+
+  const handleChangeUser = async (user) => {
+    setUsers([...users, user]);
+    setCurrentUser(user);
+  };
+
+  const handleDeleteUser = async (user) => {
+    try {
+      const response = await fetch(`http://localhost:5555/users/${user.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      if (response.status === 200) {
+        const updatedUsers = users.filter((u) => u.username !== user.username);
+        setUsers(updatedUsers);
+        setCurrentUser(null);
+      } else {
+        console.log("Error deleting user:", response.status);
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   return (
-    <div>
-      <h1>Hello</h1>;
-    </div>
+    <BrowserRouter>
+      <main>
+        <NavBar currentUser={currentUser} />
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/login">
+            <Login
+              users={users}
+              handleAddUser={handleAddUser}
+              handleLogin={handleLogin}
+            />
+          </Route>
+        </Switch>
+      </main>
+    </BrowserRouter>
   );
 }
+
 export default App;
