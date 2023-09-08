@@ -13,11 +13,11 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(128))
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    serialize_rules = ('-location.user', '-crimecategory.user',)
+    serialize_rules = ('-location', '-crimecategory',)
 
     @property
     def password(self):
@@ -40,7 +40,7 @@ class Location(db.Model, SerializerMixin):
 
     users = db.relationship('User', backref='location', lazy=True)
 
-    serialize_rules = ('-users.location',)
+    serialize_rules = ('-users',)
 
 class Crime(db.Model, SerializerMixin):
     __tablename__ = 'crimes'

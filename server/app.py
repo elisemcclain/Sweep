@@ -13,56 +13,56 @@ from flask_bcrypt import Bcrypt
 def index():
     return ''
 
-@app.route('/register', methods=['POST'])
-def register():
-    try:
-        first_name = request.json.get('first_name', None)
-        last_name = request.json.get('last_name', None)
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
+# @app.route('/register', methods=['POST'])
+# def register():
+#     try:
+#         first_name = request.json.get('first_name', None)
+#         last_name = request.json.get('last_name', None)
+#         email = request.json.get('email', None)
+#         password = request.json.get('password', None)
 
-        if not first_name:
-            return 'Missing first name', 400
-        if not last_name:
-            return 'Missing last name', 400
-        if not email:
-            return 'Missing email', 400
-        if not password:
-            return 'Missing password', 400
+#         if not first_name:
+#             return 'Missing first name', 400
+#         if not last_name:
+#             return 'Missing last name', 400
+#         if not email:
+#             return 'Missing email', 400
+#         if not password:
+#             return 'Missing password', 400
 
-        hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user = User(email=email, first_name=first_name, last_name=last_name, hash=hashed)
-        db.session.add(user)
-        db.session.commit()
+#         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+#         user = User(email=email, first_name=first_name, last_name=last_name, hash=hashed)
+#         db.session.add(user)
+#         db.session.commit()
 
-        return 'Welcome, {first_name}', 200
+#         return 'Welcome, {first_name}', 200
 
-    except IntegrityError:
-        db.session.rollback()
-        return 'User Already Exists', 400
+#     except IntegrityError:
+#         db.session.rollback()
+#         return 'User Already Exists', 400
 
-    except AttributeError:
-        return 'Provide an Email and Password in JSON format in the request body', 400
+#     except AttributeError:
+#         return 'Provide an Email and Password in JSON format in the request body', 400
 
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.json.get('email', None)
-    password = request.json.get('password', None)
+# @app.route('/login', methods=['POST'])
+# def login():
+#     email = request.json.get('email', None)
+#     password = request.json.get('password', None)
         
-    if not email:
-        return 'Missing email', 400
-    if not password:
-        return 'Missing password', 400
+#     if not email:
+#         return 'Missing email', 400
+#     if not password:
+#         return 'Missing password', 400
         
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        return 'Account Not Found!', 404
+#     user = User.query.filter_by(email=email).first()
+#     if not user:
+#         return 'Account Not Found!', 404
         
 
-    if bcrypt.checkpw(password.encode('utf-8'), user.hash):
-        return f'Logged in, Welcome {email}!', 200
-    else:
-        return 'Incorrect password', 400
+#     if bcrypt.checkpw(password.encode('utf-8'), user.hash):
+#         return f'Logged in, Welcome {email}!', 200
+#     else:
+#         return 'Incorrect password', 400
 
 
 class Users(Resource):
