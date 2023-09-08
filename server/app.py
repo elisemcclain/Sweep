@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
-# Standard library imports
-
 # Remote library imports
-from flask import request, Flask, jsonify, make_response
+from flask import request, Flask, jsonify, make_response, request, abort
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 # Local imports
 from config import app, db, api
-from models import User, Location, CrimeReport
-import bcrypt
+from models import User, Location, Crime, CrimeCategory
+from flask_bcrypt import Bcrypt
 
 @app.route('/')
 def index():
@@ -48,27 +46,24 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    try:
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
+    email = request.json.get('email', None)
+    password = request.json.get('password', None)
         
-        if not email:
-            return 'Missing email', 400
-        if not password:
-            return 'Missing password', 400
+    if not email:
+        return 'Missing email', 400
+    if not password:
+        return 'Missing password', 400
         
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            return 'User Not Found!', 404
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return 'Account Not Found!', 404
         
 
-        if bcrypt.checkpw(password.encode('utf-8'), user.hash):
-            return f'Logged in, Welcome {email}!', 200
-        else:
-            return 'Invalid Login Info!', 400
+    if bcrypt.checkpw(password.encode('utf-8'), user.hash):
+        return f'Logged in, Welcome {email}!', 200
+    else:
+        return 'Incorrect password', 400
 
-    except AttributeError:
-        return 'Provide an Email and Password in JSON format in the request body', 400
 
 class Users(Resource):
     def get(self):
@@ -119,29 +114,29 @@ class Locations(Resource):
 api.add_resource(Locations, '/locations')
 
 
-class CrimeReports(Resource):
-    def get(self):
-        crime_reports = [crime_report.to_dict() for crime_report in CrimeReport.query.all()]
+# class Crimes(Resource):
+#     def get(self):
+#         crimes = [crime.to_dict() for crime in Crimes.query.all()]
 
-        return make_response(crime_reports, 200)
+#         return make_response(crimes, 200)
 
-    def post(self):
-        new_crime_reports = CrimeReport()
-        data = request.get_json()
+#     def post(self):
+#         new_crimes = CrimeReport()
+#         data = request.get_json()
 
-        try:
-            for key in data:
-                setattr(new_crime_reports, key, data[key])
+#         try:
+#             for key in data:
+#                 setattr(new_crime_reports, key, data[key])
 
-            db.session.add(new_crime_reports)
-            db.session.commit()
+#             db.session.add(new_crime_reports)
+#             db.session.commit()
 
-            return make_response(jsonify(new_crime_reports.to_dict()), 201)
+#             return make_response(jsonify(new_crime_reports.to_dict()), 201)
         
-        except ValueError as e:
-            return make_response(jsonify({'error': str(e)}), 400)
+#         except ValueError as e:
+#             return make_response(jsonify({'error': str(e)}), 400)
 
-api.add_resource(CrimeReports, '/crimereports')
+# api.add_resource(CrimeReports, '/crimereports')
 
 
 if __name__ == '__main__':

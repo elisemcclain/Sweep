@@ -13,34 +13,54 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    hash = db.Column(db.String)
-    password = db.Column(db.String(120), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128))
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    serialize_rules = ('-location', '-crimereport',)
+    serialize_rules = ('-location.user', '-crimecategory.user',)
+
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attr')
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False) 
     address = db.Column(db.String(120), nullable=False)
+    crime_id = db.Column(db.Integer, db.ForeignKey('crimes.id'), nullable=False)
 
     users = db.relationship('User', backref='location', lazy=True)
 
     serialize_rules = ('-users.location',)
 
-class CrimeReport(db.Model, SerializerMixin):
-    __tablename__ = 'crime_reports'
+class Crime(db.Model, SerializerMixin):
+    __tablename__ = 'crimes'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
     desc = db.Column(db.String(255), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
-    
-    users = db.relationship('User', backref='crimereport', lazy=True)
-    locations = db.relationship('Location', backref='crimereport', lazy=True)
 
-    serialize_rules = ('-users.crimereport', '-locations.crimereport',)
+    crime_categories = db.relationship('CrimeCategory', backref='Crime', lazy=True)
+    locations = db.relationship('Location', backref='Crime', lazy=True)
+
+    serialize_rules = ('-locations.crime', '-crimecategories.crime',)
+
+
+class CrimeCategory(db.Model, SerializerMixin):
+    __tablename__ = 'crime_categories'
+
+    id = db.Column(db.Integer, primary_key=True)
+    crime_id = db.Column(db.Integer, db.ForeignKey('crimes.id'), nullable=False)
+    category = db.Column(db.String(120), nullable=False)
+    
+    serialize_rules = ('-users.crimecategory', '-locations.crimecategory',)
