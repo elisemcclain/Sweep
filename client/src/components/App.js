@@ -57,20 +57,32 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <main> */}
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route exact path="/login">
-          <Login
-            users={users}
-            handleAddUser={handleAddUser}
-            handleLogin={handleLogin}
-          />
-        </Route>
-      </Switch>
-      {/* </main> */}
+      <main>
+        <NavBar currentUser={currentUser} />
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/login">
+            <Login
+              users={users}
+              handleAddUser={handleAddUser}
+              handleLogin={handleLogin}
+            />
+            <Route path="/map">
+              <Map />
+            </Route>
+            <Route exact path="/user/:username">
+              <Profile
+                users={users}
+                currentUser={currentUser}
+                handleChangeUser={handleChangeUser}
+                handleDeleteUser={handleDeleteUser}
+              />
+            </Route>
+          </Route>
+        </Switch>
+      </main>
     </BrowserRouter>
   );
 }

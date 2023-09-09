@@ -17,7 +17,7 @@ function Home() {
   return (
     <div>
       <div>
-        <h1>HOME</h1>
+        <h1>SWEEP</h1>
         {/* <img className="gobsmacked" src={"./Gobsmacked.png"} alt="GOBSMACKED" /> */}
       </div>
       <div className="enter">
