@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import NavBar from "./NavBar";
+import Map from "./Map";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -72,14 +73,14 @@ function App() {
             <Route path="/map">
               <Map />
             </Route>
-            <Route exact path="/user/:username">
+            {/* <Route exact path="/user/:first_name">
               <Profile
                 users={users}
                 currentUser={currentUser}
                 handleChangeUser={handleChangeUser}
                 handleDeleteUser={handleDeleteUser}
               />
-            </Route>
+            </Route> */}
           </Route>
         </Switch>
       </main>
