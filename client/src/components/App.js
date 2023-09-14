@@ -7,7 +7,7 @@ import NavBar from "./NavBar";
 import CrimeMap from "./CrimeMap";
 import Report from "./Report";
 import CrimeForm from "./CrimeForm";
-import Profile from "./Profile;";
+import Profile from "./Profile";
 
 function App() {
   const [users, setUsers] = useState([]);
