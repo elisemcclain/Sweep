@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Remote library imports
-from flask import request, Flask, jsonify, make_response, request, abort
+from flask import request, Flask, jsonify, make_response, request, abort, render_template
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 # Local imports
@@ -9,11 +9,17 @@ from config import app, db, api
 from models import User, Location, Crime, CrimeCategory
 from flask_bcrypt import Bcrypt
 from datetime import datetime
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 @app.route('/')
 def index():
     return ''
 
+class NameForm(FlaskForm):
+    first_name = StringField("first name", validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
 class Users(Resource):
     def get(self):
@@ -138,6 +144,19 @@ class CrimeCategories(Resource):
         return make_response(crime_categories, 200)
 
 api.add_resource(CrimeCategories, '/crime_categories')
+
+@app.route('/name', methods=['GET', 'POST'])
+def name():
+    name = None
+    form = NameForm()
+
+    if form.validate_on_submit():
+        name = form.first_name.data
+        form.first_name.data = ''
+
+    return render_template("name.html",
+        name = name,
+        form = form)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./Home";
 import Login from "./Login";
 import NavBar from "./NavBar";
-import Map from "./Map";
+import CrimeMap from "./CrimeMap";
+import Report from "./Report";
+import CrimeForm from "./CrimeForm";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -64,16 +66,16 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route exact path="/login">
+          {/* <Route exact path="/login">
             <Login
               users={users}
               handleAddUser={handleAddUser}
               handleLogin={handleLogin}
-            />
-            <Route path="/map">
-              <Map />
-            </Route>
-            {/* <Route exact path="/user/:first_name">
+            /> */}
+          <Route path="/crimemap">
+            <CrimeMap />
+          </Route>
+          {/* <Route exact path="/user/:first_name">
               <Profile
                 users={users}
                 currentUser={currentUser}
@@ -81,7 +83,10 @@ function App() {
                 handleDeleteUser={handleDeleteUser}
               />
             </Route> */}
+          <Route path="/report">
+            <Report />
           </Route>
+          {/* </Route> */}
         </Switch>
       </main>
     </BrowserRouter>

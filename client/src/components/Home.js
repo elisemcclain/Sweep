@@ -18,7 +18,6 @@ function Home() {
     <div>
       <div>
         <h1>SWEEP</h1>
-        {/* <img className="gobsmacked" src={"./Gobsmacked.png"} alt="GOBSMACKED" /> */}
       </div>
       <div className="enter">
         <button onClick={handleClick} className="enter_button">
@@ -26,21 +25,6 @@ function Home() {
         </button>
       </div>
       <br />
-      {/* {goblins.length > 0 && (
-        <div className="center-imgs">
-          {goblins.map((goblin) => {
-            return (
-              <img
-                className="gob-imgs"
-                src={goblin.img_url}
-                alt={goblin.name}
-                onClick={() => handleGoblinClick(goblin)}
-              />
-            );
-          })}
-          ,
-        </div>
-      )} */}
     </div>
   );
 }
