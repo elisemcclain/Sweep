@@ -7,6 +7,7 @@ import NavBar from "./NavBar";
 import CrimeMap from "./CrimeMap";
 import Report from "./Report";
 import CrimeForm from "./CrimeForm";
+import Profile from "./Profile;";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -66,27 +67,27 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          {/* <Route exact path="/login">
+          <Route exact path="/login">
             <Login
               users={users}
               handleAddUser={handleAddUser}
               handleLogin={handleLogin}
-            /> */}
+            />
+          </Route>
           <Route path="/crimemap">
             <CrimeMap />
           </Route>
-          {/* <Route exact path="/user/:first_name">
-              <Profile
-                users={users}
-                currentUser={currentUser}
-                handleChangeUser={handleChangeUser}
-                handleDeleteUser={handleDeleteUser}
-              />
-            </Route> */}
+          <Route exact path="/profile/:first_name">
+            <Profile
+              users={users}
+              currentUser={currentUser}
+              handleChangeUser={handleChangeUser}
+              handleDeleteUser={handleDeleteUser}
+            />
+          </Route>
           <Route path="/temprep">
             <Report />
           </Route>
-          {/* </Route> */}
         </Switch>
       </main>
     </BrowserRouter>

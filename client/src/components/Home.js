@@ -9,11 +9,6 @@ function Home() {
     history.push(path);
   }
 
-  //   const handleGoblinClick = (goblin) => {
-  //     const path = `/goblins/${goblin.name}`;
-  //     history.push(path);
-  //   };
-
   return (
     <div>
       <div>

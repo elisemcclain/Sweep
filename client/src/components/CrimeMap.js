@@ -5,7 +5,7 @@ class CrimeMap extends Component {
   componentDidMount() {
     const L = require("leaflet");
     require("leaflet-control-geocoder");
-    const map = L.map("map").setView([40.7259, -73.9805], 12);
+    const map = L.map("map").setView([36.0627, 94.1606], 12);
 
     L.tileLayer(
       "https://{s}-tiles.locationiq.com/v2/obk/r/{z}/{x}/{y}.png?key=pk.1d5ad7de00e718309607920a131efa94"
@@ -21,6 +21,7 @@ class CrimeMap extends Component {
     return (
       <div>
         <div id="map" style={{ height: "400px" }}></div>
+        <p>hello</p>
       </div>
     );
   }

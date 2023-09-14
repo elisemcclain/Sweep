@@ -51,7 +51,7 @@ function CrimeForm() {
           required
         />
       </div>
-      <div>
+      {/* <div>
         <label>Category:</label>
         <input
           type="text"
@@ -60,7 +60,7 @@ function CrimeForm() {
           onChange={handleChange}
           required
         />
-      </div>
+      </div> */}
       <div>
         <label>Description:</label>
         <textarea
@@ -70,7 +70,7 @@ function CrimeForm() {
           required
         ></textarea>
       </div>
-      <div>
+      {/* <div>
         <label>Location:</label>
         <input
           type="text"
@@ -79,8 +79,8 @@ function CrimeForm() {
           onChange={handleChange}
           required
         />
-      </div>
-      {/* <div>
+      </div> */}
+      <div>
         <label>Date Occurred:</label>
         <input
           type="text"
@@ -89,7 +89,7 @@ function CrimeForm() {
           onChange={handleChange}
           required
         />
-      </div> */}
+      </div>
       <div>
         <button type="submit">Submit Report</button>
       </div>

@@ -4,7 +4,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 from validate_email import validate_email  
-from datetime import datetime
+from datetime import date
 from config import db
 from flask_bcrypt import Bcrypt
 
@@ -63,8 +63,8 @@ class Crime(db.Model, SerializerMixin):
 
     serialize_rules = ('-locations', '-crime_categories', '-users',)
 
-    # def serialize_date(self):
-    #     return self.date.isoformat()
+    def format_date(self):
+        return self.date.strftime('%m/%d/%Y')
 
 class CrimeCategory(db.Model, SerializerMixin):
     # get

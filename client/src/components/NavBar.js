@@ -33,7 +33,7 @@ function NavBar({ currentUser }) {
               <>
                 <li>
                   <Link
-                    to={`/user/${currentUser.username}`}
+                    to={`/profile/${currentUser.username}`}
                     className="nav-link"
                   >
                     PROFILE
@@ -55,7 +55,7 @@ function NavBar({ currentUser }) {
               </>
             )}
             <li>
-              <Link to="/map" className="nav-link">
+              <Link to="/crimemap" className="nav-link">
                 MAP
               </Link>
             </li>

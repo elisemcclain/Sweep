@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Susan', last_name='Gladiator', email='he1ll1obellow1@gmaail.com', password_hash='pa11ssw1ord1'),
-        User(first_name='Zendaya', last_name='Holland', email='us111er2@tester1.com', password_hash='passwo111rd2'),
+        User(first_name='Susan', last_name='Gladiator', email='w1e@glq.cm', password_hash='ssqe11'),
+        User(first_name='Zendaya', last_name='Holland', email='ee1@1q.cm', password_hash='d1q2'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -27,10 +27,15 @@ def create_locations():
 
 def create_crime():
     crimes = [
-        Crime(name='burgle', desc='Stole my favorite cat', date=datetime(2023, 9, 7, 14, 30)),
-        Crime(name='disturbance of the night', desc='Yodeling at 3am', date=datetime(2023, 9, 6, 12, 45)),
+        Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17)),
+        Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16)),
         # Add more crime reports as needed
     ]
+
+    # for crime in crimes:
+    #     formatted_date = crime.format_date()
+    #     crime.date = formatted_date
+
     db.session.add_all(crimes)
     db.session.commit()
 
@@ -51,3 +56,9 @@ if __name__ == '__main__':
         create_crime_category()
 
 
+
+# can't post crimes to backend bc of date time: SQLite DateTime type only accepts Python datetime and date objects as input.
+# do i need to add location id to crime so i can post from front end
+# can i make my own seed or is it crucial that i get a public api working
+# user page
+# login page
