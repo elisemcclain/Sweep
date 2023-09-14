@@ -83,7 +83,7 @@ function App() {
                 handleDeleteUser={handleDeleteUser}
               />
             </Route> */}
-          <Route path="/report">
+          <Route path="/temprep">
             <Report />
           </Route>
           {/* </Route> */}

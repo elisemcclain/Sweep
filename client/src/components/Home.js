@@ -18,6 +18,7 @@ function Home() {
     <div>
       <div>
         <h1>SWEEP</h1>
+        <p>Keep yourself informed of what crime is happening around you.</p>
       </div>
       <div className="enter">
         <button onClick={handleClick} className="enter_button">

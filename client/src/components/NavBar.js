@@ -39,11 +39,11 @@ function NavBar({ currentUser }) {
                     PROFILE
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to="/report" className="nav-link">
                     REPORT A CRIME
                   </Link>
-                </li>
+                </li> */}
               </>
             ) : (
               <>
@@ -55,8 +55,13 @@ function NavBar({ currentUser }) {
               </>
             )}
             <li>
-              <Link to="/crimemap" className="nav-link">
+              <Link to="/map" className="nav-link">
                 MAP
+              </Link>
+            </li>
+            <li>
+              <Link to="/temprep" className="nav-link">
+                temp report a crime
               </Link>
             </li>
             <li>

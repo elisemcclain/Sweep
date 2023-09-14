@@ -17,12 +17,26 @@ function CrimeForm() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Send crimeData to your backend API using an HTTP POST request
-    // You can use a library like Axios or the built-in fetch function
-    // Example: axios.post("/api/crimes", crimeData);
-    // After successfully posting, you can redirect or show a success message
+
+    try {
+      const response = await fetch("/api/crimes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(crimeData),
+      });
+
+      if (response.ok) {
+        console.log("Report Submitted!");
+      } else {
+        console.error("Error creating crime");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -31,7 +45,7 @@ function CrimeForm() {
         <label>Type:</label>
         <input
           type="text"
-          name="title"
+          name="name"
           value={crimeData.name}
           onChange={handleChange}
           required
@@ -41,7 +55,7 @@ function CrimeForm() {
         <label>Category:</label>
         <input
           type="text"
-          name="location"
+          name="crime_categories"
           value={crimeData.crime_categories}
           onChange={handleChange}
           required
@@ -50,7 +64,7 @@ function CrimeForm() {
       <div>
         <label>Description:</label>
         <textarea
-          name="description"
+          name="desc"
           value={crimeData.desc}
           onChange={handleChange}
           required
@@ -60,13 +74,13 @@ function CrimeForm() {
         <label>Location:</label>
         <input
           type="text"
-          name="location"
+          name="locations"
           value={crimeData.locations}
           onChange={handleChange}
           required
         />
       </div>
-      <div>
+      {/* <div>
         <label>Date Occurred:</label>
         <input
           type="text"
@@ -75,7 +89,7 @@ function CrimeForm() {
           onChange={handleChange}
           required
         />
-      </div>
+      </div> */}
       <div>
         <button type="submit">Submit Report</button>
       </div>
