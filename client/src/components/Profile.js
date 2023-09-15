@@ -108,8 +108,10 @@ function Profile({
       const response = await fetch("/logout", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Set the content type to JSON
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
+        // body: JSON.stringify(values),
       });
 
       if (response.status === 200) {
@@ -198,13 +200,13 @@ function Profile({
                   </div>
                   <br />
                   <div>
-                    {/* <label>Password</label>
+                    <label>Password</label>
                     <input
                       type="password"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       {...formik.getFieldProps("password")}
-                    /> */}
+                    />
                     {formik.touched.password && formik.errors.password ? (
                       <div>{formik.errors.password}</div>
                     ) : null}
@@ -221,10 +223,11 @@ function Profile({
                 <h3>Last Name: {currentUser.last_name}</h3>
                 <h3>Email: {currentUser.email}</h3>
                 <h4>Address: {currentUser.address}</h4>
-                <br />
-                <button onClick={logout}>Logout</button>
               </div>
             )}
+            <div>
+              <button onClick={logout}>Logout</button>
+            </div>
           </div>
         </div>
       ) : (

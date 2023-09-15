@@ -5,6 +5,8 @@ import json
 from flask import request, Flask, jsonify, make_response, request, abort, render_template, flash, request, redirect, url_for
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
+
+
 # Local imports
 from config import app, db, api
 from models import User, Location, Crime, CrimeCategory
@@ -15,7 +17,6 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-
 
 
 bcrypt = Bcrypt(app)
@@ -40,14 +41,13 @@ def login():
     password_hash = data.get('password')
 
     user = User.query.filter_by(email=email).first()
-	
+   
     if user and bcrypt.check_password_hash(user.password_hash, password_hash):
         login_user(user)
         return jsonify({'message': 'Login successful'}), 200
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
 
-# login
 @app.route('/profile')
 @login_required
 def profile():
