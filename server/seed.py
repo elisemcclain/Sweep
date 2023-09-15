@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Susan', last_name='Gladiator', email='w11ee@gdlq.cm', password_hash='ssd1eqe11'),
-        User(first_name='Zendaya', last_name='Holland', email='ee11e@1qd.cm', password_hash='d1qed12'),
+        User(first_name='Susan', last_name='Gladiator', email='w11ee@gd13dlq.cm', password_hash='ssd1ed31qe11'),
+        User(first_name='Zendaya', last_name='Holland', email='ee11e@1qd3d1.cm', password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -18,8 +18,8 @@ def create_users():
 
 def create_locations():
     locations = [
-        Location(address='72 P Shermana Wallay Way, Sydney AU', crime_id=1),
-        Location(address='133 Rainbow Rd, Mario Land', crime_id=2),
+        Location(address='72 P Shermana Wallay Way, Sydney AU'),
+        Location(address='133 Rainbow Rd, Mario Land'),
         # Add more locations as needed
     ]
     db.session.add_all(locations)
@@ -27,8 +27,8 @@ def create_locations():
 
 def create_crime():
     crimes = [
-        Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17)),
-        Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16)),
+        Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17), location_id=1),
+        Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16), location_id=2),
         # Add more crime reports as needed
     ]
 
@@ -58,7 +58,10 @@ if __name__ == '__main__':
 
 
 # can't post crimes to backend bc of date time: SQLite DateTime type only accepts Python datetime and date objects as input.
-# do i need to add location id to crime so i can post from front end
 # can i make my own seed or is it crucial that i get a public api working
 # user page
 # login page
+
+# luxon
+# calendar dropdown
+# react datepicker

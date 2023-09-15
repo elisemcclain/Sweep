@@ -11,7 +11,7 @@ function Profile({ currentUser, handleChangeUser }) {
     email: Yup.string().email("Invalid email").required("Email is required"),
     first_name: Yup.string().required("First Name is required"),
     last_name: Yup.string().required("Last Name is required"),
-    location: Yup.string().required("Location is required"),
+    location_id: Yup.string().required("Location is required"),
     // You can add validation for the password if needed
   });
 
@@ -66,7 +66,7 @@ function Profile({ currentUser, handleChangeUser }) {
                   email: currentUser.email,
                   first_name: currentUser.first_name,
                   last_name: currentUser.last_name,
-                  location: currentUser.location,
+                  location_id: currentUser.location_id,
                 }}
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
@@ -101,9 +101,9 @@ function Profile({ currentUser, handleChangeUser }) {
                   </div>
                   <div>
                     <label>Location</label>
-                    <Field type="text" name="location" />
+                    <Field type="text" name="location_id" />
                     <ErrorMessage
-                      name="location"
+                      name="location_id"
                       component="div"
                       className="error"
                     />
@@ -118,7 +118,7 @@ function Profile({ currentUser, handleChangeUser }) {
                 <h3>First Name: {currentUser.first_name}</h3>
                 <h3>Last Name: {currentUser.last_name}</h3>
                 <h3>Email: {currentUser.email}</h3>
-                <h4>Location: {currentUser.location}</h4>
+                <h4>Location: {currentUser.location_id}</h4>
                 <br />
               </div>
             )}

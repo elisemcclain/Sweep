@@ -31,6 +31,7 @@ class User(db.Model, SerializerMixin):
     
     @password.setter
     def password(self, password):
+        pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def verify_password(self, password):
@@ -43,9 +44,9 @@ class Location(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     address = db.Column(db.String(120), nullable=False)
-    crime_id = db.Column(db.Integer, db.ForeignKey('crimes.id'), nullable=False)
 
     users = db.relationship('User', backref='location', lazy=True)
+    crimes = db.relationship('Crime', backref='location', lazy=True)
 
     serialize_rules = ('-users',)
 
@@ -57,14 +58,15 @@ class Crime(db.Model, SerializerMixin):
     name = db.Column(db.String(120), nullable=False)
     desc = db.Column(db.String(255), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=False)
 
     crime_categories = db.relationship('CrimeCategory', backref='Crime', lazy=True)
-    locations = db.relationship('Location', backref='Crime', lazy=True)
+    # location = db.relationship('Location', backref='crime', lazy=True)
 
-    serialize_rules = ('-locations', '-crime_categories', '-users',)
+    serialize_rules = ('-location', '-crime_categories', '-users',)
 
-    def format_date(self):
-        return self.date.strftime('%m/%d/%Y')
+    # def format_date(self):
+    #     return self.date.strftime('%m/%d/%Y')
 
 class CrimeCategory(db.Model, SerializerMixin):
     # get
@@ -75,3 +77,4 @@ class CrimeCategory(db.Model, SerializerMixin):
     category = db.Column(db.String(120), nullable=False)
     
     serialize_rules = ('-users', '-locations' '-crimes',)
+

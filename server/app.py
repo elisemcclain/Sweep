@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Remote library imports
+import json
 from flask import request, Flask, jsonify, make_response, request, abort, render_template, flash, request, redirect, url_for
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
@@ -8,12 +9,14 @@ from flask_restful import Resource, Api
 from config import app, db, api
 from models import User, Location, Crime, CrimeCategory
 from flask_bcrypt import Bcrypt
-from datetime import date
+from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
-from webforms import LoginForm, PasswordForm
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, Email, Length
+from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
+
 
 bcrypt = Bcrypt(app)
 
@@ -34,12 +37,12 @@ def index():
 def login():
     data = request.get_json()
     email = data.get('email')
-    password = data.get('password')
+    password_hash = data.get('password')
 
     user = User.query.filter_by(email=email).first()
 	
-    if user and bcrypt.check_password_hash(user.password_hash, password):
-        login_user(user)  # Log in the user
+    if user and bcrypt.check_password_hash(user.password_hash, password_hash):
+        login_user(user)
         return jsonify({'message': 'Login successful'}), 200
     else:
         return jsonify({'error': 'Invalid credentials'}), 401
@@ -58,6 +61,8 @@ def logout():
 	flash("You Have Been Logged Out!")
 	return redirect(url_for('login'))
 
+
+
 class Users(Resource):
     def get(self):
         users = [user.to_dict() for user in User.query.all()]
@@ -67,7 +72,7 @@ class Users(Resource):
     def post(self):
         new_user = User()
         data = request.get_json()
-
+    
         try:
             for key in data:
                 setattr(new_user, key, data[key])
@@ -153,22 +158,56 @@ api.add_resource(Locations, '/locations')
 
 class Crimes(Resource):
     def get(self):
-        crimes = [crime.to_dict(rules=('-users', '-crime_categories', '-locations',)) for crime in Crime.query.all()]
+        crimes = [crime.to_dict(rules=('-users', '-crime_categories',)) for crime in Crime.query.all()]
 
         return make_response(crimes, 200)
 
     def post(self):
-        new_crime = Crime()
+        new_crime_rep = Crime()
+        
         data = request.get_json()
+        crime_data = {}
+        
+        location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+        
 
-        try:
-            for key in data:
-                setattr(new_crime, key, data[key])
-
-            db.session.add(new_crime)
+        if location:
+            location = location.__dict__
+            del location['_sa_instance_state']
+        
+     
+            # return location
+        else:
+            location = Location()
+    
+            location.address = data['address']
+        
+            
+            db.session.add(location)
             db.session.commit()
 
-            return make_response(jsonify(new_crime.to_dict()), 201)
+            location = location.to_dict()
+            # del location['_sa_instance_state']
+            print(location)
+
+        
+
+        crime_data['name']=data['name']
+        crime_data['desc']=data['desc']
+        crime_data['location_id']=location['id']
+        
+        crime_data['date']=datetime.strptime(data['date'], '%Y-%m-%d').date()
+        print(crime_data)
+
+        
+        try:
+            for key in crime_data:
+                setattr(new_crime_rep, key, crime_data[key])
+            
+            db.session.add(new_crime_rep)
+            db.session.commit()
+
+            return make_response(jsonify(new_crime_rep.to_dict()), 201)
         
         except ValueError as e:
             return make_response(jsonify({'error': str(e)}), 400)

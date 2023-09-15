@@ -3,9 +3,9 @@ import React, { useState } from "react";
 function CrimeForm() {
   const [crimeData, setCrimeData] = useState({
     name: "",
-    crime_categories: "",
+    // crime_categories: "",
     desc: "",
-    locations: "",
+    address: "",
     date: "",
   });
 
@@ -21,7 +21,7 @@ function CrimeForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/crimes", {
+      const response = await fetch("/crimes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,20 +70,20 @@ function CrimeForm() {
           required
         ></textarea>
       </div>
-      {/* <div>
-        <label>Location:</label>
+      <div>
+        <label>Address:</label>
         <input
           type="text"
-          name="locations"
-          value={crimeData.locations}
+          name="address"
+          value={crimeData.address}
           onChange={handleChange}
           required
         />
-      </div> */}
+      </div>
       <div>
         <label>Date Occurred:</label>
         <input
-          type="text"
+          type="date"
           name="date"
           value={crimeData.date}
           onChange={handleChange}
