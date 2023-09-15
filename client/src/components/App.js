@@ -48,7 +48,7 @@ function App() {
         },
       });
       if (response.status === 200) {
-        const updatedUsers = users.filter((u) => u.username !== user.username);
+        const updatedUsers = users.filter((u) => u.email !== user.email);
         setUsers(updatedUsers);
         setCurrentUser(null);
       } else {
@@ -77,9 +77,10 @@ function App() {
           <Route path="/crimemap">
             <CrimeMap />
           </Route>
-          <Route exact path="/profile/:first_name">
+          <Route exact path="/user/:first_name">
             <Profile
               users={users}
+              setUsers={setUsers}
               currentUser={currentUser}
               handleChangeUser={handleChangeUser}
               handleDeleteUser={handleDeleteUser}

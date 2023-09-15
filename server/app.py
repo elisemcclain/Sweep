@@ -55,13 +55,14 @@ def profile():
 
 # Logout
 @app.route('/logout', methods=['GET', 'POST'])
-@login_required
 def logout():
-	logout_user()
-	flash("You Have Been Logged Out!")
-	return redirect(url_for('login'))
-
-
+    if request.is_json:
+        logout_user()
+        flash("You Have Been Logged Out!")
+        # return redirect(url_for('login'))
+        return jsonify({'message': 'Logout successful'}), 200
+    else:
+        return jsonify({'error': str(e)}), 415  
 
 class Users(Resource):
     def get(self):
@@ -170,35 +171,25 @@ class Crimes(Resource):
         
         location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
         
-
         if location:
             location = location.__dict__
-            del location['_sa_instance_state']
-        
+            del location['_sa_instance_state'] 
      
-            # return location
         else:
             location = Location()
     
             location.address = data['address']
-        
-            
+
             db.session.add(location)
             db.session.commit()
 
             location = location.to_dict()
             # del location['_sa_instance_state']
-            print(location)
-
-        
 
         crime_data['name']=data['name']
         crime_data['desc']=data['desc']
         crime_data['location_id']=location['id']
-        
         crime_data['date']=datetime.strptime(data['date'], '%Y-%m-%d').date()
-        print(crime_data)
-
         
         try:
             for key in crime_data:
@@ -222,20 +213,6 @@ class CrimeCategories(Resource):
         return make_response(crime_categories, 200)
 
 api.add_resource(CrimeCategories, '/crime_categories')
-
-# @app.route('/name', methods=['GET', 'POST'])
-# def name():
-#     name = None
-#     form = NameForm()
-
-#     if form.validate_on_submit():
-#         name = form.first_name.data
-#         form.first_name.data = ''
-
-#     return render_template("name.html",
-#         first_name = first_name,
-#         form = form)
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

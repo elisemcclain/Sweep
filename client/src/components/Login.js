@@ -16,8 +16,6 @@ const Login = ({ users, handleAddUser, handleLogin }) => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      first_name: "",
-      last_name: "",
       password_hash: "",
     },
     validationSchema: formSchema,
@@ -113,6 +111,17 @@ const Login = ({ users, handleAddUser, handleLogin }) => {
           value={formik.values.last_name}
         />
         <p className="error-message-1"> {formik.errors.last_name}</p>
+        <label className="address" htmlFor="address">
+          Address:{" "}
+        </label>
+        <input
+          className="address-color"
+          id="address"
+          name="last_name"
+          onChange={formik.handleChange}
+          value={formik.values.address}
+        />
+        <p className="error-message-1"> {formik.errors.address}</p>
         <label className="password" htmlFor="password_hash">
           Password:{" "}
         </label>
@@ -128,7 +137,6 @@ const Login = ({ users, handleAddUser, handleLogin }) => {
         <br />
         <button className="login" type="submit">
           {loginType ? "Create Account" : "Login"}
-          {console.log("login")}
         </button>
       </form>
     </div>
@@ -136,17 +144,6 @@ const Login = ({ users, handleAddUser, handleLogin }) => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-
-
-
-
 
 // import React, { useEffect, useState } from "react";
 // import { Formik, FormikConsumer, useFormik } from "formik";
