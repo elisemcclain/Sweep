@@ -17,7 +17,7 @@ function Login() {
 
       if (response.status === 200) {
         // Redirect to a dashboard or other page upon successful login
-        window.location.href = "/profile/:first_name";
+        window.location.href = "/profile/${first_name}";
       } else {
         // Handle login failure, display an error message, etc.
         console.error("Login failed!!");

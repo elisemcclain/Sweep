@@ -15,43 +15,48 @@ from wtforms.validators import DataRequired
 from webforms import LoginForm, PasswordForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
+bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+
 
 @app.route('/')
 def index():
     return ''
 
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	form = LoginForm()
-	if form.validate_on_submit():
-		user = Users.query.filter_by(username=form.username.data).first()
-		if user:
-			# Check the hash
-			if check_password_hash(user.password_hash, form.password.data):
-				login_user(user)
-				flash("Login Succesfull!!")
-				return redirect(url_for('dashboard'))
-			else:
-				flash("Wrong Password - Try Again!")
-		else:
-			flash("That User Doesn't Exist! Try Again...")
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
+    user = User.query.filter_by(email=email).first()
+	
+    if user and bcrypt.check_password_hash(user.password_hash, password):
+        login_user(user)  # Log in the user
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
 
-	return render_template('login.html', form=form)
+# login
+@app.route('/profile')
+@login_required
+def profile():
+    return f'Hello, {current_user.first_name}!'
 
-# Logout Page
+# Logout
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
 	logout_user()
 	flash("You Have Been Logged Out!")
 	return redirect(url_for('login'))
-
-class NameForm(FlaskForm):
-    first_name = StringField("first name", validators=[DataRequired()])
-    submit = SubmitField("Submit")
 
 class Users(Resource):
     def get(self):
@@ -66,6 +71,8 @@ class Users(Resource):
         try:
             for key in data:
                 setattr(new_user, key, data[key])
+
+            new_user.password_hash = bcrypt.generate_password_hash(data['password_hash']).decode('utf-8')
 
             db.session.add(new_user)
             db.session.commit()

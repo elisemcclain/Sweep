@@ -1,8 +1,8 @@
-"""redo table
+"""new table
 
-Revision ID: 5d0eed1d30c8
+Revision ID: 21ce6dd41ff8
 Revises: 
-Create Date: 2023-09-08 15:41:08.606124
+Create Date: 2023-09-14 18:17:45.129479
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5d0eed1d30c8'
+revision = '21ce6dd41ff8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -47,8 +47,7 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('location_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['location_id'], ['locations.id'], name=op.f('fk_users_location_id_locations')),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

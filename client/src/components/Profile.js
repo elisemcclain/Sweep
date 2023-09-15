@@ -1,43 +1,43 @@
-import { useParams, useHistory } from "react-router-dom";
-import { useState, useEffect, useInsertionEffect } from "react";
-import { Formik } from "formik";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-function Profile({ users, currentUser, handleChangeUser, handleDeleteUser }) {
+function Profile({ currentUser, handleChangeUser }) {
+  const { first_name } = useParams();
   const [edit, setEdit] = useState(false);
-  const { username } = useParams();
-  const [userMatch, setUserMatch] = useState(false);
-  const history = useHistory();
 
-  const formShema = Yup.object().shape({
+  const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     first_name: Yup.string().required("First Name is required"),
     last_name: Yup.string().required("Last Name is required"),
     location: Yup.string().required("Location is required"),
-    password: Yup.string().required("Password is required"),
+    // You can add validation for the password if needed
   });
 
-  useEffect(() => {
-    if (currentUser.email.toLowerCase() === email.toLowerCase()) {
-      setUserMatch(true);
-    }
-  }, [currentUser, email]);
-
-  const EditProfile = async () => {
+  const handleSubmit = async (values) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:5555/users/${currentUser.id}`
+        `http://127.0.0.1:5555/users/${currentUser.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
       );
-      if (response.status === 200) {
+
+      if (response.status === 202) {
         const updatedUserData = await response.json();
         handleChangeUser(updatedUserData);
+        setEdit(false); // Turn off edit mode after successful update
       } else {
         console.error("Error updating user:", response.status);
       }
     } catch (error) {
       console.error("Error updating user:", error);
     }
-    setEdit(!edit);
   };
 
   return (
@@ -53,88 +53,72 @@ function Profile({ users, currentUser, handleChangeUser, handleDeleteUser }) {
           <div className="edit-prof-button custom-edit-button-move">
             <button
               type="button"
-              onClick={EditProfile}
+              onClick={() => setEdit(!edit)}
               className="edit-prof-button custom-edit-button"
             >
-              {edit ? "Save Profile" : "Edit Profile"}
+              {edit ? "Cancel" : "Edit Profile"}
             </button>
           </div>
           <div className="bar-background">
             {edit ? (
-              <div>
-                <form onSubmit={formik.handleSubmit}>
-                  <br />
+              <Formik
+                initialValues={{
+                  email: currentUser.email,
+                  first_name: currentUser.first_name,
+                  last_name: currentUser.last_name,
+                  location: currentUser.location,
+                }}
+                validationSchema={validationSchema}
+                onSubmit={handleSubmit}
+              >
+                <Form>
                   <div>
-                    <lable>Email</lable>
-                    <input
-                      type="email"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      {...formik.getFieldProps("email")}
+                    <label>Email</label>
+                    <Field type="email" name="email" />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="error"
                     />
-                    {formik.touched.email && formik.errors.email ? (
-                      <div>{formik.errors.email}</div>
-                    ) : null}
                   </div>
-                  <br />
                   <div>
                     <label>First Name</label>
-                    <input
-                      type="text"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      {...formik.getFieldProps("first_name")}
+                    <Field type="text" name="first_name" />
+                    <ErrorMessage
+                      name="first_name"
+                      component="div"
+                      className="error"
                     />
-                    {formik.touched.first_name && formik.errors.first_name ? (
-                      <div>{formik.errors.first_name}</div>
-                    ) : null}
                   </div>
                   <div>
                     <label>Last Name</label>
-                    <input
-                      type="text"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      {...formik.getFieldProps("last_name")}
+                    <Field type="text" name="last_name" />
+                    <ErrorMessage
+                      name="last_name"
+                      component="div"
+                      className="error"
                     />
-                    {formik.touched.last_name && formik.errors.last_name ? (
-                      <div>{formik.errors.last_name}</div>
-                    ) : null}
                   </div>
                   <div>
                     <label>Location</label>
-                    <input
-                      type="text"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      {...formik.getFieldProps("locations")}
+                    <Field type="text" name="location" />
+                    <ErrorMessage
+                      name="location"
+                      component="div"
+                      className="error"
                     />
-                    {formik.touched.locations && formik.errors.locations ? (
-                      <div>{formik.errors.locations}</div>
-                    ) : null}
                   </div>
-                  <br />
                   <div>
-                    <label>Password</label>
-                    <input
-                      type="password"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      {...formik.getFieldProps("password")}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                      <div>{formik.errors.password}</div>
-                    ) : null}
+                    <button type="submit">Save Profile</button>
                   </div>
-                  <br />
-                </form>
-              </div>
+                </Form>
+              </Formik>
             ) : (
               <div>
                 <h3>First Name: {currentUser.first_name}</h3>
                 <h3>Last Name: {currentUser.last_name}</h3>
                 <h3>Email: {currentUser.email}</h3>
-                <h4>Location: {currentUser.locations}</h4>
+                <h4>Location: {currentUser.location}</h4>
                 <br />
               </div>
             )}
