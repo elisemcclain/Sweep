@@ -1,0 +1,14 @@
+body {
+  background-color: #33468a;
+}
+
+.sweep {
+  color: #efff31;
+  font-family: Arial;
+}
+
+.logo {
+  display: flex;
+  width: 300px;
+}
+
