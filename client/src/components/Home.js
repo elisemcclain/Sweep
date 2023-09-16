@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./Styles.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Home() {
   const history = useHistory();
@@ -13,13 +14,10 @@ function Home() {
   return (
     <div>
       <div>
-        <div>
-          <img className="logo" src={"./logosweep.png"} alt="Sweep-logo" />
-        </div>
         <p>Keep yourself informed of what crime is happening around you.</p>
       </div>
       <div className="enter">
-        <button onClick={handleClick} className="enter_button">
+        <button className="btn btn-primary" onClick={handleClick}>
           Click to create account
         </button>
       </div>
