@@ -56,12 +56,10 @@ if __name__ == '__main__':
         create_crime_category()
 
 
-
-# can't post crimes to backend bc of date time: SQLite DateTime type only accepts Python datetime and date objects as input.
-# can i make my own seed or is it crucial that i get a public api working
-# user page
-# login page
-
 # luxon
 # calendar dropdown
 # react datepicker
+
+# can't login
+# can't patch changes to profile if account created
+# can't logout
