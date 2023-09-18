@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
-function NavBar({ currentUser }) {
+function NavBar({ currentUser, setCurrentUser }) {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function NavBar({ currentUser }) {
                 <>
                   <li className="nav-item active">
                     <Link
-                      to={`/profile/${currentUser.username}`}
+                      to={`/profile/${currentUser.first_name}`}
                       // className="nav-link"
                       type="button"
                       className="btn btn-primary btn-block active btn btn-primarybtn-sm m1-2"
@@ -50,7 +50,7 @@ function NavBar({ currentUser }) {
                     </Link>
                   </li>
                   <li className="nav-item active">
-                    <Link to="/report" className="nav-link">
+                    <Link to="/crimereport" className="nav-link">
                       REPORT A CRIME
                     </Link>
                   </li>

@@ -32,7 +32,7 @@ def load_user(user_id):
 def index():
     return ''
 
-class CurrentUser(Resource):
+class CurrentUserPy(Resource):
     @login_required
     def get(self):
         user = current_user
@@ -41,7 +41,7 @@ class CurrentUser(Resource):
         else:
             return make_response({"message": "not found"}, 404)
 
-api.add_resource(CurrentUser, '/currentUser')
+api.add_resource(CurrentUserPy, '/currentUserPy')
 
 class Logout(Resource):
     @login_required
@@ -110,35 +110,6 @@ class Signup(Resource):
         return new_user.to_dict(), 201
 
 api.add_resource(Signup, '/signup')
-
-# class Signup(Resource):
-#     def post(self):
-        
-#         email = request.get_json()['email']
-#         password = request.get_json()['password']
-#         first_name = request.get_json()['first_name']
-#         last_name = request.get_json()['last_name']
-#         location_id = request.get_json()['location_id']
-
-#         location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
-
-
-#         if email and password:
-            
-#             new_user = User(email=email)
-#             new_user.password_hash = password
-#             new_user.first_name = first_name
-#             new_user.last_name = last_name
-#             new_user.location_id = location_id
-#             db.session.add(new_user)
-#             db.session.commit()
-
-#             session['user_id'] = new_user.id
-            
-#             return new_user.to_dict(), 201
-
-#         return {'error': '422 Unprocessable Entity'}, 422
-
 
 
 class CheckSession(Resource):

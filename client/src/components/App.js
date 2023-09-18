@@ -5,7 +5,6 @@ import Home from "./Home";
 import Login from "./Login";
 import NavBar from "./NavBar";
 import CrimeMap from "./CrimeMap";
-import Report from "./Report";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
@@ -23,94 +22,52 @@ function App() {
       });
   }, []);
 
-  // const handleSignup = async (formData) => {
-  //   try {
-  //     const response = await fetch("http://localhost:5555/signup", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     if (response.ok) {
-  //       history.push("/login");
-  //     } else {
-  //       // Handle registration error
-  //       console.error("Registration failed");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during registration:", error);
-  //   }
-  // };
-
   const handleLogin = (user) => {
     console.log(user);
     setCurrentUser(user);
   };
 
-  const handleChangeUser = async (user) => {
-    setUsers([...users, user]);
-    setCurrentUser(user);
-  };
-
-  const handleDeleteUser = async (user) => {
-    try {
-      const response = await fetch(`http://localhost:5555/users/${user.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      if (response.status === 200) {
-        const updatedUsers = users.filter((u) => u.email !== user.email);
-        setUsers(updatedUsers);
-        setCurrentUser(null);
-      } else {
-        console.log("Error deleting user:", response.status);
-      }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-    }
+  const handleAddUser = (newUser) => {
+    const updatedUserArray = [...users, newUser];
+    setUsers(updatedUserArray);
+    setCurrentUser(newUser);
   };
 
   return (
     <BrowserRouter>
       <main>
-        <NavBar currentUser={currentUser} />
+        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route exact path="/login">
-            <Login
-              users={users}
-              // handleAddUser={handleAddUser}
-              handleLogin={handleLogin}
-            />
+            <Login users={users} handleLogin={handleLogin} />
           </Route>
           <Route exact path="/signup">
             <Signup
               users={users}
+              handleAddUser={handleAddUser}
               // handleSignup={handleSignup}
-              handleLogin={handleLogin}
+              // handleLogin={handleLogin}
+              currentUser={currentUser}
+              // setCurrentUser={setCurrentUser}
             />
           </Route>
-          <Route path="/crimemap">
+          <Route exact path="/crimemap">
             <CrimeMap />
           </Route>
-          <Route exact path="/user/:first_name">
+          <Route exact path="/profile/:first_name">
             <Profile
               users={users}
               setUsers={setUsers}
               currentUser={currentUser}
-              handleChangeUser={handleChangeUser}
-              handleDeleteUser={handleDeleteUser}
+              setCurrentUser={setCurrentUser}
+              // handleChangeUser={handleChangeUser}
             />
           </Route>
-          <Route path="/temprep">
-            <Report />
+          <Route exact path="/crimereport">
+            <CrimeForm />
           </Route>
         </Switch>
       </main>
@@ -119,3 +76,29 @@ function App() {
 }
 
 export default App;
+
+// const handleChangeUser = async (user) => {
+//   setUsers([...users, user]);
+//   setCurrentUser(user);
+// };
+
+// const handleDeleteUser = async (user) => {
+//   try {
+//     const response = await fetch(`http://localhost:5555/users/${user.id}`, {
+//       method: "DELETE",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Accept: "application/json",
+//       },
+//     });
+//     if (response.status === 200) {
+//       const updatedUsers = users.filter((u) => u.email !== user.email);
+//       setUsers(updatedUsers);
+//       setCurrentUser(null);
+//     } else {
+//       console.log("Error deleting user:", response.status);
+//     }
+//   } catch (error) {
+//     console.error("Error deleting user:", error);
+//   }
+// };
