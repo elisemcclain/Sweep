@@ -8,6 +8,7 @@ import CrimeMap from "./CrimeMap";
 import Report from "./Report";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
+import Signup from "./Signup";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -22,11 +23,26 @@ function App() {
       });
   }, []);
 
-  const handleAddUser = (newUser) => {
-    const updatedUserArray = [...users, newUser];
-    setUsers(updatedUserArray);
-    setCurrentUser(newUser);
-  };
+  // const handleSignup = async (formData) => {
+  //   try {
+  //     const response = await fetch("http://localhost:5555/signup", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (response.ok) {
+  //       history.push("/login");
+  //     } else {
+  //       // Handle registration error
+  //       console.error("Registration failed");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during registration:", error);
+  //   }
+  // };
 
   const handleLogin = (user) => {
     console.log(user);
@@ -70,7 +86,14 @@ function App() {
           <Route exact path="/login">
             <Login
               users={users}
-              handleAddUser={handleAddUser}
+              // handleAddUser={handleAddUser}
+              handleLogin={handleLogin}
+            />
+          </Route>
+          <Route exact path="/signup">
+            <Signup
+              users={users}
+              // handleSignup={handleSignup}
               handleLogin={handleLogin}
             />
           </Route>

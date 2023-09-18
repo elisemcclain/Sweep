@@ -6,9 +6,9 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from validate_email import validate_email  
 from datetime import date
 from config import db
-from flask_bcrypt import Bcrypt
+from sqlalchemy.ext.hybrid import hybrid_property
+from werkzeug.security import generate_password_hash, check_password_hash
 
-bcrypt = Bcrypt()
 
 class User(db.Model, SerializerMixin):
     # get, post, byId: patch, delete
@@ -18,24 +18,26 @@ class User(db.Model, SerializerMixin):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    password_hash = db.Column(db.String(128))
-    #add creaated at
+    _password_hash = db.Column(db.String(128))
+    #add created at
     #adad unique key for email
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
     serialize_rules = ('-location', '-crimecategory',)
 
-    @property
+    @hybrid_property
     def password(self):
-        raise AttributeError('password is not a readable attr')
-    
+        raise Exception('Password hashes may not be viewed.')
+
     @password.setter
     def password(self, password):
-        pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+        # password_hash = bcrypt.generate_password_hash(
+        #     password.encode('utf-8'))
+        self._password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    def verify_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(
+            self._password_hash, password.encode('utf-8'))
 
 
 class Location(db.Model, SerializerMixin):
@@ -78,3 +80,17 @@ class CrimeCategory(db.Model, SerializerMixin):
     
     serialize_rules = ('-users', '-locations' '-crimes',)
 
+
+
+
+    # @property
+    # def password(self):
+    #     # raise AttributeError('password is not a readable attr')
+    
+    # @password_hash.setter
+    # def password(self, password):
+    #     # pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
+    #     self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    # def verify_password(self, password):
+    #     return bcrypt.check_password_hash(self.password_hash, password)

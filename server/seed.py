@@ -63,3 +63,13 @@ if __name__ == '__main__':
 # can't login
 # can't patch changes to profile if account created
 # can't logout
+# get error when create account:
+#       pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
+#       AttributeError: 'Bcrypt' object has no attribute 'hashpw'
+
+# goals:
+    #  see crime activity on map
+    #  update my address
+    #  login, logout, create account, delete account, edit account
+    #  5 routes: home, profile, login, map, crimereport - DONE
+    #  use useContext or Redux

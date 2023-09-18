@@ -12,16 +12,11 @@ function NavBar({ currentUser }) {
 
   return (
     <div>
-      <nav className="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+      <nav className="navbar navbar-expand-sm navbar-light bg-light">
         <div className="container">
           <ul className="navbar-brand mb-0 h1">
             <Link to="/" className="d-inline-block align-top" width="140">
               SWEEP
-            </Link>
-          </ul>
-          <ul className="nav-item active">
-            <Link to="/" className="nav-link">
-              HOME
             </Link>
           </ul>
           <button
@@ -37,12 +32,19 @@ function NavBar({ currentUser }) {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
+              <ul className="nav-item active">
+                <Link to="/" className="nav-link">
+                  HOME
+                </Link>
+              </ul>
               {loggedIn ? (
                 <>
                   <li className="nav-item active">
                     <Link
                       to={`/profile/${currentUser.username}`}
-                      className="nav-link"
+                      // className="nav-link"
+                      type="button"
+                      className="btn btn-primary btn-block active btn btn-primarybtn-sm m1-2"
                     >
                       PROFILE
                     </Link>
@@ -56,7 +58,12 @@ function NavBar({ currentUser }) {
               ) : (
                 <>
                   <li className="nav-item active">
-                    <Link to="/login" className="nav-link">
+                    <Link
+                      to="/login"
+                      // className="nav-link"
+                      type="button"
+                      className="btn btn-primary btn-block active btn btn-primarybtn-sm m1-2"
+                    >
                       LOGIN
                     </Link>
                   </li>
