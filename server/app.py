@@ -34,45 +34,6 @@ def load_user(user_id):
 def index():
     return ''
 
-class CurrentUserPy(Resource):
-    def get(self):
-        user = current_user
-        if user:
-            return make_response(user, 201)
-        else:
-            return make_response({"message": "plz login"}, 404)
-
-api.add_resource(CurrentUserPy, '/currentUserPy', methods=['GET'])
-
-
-@app.route('/logout', methods=['GET', 'DELETE', 'OPTIONS', 'POST'])
-@login_required
-def logout():
-    try:
-        if current_user.authenticate():
-            logout_user()
-            session.clear()
-
-            return make_response({}, 204)
-        else:
-            return make_response({"message": "Not logged in"}, 400)
-    except Exception as e:
-        return make_response({"error": str(e)}, 500) 
-
-
-
-    # def get(self):
-    #     user = User.query.filter_by(email=email).first()
-
-    #     if not user:
-    #         return {'error': 'User not found'}, 404
-
-    #     if user and user.authenticate(_password_hash):
-    #         session['user_id'] = user.id
-    #         return user.to_dict(), 200
-        
-    #     return make_response(jsonify(user.to_dict()), 200)
-
 
 class Signup(Resource):
     def post(self):
@@ -129,6 +90,34 @@ class Login(Resource):
             return {"message": "Invalid login"}, 401
 
 api.add_resource(Login, '/login', methods=['GET','POST'])
+
+@app.route("/currentuserpy", methods=["GET"])
+def get():
+    if current_user:
+        user_data = {
+            "email": "current_user.email",
+            "first_name": "current_user.first_name",
+            "last_name": "current_user.last_name",
+            # "password": "current_user.hash_password"
+        }
+
+        response = jsonify(message="Simple server is running")
+        response = jsonify()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    try:
+        if current_user:
+            logout_user()
+            session.clear()
+
+            return make_response({}, 204)
+        else:
+            return make_response({"message": "Not logged in"}, 400)
+    except Exception as e:
+        return make_response({"error": str(e)}, 500) 
 
 
 class CheckSession(Resource):

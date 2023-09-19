@@ -9,18 +9,19 @@ function Profile({ currentUser, currentUserData }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch("http://localhost:5555/currentUserPy", {
+        const response = await fetch("http://localhost:5555/currentuserpy", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
         });
 
         if (response.ok) {
           const data = await response.json();
           setUser(data);
-        } else if (response.status === 401) {
+          console.log(data);
+          console.log(user);
+        } else if (response.status == 401) {
           history.push("/login");
         } else {
           throw new Error("Failed to fetch user data");

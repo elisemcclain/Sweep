@@ -29,7 +29,7 @@ const Login = ({ users, currentUser, setCurrentUser }) => {
       if (response.ok) {
         const data = await response.json();
         setCurrentUser(currentUser);
-        history.push("/profile");
+        history.push(`/profile/{first_name}`);
         console.log("yay");
       } else {
         console.error("Login failed. Please check the prob.");

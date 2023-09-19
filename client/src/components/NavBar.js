@@ -15,9 +15,9 @@ function NavBar({ currentUser, setCurrentUser }) {
     <div>
       <nav className="navbar navbar-expand-sm">
         <div className="container">
-          <div>
+          {/* <div>
             <img className="magnify" src="./magnify.png" alt="Sweep-logo" />
-          </div>
+          </div> */}
           <ul className="navbar-brand mb-0 h1">
             <Link to="/" className="d-inline-block align-top" width="140">
               SWEEP
@@ -65,7 +65,7 @@ function NavBar({ currentUser, setCurrentUser }) {
                   </li>
                   <li className="nav-item active">
                     <Link
-                      to={`/profile/${currentUser.first_name}`}
+                      to={`profile/{first_name}`}
                       type="button"
                       className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
                     >
