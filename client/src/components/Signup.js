@@ -56,7 +56,7 @@ const Signup = ({
         console.log(currentUserData.first_name);
         console.log(currentUserData);
         history.push(`/profile/${values.first_name}`);
-        alert("User registered successfully!!!!");
+        console.log("User registered successfully!!");
       } else {
         const responseData = await response.json();
         if (responseData.error) {
