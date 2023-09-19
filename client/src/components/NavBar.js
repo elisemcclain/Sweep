@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Styles from "./Styles.css";
 
-function NavBar({ currentUser, setCurrentUser }) {
+function NavBar() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {

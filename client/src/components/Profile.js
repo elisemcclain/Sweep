@@ -9,7 +9,7 @@ function Profile({ currentUser, currentUserData }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await fetch("http://localhost:5555/currentuserpy", {
+        const response = await fetch("http://127.0.0.1:5555/currentuserpy", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -20,7 +20,7 @@ function Profile({ currentUser, currentUserData }) {
           const data = await response.json();
           setUser(data);
           console.log(data);
-          console.log(user);
+          console.log(user.first_name);
         } else if (response.status == 401) {
           history.push("/login");
         } else {
@@ -58,9 +58,7 @@ function Profile({ currentUser, currentUserData }) {
     <div className="profile-container">
       <h1>hi</h1>
       <div>
-        <h2>
-          {/* Welcome, {currentUserData.first_name} {currentUserData.last_name} */}
-        </h2>
+        <h2>{/* Welcome, {user.first_name} {user.last_name} */}</h2>
         {/* <p>Email: {currentUserData.email}</p> */}
         <button onClick={handleEditProfile}>Edit Profile</button>
         <button onClick={handleLogout}>Logout</button>

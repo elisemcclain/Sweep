@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import Profile from "./Profile";
+import { UserContext } from "./UserContext";
 
-const Signup = ({
-  handleAddUser,
-  currentUser,
-  setCurrentUser,
-  handleLogin,
-}) => {
+const Signup = ({ handleAddUser, handleLogin }) => {
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
     first_name: Yup.string().required("First name is required").max(20),
@@ -50,11 +48,12 @@ const Signup = ({
       });
 
       if (response.status === 201) {
-        const currentUserData = await response.json();
-        handleAddUser(currentUserData);
-        setCurrentUser(currentUserData);
-        console.log(currentUserData.first_name);
-        console.log(currentUserData);
+        const data = await response.json();
+        handleAddUser(data);
+        setCurrentUser(currentUser);
+        console.log(data.first_name);
+        console.log(data);
+
         history.push(`/profile/${values.first_name}`);
         console.log("User registered successfully!!");
       } else {
@@ -72,7 +71,7 @@ const Signup = ({
     }
   };
 
-  function handleReturn() {
+  function handleSwitch() {
     history.push("/login");
   }
 
@@ -84,6 +83,8 @@ const Signup = ({
             <div className="row d-flex justify-content-center">
               <div className="col-lg-8">
                 <h2 className="fw-bold mb-5">Create Account</h2>
+                <pre>{JSON.stringify(currentUser, null, 2)}</pre>
+                <button onClick={() => setCurrentUser()}>hi</button>
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
@@ -179,7 +180,7 @@ const Signup = ({
                 <button
                   type="submit"
                   className="btn btn-primary btn-block mb-4"
-                  onClick={handleReturn}
+                  onClick={handleSwitch}
                 >
                   Back to login
                 </button>

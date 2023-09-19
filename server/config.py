@@ -13,7 +13,7 @@ from sqlalchemy import MetaData
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SECRET_KEY"] = "my super secret key"
+app.config["SECRET_KEY"] = "my_super_secret_key"
 app.json.compact = False
 
 # Define metadata, instantiate db
@@ -27,18 +27,7 @@ db.init_app(app)
 # Instantiate REST API
 api = Api(app)
 
-# Instantiate CORS
-CORS(
-    app,
-    resources={
-        r"/currentUserPy": {"origins":"http://localhost:3000"},
-        r"/logout": {"origins":"http://localhost:3000"},
-        r"/login": {"origins":"http://localhost:3000"},
-        r"/signup": {"origins":"http://localhost:3000"},
-        r"/check_session": {"origins":"http://localhost:3000"},
-        r"/users": {"origins":"http://localhost:3000"}
-        },
-        supports_credentials=True)
+
 
 
 

@@ -17,7 +17,10 @@ from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS, cross_origin
 
+# Instantiate CORS
+CORS(app, supports_credentials=True)
 
 bcrypt = Bcrypt(app)
 
@@ -89,22 +92,30 @@ class Login(Resource):
         else:
             return {"message": "Invalid login"}, 401
 
-api.add_resource(Login, '/login', methods=['GET','POST'])
+api.add_resource(Login, '/login', methods=['POST'])
+
+
 
 @app.route("/currentuserpy", methods=["GET"])
 def get():
-    if current_user:
-        user_data = {
-            "email": "current_user.email",
-            "first_name": "current_user.first_name",
-            "last_name": "current_user.last_name",
-            # "password": "current_user.hash_password"
-        }
-
-        response = jsonify(message="Simple server is running")
-        response = jsonify()
+    if current_user.is_authenticated:
+        user_data={'id': current_user.id, 'first_name': current_user.first_name}
+        print(user_data)
+        response = jsonify(user_data)
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    else:
+        return make_response({"message": "User not logged in"}, 401)
+
+
+# @app.route('/dashboard', methods=['GET'])
+# def dashboard_api():
+#     dashboard_data = {
+#         "message": "This is your dashboard data.",
+#         "user_id": current_user.id,
+#         "first_name": current_user.first_name,
+#     }
+#     return jsonify(dashboard_data)
 
 @app.route('/logout', methods=['POST'])
 def logout():

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
 
 import Home from "./Home";
@@ -10,14 +10,19 @@ import Profile from "./Profile";
 import Signup from "./Signup";
 import Styles from "./Styles.css";
 import { Map } from "@googlemaps/react-wrapper";
+import { UserContext } from "./UserContext";
 
 function App() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const providerValue = useMemo(
+    () => ({ currentUser, setCurrentUser }),
+    [currentUser, setCurrentUser]
+  );
   const history = useHistory();
 
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch("http://127.0.0.1:5555/users")
       .then((r) => r.json())
       .then((userArray) => {
         setUsers(userArray);
@@ -39,43 +44,28 @@ function App() {
   return (
     <BrowserRouter>
       <main>
-        <NavBar currentUser={currentUser} />
         <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/login">
-            <Login
-              users={users}
-              currentUser={currentUser}
-              setCurrentUser={setCurrentUser}
-            />
-          </Route>
-          <Route exact path="/signup">
-            <Signup
-              users={users}
-              handleAddUser={handleAddUser}
-              // handleSignup={handleSignup}
-              handleLogin={handleLogin}
-              currentUser={currentUser}
-              setCurrentUser={setCurrentUser}
-            />
-          </Route>
-          <Route exact path="/crimemap">
-            <CrimeMap />
-          </Route>
-          <Route exact path="/profile/:first_name">
-            <Profile
-              users={users}
-              // setUsers={setUsers}
-              currentUser={currentUser}
-              // setCurrentUser={setCurrentUser}
-              // handleChangeUser={handleChangeUser}
-            />
-          </Route>
-          <Route exact path="/crimereport">
-            <CrimeForm />
-          </Route>
+          <UserContext.Provider value={{ providerValue }}>
+            <NavBar />
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/login">
+              <Login users={users} />
+            </Route>
+            <Route exact path="/signup">
+              <Signup handleAddUser={handleAddUser} handleLogin={handleLogin} />
+            </Route>
+            <Route exact path="/crimemap">
+              <CrimeMap />
+            </Route>
+            <Route exact path="/profile/:first_name">
+              <Profile />
+            </Route>
+            <Route exact path="/crimereport">
+              <CrimeForm />
+            </Route>
+          </UserContext.Provider>
         </Switch>
       </main>
     </BrowserRouter>

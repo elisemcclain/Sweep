@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
+import { UserContext } from "./UserContext";
+import Signup from "./Signup";
 
-const Login = ({ users, currentUser, setCurrentUser }) => {
+const Login = ({ users }) => {
   const history = useHistory();
+  const { currentUser, setCurrentUser } = useContext(UserContext);
 
   const initialValues = {
     email: "",
@@ -18,8 +21,9 @@ const Login = ({ users, currentUser, setCurrentUser }) => {
 
   const onSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("http://127.0.0.1:5555/login", {
         method: "POST",
+        // credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -29,7 +33,7 @@ const Login = ({ users, currentUser, setCurrentUser }) => {
       if (response.ok) {
         const data = await response.json();
         setCurrentUser(currentUser);
-        history.push(`/profile/{first_name}`);
+        history.push(`/profile/${data.first_name}`);
         console.log("yay");
       } else {
         console.error("Login failed. Please check the prob.");
@@ -41,9 +45,22 @@ const Login = ({ users, currentUser, setCurrentUser }) => {
     }
   };
 
+  function handleChange() {
+    history.push("/signup");
+  }
+
   return (
     <div>
       <h2>Login</h2>
+      <pre>{JSON.stringify(currentUser, null, 2)}</pre>
+      <button
+        onClick={async () => {
+          const currentUser = await Signup();
+          setCurrentUser(currentUser);
+        }}
+      >
+        hi
+      </button>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -66,7 +83,9 @@ const Login = ({ users, currentUser, setCurrentUser }) => {
         </Form>
       </Formik>
       <div>
-        <button type="submit">Signup</button>
+        <button onClick={handleChange} type="submit">
+          Signup
+        </button>
       </div>
     </div>
   );
