@@ -1,38 +1,31 @@
-import React, { Component } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import React from "react";
+import { useMemo } from "react";
 
-class CrimeMap extends Component {
-  componentDidMount() {
-    const L = require("leaflet");
-    require("leaflet-control-geocoder");
-    const map = L.map("map").setView([40.7128, -74.006], 11);
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 
-    L.tileLayer(
-      "https://{s}-tiles.locationiq.com/v2/obk/r/{z}/{x}/{y}.png?key=pk.1d5ad7de00e718309607920a131efa94"
-    ).addTo(map);
+const CrimeMap = () => {
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
+  });
 
-    const geocoder = L.Control.geocoder({
-      apiKey: "pk.1d5ad7de00e718309607920a131efa94",
-    });
-    geocoder.addTo(map);
-  }
+  const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
 
-  render() {
-    return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-8">
-            <div
-              className="leaf-map"
-              id="map"
-              style={{ height: "400px" }}
-            ></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="App">
+      {!isLoaded ? (
+        <h1>Loading...</h1>
+      ) : (
+        <GoogleMap
+          mapContainerClassName="map-container"
+          center={center}
+          zoom={10}
+        >
+          <Marker position={{ lat: 18.52043, lng: 73.856743 }} />
+        </GoogleMap>
+      )}
+    </div>
+  );
+};
 
 export default CrimeMap;
 

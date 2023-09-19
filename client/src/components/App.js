@@ -9,6 +9,7 @@ import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
 import Styles from "./Styles.css";
+import { Map } from "@googlemaps/react-wrapper";
 
 function App() {
   const [users, setUsers] = useState([]);
