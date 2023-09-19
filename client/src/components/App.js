@@ -8,6 +8,7 @@ import CrimeMap from "./CrimeMap";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
+import Styles from "./Styles.css";
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -15,11 +16,10 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch("http://localhost:3000//users")
+    fetch("http://localhost:3000/users")
       .then((r) => r.json())
       .then((userArray) => {
         setUsers(userArray);
-        console.log(users);
       });
   }, []);
 

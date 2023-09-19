@@ -13,7 +13,7 @@ function EditProfile({ currentUser }) {
   const history = useHistory();
 
   useEffect(() => {
-    fetch("/users/<int:id>", {
+    fetch("http://localhost:5555/currentUserPy", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

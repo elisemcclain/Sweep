@@ -13,15 +13,20 @@ function Home() {
 
   return (
     <div>
-      <div>
-        <p>Keep yourself informed of what crime is happening around you.</p>
+      <div className="description">
+        <h2>Keep yourself informed of what crime is happening around you.</h2>
       </div>
-      <div className="enter">
-        <button className="btn btn-primary" onClick={handleClick}>
-          Click to create account
+      <div className="btn-top">
+        <button
+          onClick={handleClick}
+          className="btn-start btn-outline-secondary btn-lg"
+        >
+          Click here to get started.
         </button>
+        <div className="world">
+          <img className="world-main" src={"/world.png"} alt="world-logo" />
+        </div>
       </div>
-      <br />
     </div>
   );
 }

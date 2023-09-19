@@ -60,12 +60,8 @@ if __name__ == '__main__':
 # calendar dropdown
 # react datepicker
 
-# can't login
 # can't patch changes to profile if account created
 # can't logout
-# get error when create account:
-#       pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
-#       AttributeError: 'Bcrypt' object has no attribute 'hashpw'
 
 # goals:
     #  see crime activity on map
@@ -73,3 +69,5 @@ if __name__ == '__main__':
     #  login, logout, create account, delete account, edit account
     #  5 routes: home, profile, login, map, crimereport - DONE
     #  use useContext or Redux
+
+    # can't do fucking shit without current_user being set on login

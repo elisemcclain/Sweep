@@ -43,14 +43,19 @@ class CurrentUserPy(Resource):
 
 api.add_resource(CurrentUserPy, '/currentUserPy')
 
-class Logout(Resource):
-    @login_required
-    def delete(self):
+@app.route('/logout', methods=['GET', 'DELETE', 'OPTIONS', 'POST'])
+@login_required
+def logout():
+    try:
+        if current_user.is_authenticated:
+            logout_user()
+            session.clear()
 
-        session['user_id'] = None
-        return {}, 204
-
-api.add_resource(Logout, '/logout')
+            return make_response({}, 204)
+        else:
+            return make_response({"message": "Not logged in"}, 400)
+    except Exception as e:
+        return make_response({"error": str(e)}, 500) 
 
 
 class Login(Resource):

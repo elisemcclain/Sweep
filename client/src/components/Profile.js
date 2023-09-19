@@ -39,9 +39,8 @@ function Profile({ currentUser, currentUserData }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5555/logout", {
-        method: "DELETE",
-        credentials: "include",
+      const response = await fetch(`http://localhost:5555/logout`, {
+        method: "POST",
       });
 
       if (response.status === 204) {

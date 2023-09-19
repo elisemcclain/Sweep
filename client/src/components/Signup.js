@@ -72,47 +72,122 @@ const Signup = ({
     }
   };
 
+  function handleReturn() {
+    history.push("/login");
+  }
+
   return (
     <div>
-      <h2>Sign Up</h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {() => (
-          <Form>
-            <div>
-              <label>Email:</label>
-              <Field type="email" name="email" />
-              <ErrorMessage name="email" component="div" />
+      <section className="text-center">
+        <div className="card mx-4 mx-md-5 shadow-5-strong">
+          <div className="card-body py-5 px-md-5">
+            <div className="row d-flex justify-content-center">
+              <div className="col-lg-8">
+                <h2 className="fw-bold mb-5">Create Account</h2>
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
+                >
+                  {() => (
+                    <Form>
+                      <div className="row">
+                        <div className="col-md-6 mb-4">
+                          <div className="form-outline">
+                            <Field
+                              type="text"
+                              id="form3Example1"
+                              name="first_name"
+                              className="form-control"
+                              placeholder="First name"
+                            />
+                            <label
+                              className="form-label"
+                              htmlFor="form3Example1"
+                            >
+                              First name
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-4">
+                          <div className="form-outline">
+                            <Field
+                              type="text"
+                              id="form3Example2"
+                              name="last_name"
+                              className="form-control"
+                              placeholder="Last name"
+                            />
+                            <label
+                              className="form-label"
+                              htmlFor="form3Example2"
+                            >
+                              Last name
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <Field
+                          type="address"
+                          id="form3Example3"
+                          name="address"
+                          className="form-control"
+                          placeholder="Address"
+                        />
+                        <label className="form-label" htmlFor="form3Example3">
+                          Address
+                        </label>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <Field
+                          type="email"
+                          id="form3Example3"
+                          name="email"
+                          className="form-control"
+                          placeholder="Email"
+                        />
+                        <label className="form-label" htmlFor="form3Example3">
+                          Email
+                        </label>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <Field
+                          type="password"
+                          id="form3Example4"
+                          name="password"
+                          className="form-control"
+                          placeholder="Password"
+                        />
+                        <label className="form-label" htmlFor="form3Example4">
+                          Password
+                        </label>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-block mb-4"
+                      >
+                        Sign up
+                      </button>
+                    </Form>
+                  )}
+                </Formik>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-block mb-4"
+                  onClick={handleReturn}
+                >
+                  Back to login
+                </button>
+              </div>
             </div>
-            <div>
-              <label>First Name:</label>
-              <Field type="first_name" name="first_name" />
-              <ErrorMessage name="first_name" component="div" />
-            </div>
-            <div>
-              <label>Last Name:</label>
-              <Field type="last_name" name="last_name" />
-              <ErrorMessage name="last_name" component="div" />
-            </div>
-            <div>
-              <label>Address:</label>
-              <Field type="address" name="address" />
-              <ErrorMessage name="address" component="div" />
-            </div>
-            <div>
-              <label>Password:</label>
-              <Field type="password" name="password" />
-              <ErrorMessage name="password" component="div" />
-            </div>
-            <div>
-              <button type="submit">Sign Up</button>
-            </div>
-          </Form>
-        )}
-      </Formik>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

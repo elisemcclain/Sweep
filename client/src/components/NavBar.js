@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import Styles from "./Styles.css";
 
 function NavBar({ currentUser, setCurrentUser }) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -12,8 +13,11 @@ function NavBar({ currentUser, setCurrentUser }) {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
+      <nav className="navbar navbar-expand-sm">
         <div className="container">
+          <div>
+            <img className="magnify" src="./magnify.png" alt="Sweep-logo" />
+          </div>
           <ul className="navbar-brand mb-0 h1">
             <Link to="/" className="d-inline-block align-top" width="140">
               SWEEP
@@ -37,38 +41,6 @@ function NavBar({ currentUser, setCurrentUser }) {
                   HOME
                 </Link>
               </ul>
-              {loggedIn ? (
-                <>
-                  <li className="nav-item active">
-                    <Link
-                      to={`/profile/${currentUser.first_name}`}
-                      // className="nav-link"
-                      type="button"
-                      className="btn btn-primary btn-block active btn btn-primarybtn-sm m1-2"
-                    >
-                      PROFILE
-                    </Link>
-                  </li>
-                  <li className="nav-item active">
-                    <Link to="/crimereport" className="nav-link">
-                      REPORT A CRIME
-                    </Link>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li className="nav-item active">
-                    <Link
-                      to="/login"
-                      // className="nav-link"
-                      type="button"
-                      className="btn btn-primary btn-block active btn btn-primarybtn-sm m1-2"
-                    >
-                      LOGIN
-                    </Link>
-                  </li>
-                </>
-              )}
               <li className="nav-item active">
                 <Link to="/crimemap" className="nav-link">
                   MAP
@@ -84,6 +56,36 @@ function NavBar({ currentUser, setCurrentUser }) {
                   HELP
                 </a>
               </li>
+              {loggedIn ? (
+                <>
+                  <li className="nav-item active">
+                    <Link to="/crimereport" className="nav-link">
+                      REPORT A CRIME
+                    </Link>
+                  </li>
+                  <li className="nav-item active">
+                    <Link
+                      to={`/profile/${currentUser.first_name}`}
+                      type="button"
+                      className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
+                    >
+                      PROFILE
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item active">
+                    <Link
+                      to="/login"
+                      type="button"
+                      className="btn-custom btn-block active btn btn-primarybtn-sm m1-2"
+                    >
+                      LOGIN
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
