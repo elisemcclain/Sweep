@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
 
 import Home from "./Home";
 import Login from "./Login";
@@ -12,46 +12,52 @@ import Signup from "./Signup";
 function App() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
-    fetch("http://localhost:5555/users")
+    fetch("http://localhost:3000//users")
       .then((r) => r.json())
       .then((userArray) => {
         setUsers(userArray);
-        console.log({ users, userArray });
+        console.log(users);
       });
   }, []);
+
+  const handleAddUser = (newUser) => {
+    const updatedUserArray = [...users, newUser];
+    setUsers(updatedUserArray);
+    setCurrentUser(newUser);
+    console.log({ updatedUserArray });
+  };
 
   const handleLogin = (user) => {
     console.log(user);
     setCurrentUser(user);
   };
 
-  const handleAddUser = (newUser) => {
-    const updatedUserArray = [...users, newUser];
-    setUsers(updatedUserArray);
-    setCurrentUser(newUser);
-  };
-
   return (
     <BrowserRouter>
       <main>
-        <NavBar currentUser={currentUser} setCurrentUser={setCurrentUser} />
+        <NavBar currentUser={currentUser} />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route exact path="/login">
-            <Login users={users} handleLogin={handleLogin} />
+            <Login
+              users={users}
+              currentUser={currentUser}
+              setCurrentUser={setCurrentUser}
+            />
           </Route>
           <Route exact path="/signup">
             <Signup
               users={users}
               handleAddUser={handleAddUser}
               // handleSignup={handleSignup}
-              // handleLogin={handleLogin}
+              handleLogin={handleLogin}
               currentUser={currentUser}
-              // setCurrentUser={setCurrentUser}
+              setCurrentUser={setCurrentUser}
             />
           </Route>
           <Route exact path="/crimemap">
@@ -60,9 +66,9 @@ function App() {
           <Route exact path="/profile/:first_name">
             <Profile
               users={users}
-              setUsers={setUsers}
+              // setUsers={setUsers}
               currentUser={currentUser}
-              setCurrentUser={setCurrentUser}
+              // setCurrentUser={setCurrentUser}
               // handleChangeUser={handleChangeUser}
             />
           </Route>

@@ -28,7 +28,18 @@ db.init_app(app)
 api = Api(app)
 
 # Instantiate CORS
-CORS(app)
+CORS(
+    app,
+    resources={
+        r"/currentUserPy": {"origins":"http://localhost:3000"},
+        r"/logout": {"origins":"http://localhost:3000"},
+        r"/login": {"origins":"http://localhost:3000"},
+        r"/signup": {"origins":"http://localhost:3000"},
+        r"/check_session": {"origins":"http://localhost:3000"},
+        r"/users": {"origins":"http://localhost:3000"}
+        },
+        supports_credentials=True)
+
 
 
 

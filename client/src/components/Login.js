@@ -1,76 +1,75 @@
-// login.js
-
-import React, { useEffect, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import React from "react";
+import { useFormik, Form, } from "formik";
+import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
-import * as yup from "yup";
 
-// const Login = ({ users, handleAddUser, handleLogin }) => {
-//   const [loginType, setLoginType] = useState(false);
-const Login = () => {
-  const initialValues = {
-    email: "",
-    password: "",
-  };
-
-  const validationSchema = yup.object().shape({
-    email: yup.string().email("Invalid email address").required("Required"),
-    password: yup.string().required("Required"),
-  });
-
+const Login = ({ users, currentUser, setCurrentUser }) => {
   const history = useHistory();
 
-  const onSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      if (response.ok) {
-        // Handle successful login
-      } else {
-        // Handle login failure, e.g., show an error message
-      }
-    } catch (error) {
-      // Handle network or other errors
-    } finally {
-      setSubmitting(false);
-    }
+  const handleLogin = (user) => {
+    setCurrentUser(users);
+    history.push(`/profile/${user.first_name}`);
   };
 
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string().required("Password is required"),
+    }),
+    onSubmit: (values) => {
+      handleLogin(values);
+      setCurrentUser(currentUser);
+    },
+  });
+
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        <Form>
-          <div>
-            <label>Email:</label>
-            <Field type="email" name="email" />
-            <ErrorMessage name="email" component="div" />
-          </div>
-          <div>
-            <label>Password:</label>
-            <Field type="password" name="password" />
-            <ErrorMessage name="password" component="div" />
-          </div>
-          <div>
-            <button type="submit">Login</button>
-          </div>
-        </Form>
-      </Formik>
-      <div>
-        <button type="submit" onClick={history.push("/signup")}>
-          Signup
+      <form onSubmit={formik.handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            {...formik.getFieldProps("email")}
+            className={`form-control ${
+              formik.touched.email && formik.errors.email ? "is-invalid" : ""
+            }`}
+            placeholder="Enter your email"
+          />
+          {formik.touched.email && formik.errors.email && (
+            <div className="invalid-feedback">{formik.errors.email}</div>
+          )}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            {...formik.getFieldProps("password")}
+            className={`form-control ${
+              formik.touched.password && formik.errors.password
+                ? "is-invalid"
+                : ""
+            }`}
+            placeholder="Enter your password"
+          />
+          {formik.touched.password && formik.errors.password && (
+            <div className="invalid-feedback">{formik.errors.password}</div>
+          )}
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Login
         </button>
-      </div>
+      </form>
     </div>
   );
 };

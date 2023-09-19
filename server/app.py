@@ -37,9 +37,9 @@ class CurrentUserPy(Resource):
     def get(self):
         user = current_user
         if user:
-            return make_response(user.to_dict(), 201)
+            return make_response(user.to_dict(rules=('-locations', '-crimecategories', '-crimes',)), 201)
         else:
-            return make_response({"message": "not found"}, 404)
+            return make_response({"message": "plz login"}, 404)
 
 api.add_resource(CurrentUserPy, '/currentUserPy')
 
@@ -266,31 +266,3 @@ if __name__ == '__main__':
 
 
 
-
-
-
-#     class Users(Resource):
-#     def get(self):
-#         users = [user.to_dict() for user in User.query.all()]
-
-#         return make_response(users, 200)
-
-#     def post(self):
-#         new_user = User()
-#         data = request.get_json()
-    
-#         try:
-#             for key in data:
-#                 setattr(new_user, key, data[key])
-
-#             new_user.password_hash = bcrypt.generate_password_hash(data['password_hash']).decode('utf-8')
-
-#             db.session.add(new_user)
-#             db.session.commit()
-
-#             return make_response(jsonify(new_user.to_dict()), 201)
-        
-#         except ValueError as e:
-#             return make_response(jsonify({'error': str(e)}), 400)
-
-# api.add_resource(Users, '/users')

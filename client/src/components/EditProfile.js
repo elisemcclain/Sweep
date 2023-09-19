@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-function EditProfile() {
+function EditProfile({ currentUser }) {
   const [formData, setFormData] = useState({
     email: "",
     first_name: "",
@@ -13,7 +13,7 @@ function EditProfile() {
   const history = useHistory();
 
   useEffect(() => {
-    fetch("/currentUser", {
+    fetch("/users/<int:id>", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,8 +52,7 @@ function EditProfile() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Send a PUT request to update the user's profile
-    fetch("/updateProfile", {
+    fetch("/users/<int:id>", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
