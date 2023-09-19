@@ -1,14 +1,12 @@
 import React from "react";
-import { useMemo } from "react";
-
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript } from "@react-google-maps/api";
 
 const CrimeMap = () => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY || "",
+    googleMapsApiKey: process.env.AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo || "",
   });
 
-  const center = useMemo(() => ({ lat: 18.52043, lng: 73.856743 }), []);
+  const center = { lat: 18.52043, lng: 73.856743 };
 
   return (
     <div className="App">
@@ -16,12 +14,13 @@ const CrimeMap = () => {
         <h1>Loading...</h1>
       ) : (
         <GoogleMap
-          mapContainerClassName="map-container"
+          mapContainerStyle={{
+            width: "100%",
+            height: "400px",
+          }}
           center={center}
           zoom={10}
-        >
-          <Marker position={{ lat: 18.52043, lng: 73.856743 }} />
-        </GoogleMap>
+        ></GoogleMap>
       )}
     </div>
   );

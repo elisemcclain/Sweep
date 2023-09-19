@@ -16,6 +16,8 @@ from wtforms.validators import DataRequired, Email, Length
 from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 bcrypt = Bcrypt(app)
 
@@ -33,21 +35,21 @@ def index():
     return ''
 
 class CurrentUserPy(Resource):
-    @login_required
     def get(self):
         user = current_user
         if user:
-            return make_response(user.to_dict(rules=('-locations', '-crimecategories', '-crimes',)), 201)
+            return make_response(user, 201)
         else:
             return make_response({"message": "plz login"}, 404)
 
-api.add_resource(CurrentUserPy, '/currentUserPy')
+api.add_resource(CurrentUserPy, '/currentUserPy', methods=['GET'])
+
 
 @app.route('/logout', methods=['GET', 'DELETE', 'OPTIONS', 'POST'])
 @login_required
 def logout():
     try:
-        if current_user.is_authenticated:
+        if current_user.authenticate():
             logout_user()
             session.clear()
 
@@ -58,20 +60,19 @@ def logout():
         return make_response({"error": str(e)}, 500) 
 
 
-class Login(Resource):
-    def post(self):
-        email = request.get_json()['email']
-        password = request.get_json()['password']
 
-        user = User.query.filter(User.email == email).first()
+    # def get(self):
+    #     user = User.query.filter_by(email=email).first()
 
-        if user and user.authenticate(_password_hash):
-            session['user_id'] = user.id
-            return user.to_dict(), 200
+    #     if not user:
+    #         return {'error': 'User not found'}, 404
 
-        return {'error': '401 Unauthorized'}, 401
+    #     if user and user.authenticate(_password_hash):
+    #         session['user_id'] = user.id
+    #         return user.to_dict(), 200
+        
+    #     return make_response(jsonify(user.to_dict()), 200)
 
-api.add_resource(Login, '/login')
 
 class Signup(Resource):
     def post(self):
@@ -115,6 +116,19 @@ class Signup(Resource):
         return new_user.to_dict(), 201
 
 api.add_resource(Signup, '/signup')
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        existing_user = User.query.filter_by(email=data['email']).first()
+
+        if existing_user and bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
+            session['user_id'] = existing_user.id
+            return existing_user.to_dict(), 201
+        else:
+            return {"message": "Invalid login"}, 401
+
+api.add_resource(Login, '/login', methods=['GET','POST'])
 
 
 class CheckSession(Resource):
