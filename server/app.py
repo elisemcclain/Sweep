@@ -100,7 +100,7 @@ def login():
     user = User.query.filter_by(email=email).first()
 
     if user and bcrypt.check_password_hash(user._password_hash, password):
-
+        session['user_id'] = user.id
         return jsonify({'token': 'your_generated_token'})
 
     return jsonify({'message': 'Invalid credentials'}), 401
