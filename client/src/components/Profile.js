@@ -6,34 +6,6 @@ function Profile() {
   const history = useHistory();
   const user = useUser();
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:5555/currentuserpy", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          user(data);
-          console.log(data);
-          console.log(user.first_name);
-        } else if (response.status == 401) {
-          history.push("/login");
-        } else {
-          throw new Error("Failed to fetch user data");
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, [history, user]);
-
   const handleEditProfile = () => {
     history.push("/edit-profile");
   };

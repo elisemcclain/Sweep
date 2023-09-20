@@ -30,10 +30,19 @@ function App() {
             if (!response.ok) {
               throw new Error("Request failed with status: " + response.status);
             }
-            return response.json();
+            return response.text();
           })
           .then((userData) => {
-            console.log(userData);
+            if (userData.trim() !== "") {
+              try {
+                const userDataJSON = JSON.parse(userData);
+                console.log(userDataJSON);
+              } catch (error) {
+                console.error("Error parsing JSON:", error);
+              }
+            } else {
+              console.log("No JSON data received from check_session");
+            }
           })
           .catch((error) => {
             console.error("Error checking session:", error);
