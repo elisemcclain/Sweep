@@ -6,10 +6,9 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Make a fetch request to get the current user data from your server
     fetch("http://127.0.0.1:5555/currentuserpy", {
       method: "GET",
-      credentials: "include", // Include credentials for CORS if needed
+      credentials: "include",
     })
       .then((response) => {
         if (response.ok) {
