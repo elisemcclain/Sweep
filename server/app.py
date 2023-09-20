@@ -91,29 +91,39 @@ class Signup(Resource):
 
 api.add_resource(Signup, '/signup')
 
-class Login(Resource):
-    def post(self):
-        data = request.get_json()
-        existing_user = User.query.filter_by(email=data['email']).one_or_none()
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
-        if not existing_user:
-            return make_response(jsonify({"message": "Invalid login"}), 401)
+    user = User.query.filter_by(email=email).first()
+
+    if user and bcrypt.check_password_hash(user._password_hash, password):
+
+        return jsonify({'token': 'your_generated_token'})
+
+    return jsonify({'message': 'Invalid credentials'}), 401
+
+
+
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         existing_user = User.query.filter_by(email=data['email']).one_or_none()
+
+#         if not existing_user:
+#             return make_response(jsonify({"message": "Invalid login"}), 401)
         
-        # bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
-        login_user(existing_user)
-        db.session['user_id'] = existing_user.id
-        db.session.commit()
-        return make_response(existing_user.to_dict(), 201)
+#         # bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
+#         login_user(existing_user)
+#         db.session['user_id'] = existing_user.id
+#         db.session.commit()
+#         return make_response(existing_user.to_dict(), 201)
 
-api.add_resource(Login, '/login', methods=['POST'])
+# api.add_resource(Login, '/login', methods=['POST'])
             
-# class UsersById(Resource):
-#     def get(self, id):
-#         user = User.query.filter_by(id=id).first()
-#         if not user:
-#             return make_response(jsonify({'error': 'User not found'}), 404)
-        
-#         return make_response(jsonify(user.to_dict()), 200)
+
 
 
 @app.route('/currentuserpy')

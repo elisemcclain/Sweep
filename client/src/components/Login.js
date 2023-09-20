@@ -30,7 +30,7 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
-      body: JSON.stringify({ userData }),
+      body: JSON.stringify(userData),
     }).then((response) => {
       if (response.ok) {
         setUserData(userData);

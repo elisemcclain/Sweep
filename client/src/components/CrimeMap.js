@@ -1,31 +1,40 @@
 import React from "react";
-import { GoogleMap, useLoadScript } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  useLoadScript,
+  Marker,
+} from "@react-google-maps/api";
 
 const CrimeMap = () => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo || "",
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo",
   });
 
-  const center = { lat: 18.52043, lng: 73.856743 };
+  if (!isLoaded) {
+    return "Loading...";
+  }
+
+  const center = { lat: 36.0822, lng: 94.1719 };
 
   return (
     <div className="App">
-      {!isLoaded ? (
-        <h1>Loading...</h1>
-      ) : (
+      {isLoaded ? (
         <GoogleMap
+          center={center}
           mapContainerStyle={{
             width: "100%",
             height: "400px",
           }}
-          center={center}
           zoom={10}
-        ></GoogleMap>
+        >
+          <Marker position={center} />
+        </GoogleMap>
+      ) : (
+        <h1>Loading...</h1>
       )}
     </div>
   );
 };
 
 export default CrimeMap;
-
-// AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo

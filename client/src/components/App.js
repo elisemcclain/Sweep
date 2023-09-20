@@ -47,16 +47,11 @@ function App() {
     console.log({ updatedUserArray });
   };
 
-  const handleLogin = (user) => {
-    console.log(user);
-    // You may not need setUser here, as the current user is managed by the UserProvider
-  };
-
   return (
     <BrowserRouter>
       <main>
+        <NavBar />
         <Switch>
-          {/* Remove NavBar from here */}
           <Route exact path="/">
             <Home />
           </Route>
@@ -64,7 +59,7 @@ function App() {
             <Login users={users} />
           </Route>
           <Route exact path="/signup">
-            <Signup handleAddUser={handleAddUser} handleLogin={handleLogin} />
+            <Signup handleAddUser={handleAddUser} />
           </Route>
           <Route exact path="/crimemap">
             <CrimeMap />
