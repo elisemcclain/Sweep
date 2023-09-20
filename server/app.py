@@ -225,7 +225,7 @@ api.add_resource(UsersById, '/users/<int:id>')
 
 class Locations(Resource):
     def get(self):
-        locations = [location.to_dict(rules=('-users',)) for location in Location.query.all()]
+        locations = [location.to_dict(rules=('-users','-crimes',)) for location in Location.query.all()]
 
         return make_response(locations, 200)
 
