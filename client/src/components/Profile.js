@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import Signup from "./Signup";
+import { UserProvider, useUser } from "./UserProvider";
 
-function Profile({ currentUser, currentUserData }) {
-  const [user, setUser] = useState(null);
+function Profile() {
   const history = useHistory();
+  const user = useUser();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -18,7 +18,7 @@ function Profile({ currentUser, currentUserData }) {
 
         if (response.ok) {
           const data = await response.json();
-          setUser(data);
+          user(data);
           console.log(data);
           console.log(user.first_name);
         } else if (response.status == 401) {
@@ -32,7 +32,7 @@ function Profile({ currentUser, currentUserData }) {
     };
 
     fetchCurrentUser();
-  }, [history]);
+  }, [history, user]);
 
   const handleEditProfile = () => {
     history.push("/edit-profile");

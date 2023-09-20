@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
+import { UserProvider } from "./components/UserProvider";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -13,7 +14,9 @@ const root = createRoot(container);
 
 root.render(
   <BrowserRouter>
-    <App />
+    <UserProvider>
+      <App />
+    </UserProvider>
   </BrowserRouter>
 );
 

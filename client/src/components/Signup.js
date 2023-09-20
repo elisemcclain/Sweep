@@ -3,10 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import Profile from "./Profile";
-import { UserContext } from "./UserContext";
+import { UserProvider } from "./UserProvider";
 
 const Signup = ({ handleAddUser, handleLogin }) => {
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const [user, setUser] = useContext(UserProvider);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
@@ -50,9 +50,9 @@ const Signup = ({ handleAddUser, handleLogin }) => {
       if (response.status === 201) {
         const data = await response.json();
         handleAddUser(data);
-        setCurrentUser(currentUser);
+        setUser(user);
         console.log(data.first_name);
-        console.log(data);
+        console.log(user);
 
         history.push(`/profile/${values.first_name}`);
         console.log("User registered successfully!!");
@@ -83,8 +83,8 @@ const Signup = ({ handleAddUser, handleLogin }) => {
             <div className="row d-flex justify-content-center">
               <div className="col-lg-8">
                 <h2 className="fw-bold mb-5">Create Account</h2>
-                <pre>{JSON.stringify(currentUser, null, 2)}</pre>
-                <button onClick={() => setCurrentUser()}>hi</button>
+                <pre>{JSON.stringify(user, null, 2)}</pre>
+                <button onClick={() => setUser()}>hi</button>
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}

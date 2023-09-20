@@ -18,6 +18,14 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
+from flask import Flask, session
+from flask_session import Session
+
+
+SECRET_KEY = "oifdjupoe8u-9cv8uaijf2i5u"
+SESSION_TYPE = 'filesystem'
+app.config.from_object(__name__)
+Session(app)
 
 # Instantiate CORS
 CORS(app, supports_credentials=True)
@@ -34,6 +42,8 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 @app.route('/')
+@cross_origin(supports_credentials=True)
+
 def index():
     return ''
 
@@ -84,45 +94,52 @@ api.add_resource(Signup, '/signup')
 class Login(Resource):
     def post(self):
         data = request.get_json()
-        existing_user = User.query.filter_by(email=data['email']).first()
+        existing_user = User.query.filter_by(email=data['email']).one_or_none()
 
-        if existing_user and bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
-            session['user_id'] = existing_user.id
-            return existing_user.to_dict(), 201
-        else:
-            return {"message": "Invalid login"}, 401
+        if not existing_user:
+            return make_response(jsonify({"message": "Invalid login"}), 401)
+        
+        # bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
+        login_user(existing_user)
+        db.session['user_id'] = existing_user.id
+        db.session.commit()
+        return make_response(existing_user.to_dict(), 201)
 
 api.add_resource(Login, '/login', methods=['POST'])
+            
+# class UsersById(Resource):
+#     def get(self, id):
+#         user = User.query.filter_by(id=id).first()
+#         if not user:
+#             return make_response(jsonify({'error': 'User not found'}), 404)
+        
+#         return make_response(jsonify(user.to_dict()), 200)
 
 
+@app.route('/currentuserpy')
+@cross_origin(supports_credentials=True)
+@login_required
+def current_user_data():
+        user = current_user
+        print("Current User:", user)
+        if user:
+            response = make_response(user.to_dict(), 200)
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response
+        else:
+            response = make_response({"message": "User not found"}, 404)
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response
 
-@app.route("/currentuserpy", methods=["GET"])
-def get():
-    if current_user.is_authenticated:
-        user_data={'id': current_user.id, 'first_name': current_user.first_name}
-        print(user_data)
-        response = jsonify(user_data)
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        return make_response({"message": "User not logged in"}, 401)
 
-
-# @app.route('/dashboard', methods=['GET'])
-# def dashboard_api():
-#     dashboard_data = {
-#         "message": "This is your dashboard data.",
-#         "user_id": current_user.id,
-#         "first_name": current_user.first_name,
-#     }
-#     return jsonify(dashboard_data)
 
 @app.route('/logout', methods=['POST'])
+@cross_origin(supports_credentials=True)
 def logout():
     try:
         if current_user:
             logout_user()
-            session.clear()
+            session.pop('user_id', None)
 
             return make_response({}, 204)
         else:

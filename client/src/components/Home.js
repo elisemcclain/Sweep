@@ -1,9 +1,12 @@
 import { useHistory } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useUser } from "./UserProvider"; // Import the useUser hook
 
 function Home() {
+  const user = useUser();
+
   const history = useHistory();
 
   function handleClick() {

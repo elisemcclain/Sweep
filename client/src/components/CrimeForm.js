@@ -3,7 +3,6 @@ import React, { useState } from "react";
 function CrimeForm() {
   const [crimeData, setCrimeData] = useState({
     name: "",
-    // crime_categories: "",
     desc: "",
     address: "",
     date: "",
