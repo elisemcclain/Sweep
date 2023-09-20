@@ -8,14 +8,11 @@ const Login = () => {
   const history = useHistory();
   const user = useUser();
 
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-  });
+  const [userData, setUserData] = useState([]);
 
   const initialValues = {
     email: "",
-    password: "",
+    // password: "",
   };
 
   const validationSchema = yup.object().shape({
@@ -23,7 +20,8 @@ const Login = () => {
     password: yup.string().required("Required"),
   });
 
-  const onSubmit = () => {
+  const onSubmit = (values) => {
+    setUserData({ email: values.email, password: values.password });
     fetch("http://127.0.0.1:5555/login", {
       method: "POST",
       credentials: "include",
@@ -34,7 +32,8 @@ const Login = () => {
     }).then((response) => {
       if (response.ok) {
         setUserData(userData);
-        history.push(`/profile/${user.first_name}`);
+        console.log(userData);
+        history.push(`/profile/${userData.first_name}`);
         console.log("yay");
       } else {
         console.error("Login failed. Please check the problem.");

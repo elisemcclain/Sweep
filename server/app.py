@@ -92,9 +92,12 @@ api.add_resource(Signup, '/signup')
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    email = data['email']
+    password = data['password']
+    first_name = data['first_name']
+    last_name = data['last_name']
 
+    all_users = User.query.all()
     user = User.query.filter_by(email=email).first()
 
     if user and bcrypt.check_password_hash(user._password_hash, password):
@@ -103,7 +106,45 @@ def login():
 
     return jsonify({'message': 'Invalid credentials'}), 401
 
+    # def post(self):
+    #     new_crime_rep = Crime()
+        
+    #     data = request.get_json()
+    #     crime_data = {}
+        
+    #     location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+        
+    #     if location:
+    #         location = location.__dict__
+    #         del location['_sa_instance_state'] 
+     
+        # else:
+        #     location = Location()
+    
+        #     location.address = data['address']
 
+        #     db.session.add(location)
+        #     db.session.commit()
+
+        #     location = location.to_dict()
+        #     # del location['_sa_instance_state']
+
+        # crime_data['name']=data['name']
+        # crime_data['desc']=data['desc']
+        # crime_data['location_id']=location['id']
+        # crime_data['date']=datetime.strptime(data['date'], '%Y-%m-%d').date()
+        
+        # try:
+        #     for key in crime_data:
+        #         setattr(new_crime_rep, key, crime_data[key])
+            
+        #     db.session.add(new_crime_rep)
+        #     db.session.commit()
+
+        #     return make_response(jsonify(new_crime_rep.to_dict()), 201)
+        
+        # except ValueError as e:
+        #     return make_response(jsonify({'error': str(e)}), 400)
 
 # class Login(Resource):
 #     def post(self):
@@ -120,25 +161,24 @@ def login():
 #         return make_response(existing_user.to_dict(), 201)
 
 # api.add_resource(Login, '/login', methods=['POST'])
-            
 
 
-
-@app.route('/currentuserpy')
+@app.route('/currentuserpy', methods=['GET'])
 @cross_origin(supports_credentials=True)
 @login_required
 def current_user_data():
-        user = current_user
-        print("Current User:", user)
+        users = User.query.all()
+        user = [{"id": user.id, "email": user.email, "first_name": user.first_name} for user in users]
+        # print("Current User:", user)
+        
         if user:
-            response = make_response(user.to_dict(), 200)
+            # response = make_response(user.to_dict(), 200)
             response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
+            jsonify({"users": user_data})
         else:
             response = make_response({"message": "User not found"}, 404)
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response
-
 
 
 @app.route('/logout', methods=['POST'])
