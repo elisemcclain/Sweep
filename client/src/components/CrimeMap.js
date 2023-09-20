@@ -43,7 +43,12 @@ const CrimeMap = () => {
         }}
         zoom={5}
       >
-        <Marker position={center} />
+        {addresses.map((location, index) => (
+          <Marker
+            key={index}
+            position={{ lat: location.lat, lng: location.lng }}
+          />
+        ))}
       </GoogleMap>
     </div>
   );
