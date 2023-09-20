@@ -89,78 +89,39 @@ class Signup(Resource):
 
 api.add_resource(Signup, '/signup')
 
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    email = data['email']
-    password = data['password']
-    first_name = data['first_name']
-    last_name = data['last_name']
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     data = request.get_json()
+#     email = data['email']
+#     password = data['password']
+#     first_name = data['first_name']
+#     last_name = data['last_name']
 
-    all_users = User.query.all()
-    user = User.query.filter_by(email=email).first()
+#     all_users = User.query.all()
+#     user = User.query.filter_by(email=email).first()
 
-    if user and bcrypt.check_password_hash(user._password_hash, password):
-        session['user_id'] = user.id
-        return jsonify({'token': 'your_generated_token'})
+#     if user and bcrypt.check_password_hash(user._password_hash, password):
+#         session['user_id'] = user.id
+#         return jsonify({'token': 'your_generated_token'})
 
-    return jsonify({'message': 'Invalid credentials'}), 401
+#     return jsonify({'message': 'Invalid credentials'}), 401
 
-    # def post(self):
-    #     new_crime_rep = Crime()
-        
-    #     data = request.get_json()
-    #     crime_data = {}
-        
-    #     location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
-        
-    #     if location:
-    #         location = location.__dict__
-    #         del location['_sa_instance_state'] 
-     
-        # else:
-        #     location = Location()
-    
-        #     location.address = data['address']
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
 
-        #     db.session.add(location)
-        #     db.session.commit()
+        if 'email' not in data:
+            return make_response({"message": "Invalid request data"}, 400)
 
-        #     location = location.to_dict()
-        #     # del location['_sa_instance_state']
+        user = User.query.filter_by(email=data['email']).first()
 
-        # crime_data['name']=data['name']
-        # crime_data['desc']=data['desc']
-        # crime_data['location_id']=location['id']
-        # crime_data['date']=datetime.strptime(data['date'], '%Y-%m-%d').date()
-        
-        # try:
-        #     for key in crime_data:
-        #         setattr(new_crime_rep, key, crime_data[key])
-            
-        #     db.session.add(new_crime_rep)
-        #     db.session.commit()
+        if not bcrypt.check_password_hash(user._password_hash.encode('utf-8'), data['password']):
+            return make_response({"message": "Invalid login"}, 401)
 
-        #     return make_response(jsonify(new_crime_rep.to_dict()), 201)
-        
-        # except ValueError as e:
-        #     return make_response(jsonify({'error': str(e)}), 400)
+        login_user(user, remember=True)
+        return "You're logged in!", 200
 
-# class Login(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         existing_user = User.query.filter_by(email=data['email']).one_or_none()
-
-#         if not existing_user:
-#             return make_response(jsonify({"message": "Invalid login"}), 401)
-        
-#         # bcrypt.check_password_hash(existing_user._password_hash, data['password'].encode('utf-8')):
-#         login_user(existing_user)
-#         db.session['user_id'] = existing_user.id
-#         db.session.commit()
-#         return make_response(existing_user.to_dict(), 201)
-
-# api.add_resource(Login, '/login', methods=['POST'])
+api.add_resource(Login, '/login', methods=['POST'])
 
 
 @app.route('/currentuserpy', methods=['GET'])

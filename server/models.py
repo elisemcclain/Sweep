@@ -19,11 +19,18 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     _password_hash = db.Column(db.String(128))
+    is_active = db.Column(db.Boolean, nullable=True)
     #add created at
     #adad unique key for email
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
     serialize_rules = ('-location', '-crimecategory',)
+
+    def get_id(self):
+        return str(self.id)
+
+    def is_active(self):
+        return self.is_active
 
     @hybrid_property
     def password(self):
