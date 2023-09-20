@@ -2,7 +2,7 @@
 
 # Remote library imports
 import json
-from flask import request, Flask, jsonify, make_response, request, abort, render_template, flash, request, redirect, url_for, session
+from flask import request, Flask, jsonify, make_response, request, abort, flash, request, redirect, url_for, session
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 
@@ -10,7 +10,6 @@ from flask_restful import Resource, Api
 from config import app, db, api
 from models import User, Location, Crime, CrimeCategory
 from datetime import datetime
-from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from webforms import LoginForm, PasswordForm, RegistrationForm
@@ -18,7 +17,6 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
-from flask import Flask, session
 from flask_session import Session
 
 

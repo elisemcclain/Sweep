@@ -49,8 +49,7 @@ const Signup = ({ handleAddUser, handleLogin }) => {
 
       if (response.status === 201) {
         const data = await response.json();
-        localStorage.setItem("userToken", data.token);
-
+        console.log(data);
         console.log(user);
 
         history.push(`/profile/${data.first_name}`);
