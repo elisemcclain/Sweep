@@ -14,10 +14,11 @@ function Profile() {
     try {
       const response = await fetch(`http://localhost:5555/logout`, {
         method: "POST",
+        credentials: "include",
       });
 
       if (response.status === 204) {
-        history.push("/login");
+        history.push("/");
       } else {
         console.error("Logout failed:", response.statusText);
       }

@@ -97,22 +97,22 @@ class Login(Resource):
         user = User.query.filter(User.email==data['email']).first()
 
         if not user:
-            return make_response({"message": "Invalid request data"}, 400)
+            return make_response({"message": "user not found"}, 404)
 
         password = data['password']
+        print(user)
 
         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
             login_user(user, remember=True)
-            print(user)
-            session['logged_in'] = True
+            # print(user)
             return make_response("You're logged in!", 200)
-
 
         if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
 
 
-api.add_resource(Login, '/login', methods=['POST'])
+api.add_resource(Login, '/login', methods=['GET','POST'])
+
 
 
 class CurrentUser(Resource):
@@ -123,21 +123,12 @@ class CurrentUser(Resource):
 api.add_resource(CurrentUser, '/currentuser')
 
 
-@app.route('/logout', methods=['POST'])
-@cross_origin(supports_credentials=True)
-def logout():
-    try:
-        if current_user:
-            logout_user()
-            session.pop('user_id', None)
-            session['logged_in'] = False
-
-            return make_response({}, 204)
-        else:
-            return make_response({"message": "Not logged in"}, 400)
-    except Exception as e:
-        return make_response({"error": str(e)}, 500) 
-
+class Logout(Resource):
+    @login_required
+    def post(self):
+        logout_user()
+        return make_response("youre logged out!!")
+api.add_resource(Logout, '/logout')
 
 # class CheckSession(Resource):
 #     def get(self):

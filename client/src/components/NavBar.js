@@ -3,8 +3,8 @@ import React, { useEffect, useState, useContext } from "react";
 import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
-function NavBar({ loggedIn, setLoggedIn }) {
-  // const [loggedIn, setLoggedIn] = useState(false);
+function NavBar() {
+  const [loggedIn, setLoggedIn] = useState(false);
   let user = useContext(UserContext);
 
   // useEffect(() => {
@@ -78,7 +78,7 @@ function NavBar({ loggedIn, setLoggedIn }) {
                   </li>
                   <li className="nav-item active">
                     <Link
-                      // to={`/profile/${user.first_name}`}
+                      to={`/profile/${user.first_name}`}
                       type="button"
                       className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
                     >

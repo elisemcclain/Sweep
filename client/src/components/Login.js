@@ -4,9 +4,12 @@ import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 import { UserContext } from "./UserProvider";
 
-const Login = ({ loggedIn }) => {
+const Login = () => {
   const history = useHistory();
   let user = useContext(UserContext);
+  const [loggedIn, setLoggedIn] = useState(false);
+  // let loggedIn = useContext(UserContext);
+  console.log(user);
 
   const [userData, setUserData] = useState([]);
 
@@ -31,9 +34,11 @@ const Login = ({ loggedIn }) => {
     }).then((response) => {
       if (response.ok) {
         setUserData(userData);
-        console.log(loggedIn);
+        setLoggedIn(loggedIn);
         // console.log(userData);
         console.log(user);
+        console.log(loggedIn);
+
         history.push(`/profile/${user.first_name}`);
         console.log("yay");
       } else {
