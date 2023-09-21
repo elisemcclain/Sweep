@@ -25,19 +25,23 @@ function App() {
         setUsers(r);
         console.log(user);
 
-        fetch("http://127.0.0.1:5555/check_login_status")
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((data) => {
-            setLoggedIn(data);
-            console.log(data);
-          })
-          .catch((error) => {
-            console.error("Error checking login status:", error);
-          });
+        // fetch("http://127.0.0.1:5555/check_login_status")
+        //   .then((response) => {
+        //     if (response.ok) {
+        //       return response.json();
+        //     }
+        //   })
+        //   .then((data) => {
+        //     if (data && data.user) {
+        //       setLoggedIn(true);
+        //       console.log(data);
+        //     } else {
+        //       setLoggedIn(false);
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     console.error("Error checking login status:", error);
+        //   });
 
         //       fetch("http://127.0.0.1:5555/currentuser", {
         //         method: "GET",

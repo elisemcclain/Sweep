@@ -107,6 +107,8 @@ class Login(Resource):
             # print(user)
             return make_response("You're logged in!", 200)
 
+        
+
         if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
 

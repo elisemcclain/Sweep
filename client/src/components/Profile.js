@@ -5,6 +5,7 @@ import { UserContext } from "./UserProvider";
 function Profile({ setLoggedIn }) {
   const history = useHistory();
   let user = useContext(UserContext);
+  
 
   const handleEditProfile = () => {
     history.push("/edit-profile");
