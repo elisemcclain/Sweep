@@ -1,10 +1,10 @@
 import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { UserProvider, useUser } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 
 function Profile() {
   const history = useHistory();
-  const user = useUser();
+  let user = useContext(UserContext);
 
   const handleEditProfile = () => {
     history.push("/edit-profile");

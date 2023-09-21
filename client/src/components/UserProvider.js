@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/currentuserpy", {
+    fetch("http://127.0.0.1:5555/currentuser", {
       method: "GET",
       credentials: "include",
     })
@@ -27,8 +27,4 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
-};
-
-export const useUser = () => {
-  return useContext(UserContext);
 };

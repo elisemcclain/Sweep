@@ -2,17 +2,18 @@ import React, { useContext, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
-import { UserProvider, useUser } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 
 const Login = () => {
   const history = useHistory();
-  const user = useUser();
+  let user = useContext(UserContext);
+  console.log(user);
 
   const [userData, setUserData] = useState([]);
 
   const initialValues = {
     email: "",
-    // password: "",
+    password: "",
   };
 
   const validationSchema = yup.object().shape({
@@ -21,14 +22,13 @@ const Login = () => {
   });
 
   const onSubmit = (values) => {
-    setUserData({ email: values.email, password: values.password });
     fetch("http://127.0.0.1:5555/login", {
       method: "POST",
       credentials: "include",
       headers: {
-        "Content-Type": "application/json; charset=UTF-8",
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(values, null, 2),
     }).then((response) => {
       if (response.ok) {
         setUserData(userData);

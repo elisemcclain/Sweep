@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
 
 import Home from "./Home";
@@ -9,12 +9,12 @@ import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
 import Styles from "./Styles.css";
-import { UserProvider, useUser } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 
 function App() {
   const [users, setUsers] = useState([]);
-  const user = useUser();
   const history = useHistory();
+  let user = useContext(UserContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")
@@ -22,7 +22,7 @@ function App() {
       .then((r) => {
         setUsers(r);
 
-        fetch("http://127.0.0.1:5555/check_session", {
+        fetch("http://127.0.0.1:5555/currentuser", {
           method: "GET",
           credentials: "include",
         })

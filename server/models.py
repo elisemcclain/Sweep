@@ -5,9 +5,12 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 from validate_email import validate_email  
 from datetime import date
-from config import db
+from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, render_template, url_for,redirect
+from flask_sqlalchemy import SQLAlchemy
+
 
 
 class User(db.Model, SerializerMixin):
@@ -17,8 +20,8 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    _password_hash = db.Column(db.String(128))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=True)
     is_active = db.Column(db.Boolean, nullable=True)
     #add created at
     #adad unique key for email
@@ -32,19 +35,18 @@ class User(db.Model, SerializerMixin):
     def is_active(self):
         return self.is_active
 
-    @hybrid_property
-    def password(self):
-        raise Exception('Password hashes may not be viewed.')
+    # @hybrid_property
+    # def password(self):
+    #     raise Exception('Password hashes may not be viewed.')
 
-    @password.setter
-    def password(self, password):
-        # password_hash = bcrypt.generate_password_hash(
-        #     password.encode('utf-8'))
-        self._password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    # @password.setter
+    # def password(self, password):
+    #     password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
+    #     self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
-    def authenticate(self, password):
-        return bcrypt.check_password_hash(
-            self._password_hash, password.encode('utf-8'))
+    # def authenticate(self, password):
+    #     return bcrypt.check_password_hash(
+    #         self.password_hash, password.encode('utf-8'))
             
     def is_authenticated(self):
         return True

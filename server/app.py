@@ -7,15 +7,14 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 
 # Local imports
-from config import app, db, api
+from config import app, db, api, bcrypt
 from models import User, Location, Crime, CrimeCategory
 from datetime import datetime
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from flask_bcrypt import Bcrypt
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 
@@ -28,7 +27,6 @@ Session(app)
 # Instantiate CORS
 CORS(app, supports_credentials=True)
 
-bcrypt = Bcrypt(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -50,12 +48,6 @@ class Signup(Resource):
     def post(self):
         data = request.get_json()
 
-        hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-
-        existing_user = User.query.filter_by(email=data['email']).first()
-        if existing_user:
-            return {'error': 'Email already exists'}, 409
-
         location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
 
         if location:
@@ -71,10 +63,23 @@ class Signup(Resource):
             db.session.commit()
 
             location = location.to_dict()
+            
+        email=data['email']
+        password=data['password']
+        first_name=data['first_name']
+        last_name=data['last_name']
+        location_id=location['id']
+
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return make_response({'error': 'Email already exists'}, 409)
+
 
         new_user = User(
             email=data['email'],
-            _password_hash=hashed_password,
+            password_hash=hashed_password,
             first_name=data['first_name'],
             last_name=data['last_name'],
             location_id=location['id']
@@ -82,8 +87,6 @@ class Signup(Resource):
 
         db.session.add(new_user)
         db.session.commit()
-
-        session['user_id'] = new_user.id
             
         return new_user.to_dict(), 201
 
@@ -92,39 +95,35 @@ api.add_resource(Signup, '/signup')
 class Login(Resource):
     def post(self):
         data = request.get_json()
+        user = User.query.filter(User.email==data['email']).first()
 
-        if 'email' not in data:
+        if not user:
             return make_response({"message": "Invalid request data"}, 400)
 
-        user = User.query.filter_by(email=data['email']).first()
+        password = data['password']
+        print(user)
 
-        if not bcrypt.check_password_hash(user._password_hash.encode('utf-8'), data['password']):
+
+
+        if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+            login_user(user, remember=True)
+            print(user)
+            return make_response("You're logged in!", 200)
+
+        if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
 
-        login_user(user, remember=True)
-        print(user)
-        return "You're logged in!", 200
+        
 
 api.add_resource(Login, '/login', methods=['POST'])
 
 
-@app.route('/currentuserpy', methods=['GET'])
-@cross_origin(supports_credentials=True)
-@login_required
-def current_user_data():
-        users = User.query.all()
-        user = [{"id": user.id, "email": user.email, "first_name": user.first_name} for user in users]
-        # print("Current User:", user)
-        
-        if user:
-            # response = make_response(user.to_dict(), 200)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return make_response(jsonify({"users": user}), 200)
+class CurrentUser(Resource):
+    @login_required
+    def get(self):
+        return make_response(current_user.to_dict(), 200)
 
-        else:
-            response = make_response({"message": "User not found"}, 404)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
+api.add_resource(CurrentUser, '/currentuser')
 
 
 @app.route('/logout', methods=['POST'])
@@ -291,8 +290,3 @@ api.add_resource(CrimeCategories, '/crime_categories')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
-
-
-
-
-

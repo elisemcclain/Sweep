@@ -3,10 +3,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import Profile from "./Profile";
-import { UserProvider, useUser } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 
 const Signup = ({ handleAddUser, handleLogin }) => {
-  const user = useUser();
+  let user = useContext(UserContext);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
@@ -53,7 +53,7 @@ const Signup = ({ handleAddUser, handleLogin }) => {
         console.log(data);
         console.log(user);
 
-        history.push(`/profile/${data.first_name}`);
+        history.push(`/profile/${data?.first_name}`);
         console.log("User registered successfully!!");
       } else {
         const responseData = await response.json();

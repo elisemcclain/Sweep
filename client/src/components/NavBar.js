@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState, useContext } from "react";
 import Styles from "./Styles.css";
-import { UserProvider, useUser } from "./UserProvider";
+import { UserContext } from "./UserProvider";
 
 function NavBar() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const user = useUser();
+  let user = useContext(UserContext);
 
   return (
     <div>
