@@ -114,7 +114,6 @@ class Login(Resource):
 api.add_resource(Login, '/login', methods=['GET','POST'])
 
 
-
 class CurrentUser(Resource):
     @login_required
     def get(self):
@@ -127,7 +126,7 @@ class Logout(Resource):
     @login_required
     def post(self):
         logout_user()
-        return make_response("youre logged out!!")
+        return make_response("youre logged out!!", 200)
 api.add_resource(Logout, '/logout')
 
 # class CheckSession(Resource):

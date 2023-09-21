@@ -19,12 +19,10 @@ export const UserProvider = ({ children }) => {
       })
       .then((userData) => {
         setUser(userData);
-        // setLoggedIn(true);
       })
       .catch((error) => {
         console.error("Error fetching current user:", error);
         setUser(null);
-        // setLoggedIn(false);
       });
   }, []);
 

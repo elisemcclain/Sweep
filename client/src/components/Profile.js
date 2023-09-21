@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
-function Profile() {
+function Profile({ setLoggedIn }) {
   const history = useHistory();
   let user = useContext(UserContext);
 
@@ -17,8 +17,9 @@ function Profile() {
         credentials: "include",
       });
 
-      if (response.status === 204) {
-        history.push("/");
+      if (response.status === 200) {
+        history.push("/login");
+        setLoggedIn(false);
       } else {
         console.error("Logout failed:", response.statusText);
       }

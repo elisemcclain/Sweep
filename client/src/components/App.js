@@ -25,19 +25,19 @@ function App() {
         setUsers(r);
         console.log(user);
 
-        // fetch("http://127.0.0.1:5555/check_login_status")
-        //   .then((response) => {
-        //     if (response.ok) {
-        //       return response.json();
-        //     }
-        //   })
-        //   .then((data) => {
-        //     setLoggedIn(loggedIn);
-        //     console.log(data);
-        //   })
-        //   .catch((error) => {
-        //     console.error("Error checking login status:", error);
-        //   });
+        fetch("http://127.0.0.1:5555/check_login_status")
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setLoggedIn(data);
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Error checking login status:", error);
+          });
 
         //       fetch("http://127.0.0.1:5555/currentuser", {
         //         method: "GET",
@@ -82,10 +82,18 @@ function App() {
             <Home />
           </Route>
           <Route exact path="/login">
-            <Login users={users} />
+            <Login
+              users={users}
+              loggedIn={loggedIn}
+              setLoggedIn={setLoggedIn}
+            />
           </Route>
           <Route exact path="/signup">
-            <Signup handleAddUser={handleAddUser} />
+            <Signup
+              handleAddUser={handleAddUser}
+              loggedIn={loggedIn}
+              setLoggedIn={setLoggedIn}
+            />
           </Route>
           <Route exact path="/crimemap">
             <CrimeMap />

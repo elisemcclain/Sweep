@@ -82,8 +82,7 @@ const Signup = ({ handleAddUser, handleLogin }) => {
             <div className="row d-flex justify-content-center">
               <div className="col-lg-8">
                 <h2 className="fw-bold mb-5">Create Account</h2>
-                {/* <pre>{JSON.stringify(user, null, 2)}</pre>
-                <button onClick={() => setUser()}>hi</button> */}
+                
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
