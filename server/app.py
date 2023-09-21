@@ -89,23 +89,6 @@ class Signup(Resource):
 
 api.add_resource(Signup, '/signup')
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     data = request.get_json()
-#     email = data['email']
-#     password = data['password']
-#     first_name = data['first_name']
-#     last_name = data['last_name']
-
-#     all_users = User.query.all()
-#     user = User.query.filter_by(email=email).first()
-
-#     if user and bcrypt.check_password_hash(user._password_hash, password):
-#         session['user_id'] = user.id
-#         return jsonify({'token': 'your_generated_token'})
-
-#     return jsonify({'message': 'Invalid credentials'}), 401
-
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -119,6 +102,7 @@ class Login(Resource):
             return make_response({"message": "Invalid login"}, 401)
 
         login_user(user, remember=True)
+        print(user)
         return "You're logged in!", 200
 
 api.add_resource(Login, '/login', methods=['POST'])
@@ -135,7 +119,8 @@ def current_user_data():
         if user:
             # response = make_response(user.to_dict(), 200)
             response.headers.add("Access-Control-Allow-Origin", "*")
-            jsonify({"users": user_data})
+            return make_response(jsonify({"users": user}), 200)
+
         else:
             response = make_response({"message": "User not found"}, 404)
             response.headers.add("Access-Control-Allow-Origin", "*")
@@ -239,10 +224,10 @@ class Locations(Resource):
             db.session.add(new_location)
             db.session.commit()
 
-            return make_response(jsonify(new_location.to_dict()), 201)
+            return make_response(new_location.to_dict(), 201)
         
         except ValueError as e:
-            return make_response(jsonify({'error': str(e)}), 400)
+            return make_response({'error': str(e)}, 400)
 
 api.add_resource(Locations, '/locations')
 
