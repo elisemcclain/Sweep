@@ -12,12 +12,20 @@ import redis
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SECRET_KEY"] = "my_super_secret_key"
+app.config['SQLALCHEMY_ECHO'] = True
+app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
 app.json.compact = False
 
 app.config['REMEMBER_COOKIE_DOMAIN']= "http://localhost:3000/"
 app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_REDIS"] = redis.from_url("redis://127.0.0.1:6379")
+
+
+
+
 
 # Define metadata, instantiate db
 metadata = MetaData(naming_convention={
@@ -25,7 +33,7 @@ metadata = MetaData(naming_convention={
 })
 db = SQLAlchemy(metadata=metadata)
 migrate = Migrate(app, db)
-db.init_app(app)
+# db.init_app(app)
 
 # Instantiate REST API
 api = Api(app)

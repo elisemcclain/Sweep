@@ -18,10 +18,12 @@ from flask_cors import CORS, cross_origin
 from flask_session import Session
 
 
-SECRET_KEY = "oifdjupoe8u-9cv8uaijf2i5u"
-SESSION_TYPE = 'filesystem'
 app.config.from_object(__name__)
-Session(app)
+server_session = Session(app)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
 
 # Instantiate CORS
 CORS(app, supports_credentials=True)
@@ -107,18 +109,19 @@ class Login(Resource):
             # print(user)
             return make_response("You're logged in!", 200)
 
-        
+        session["user_id"] = user.id
 
         if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
 
 
-api.add_resource(Login, '/login', methods=['GET','POST'])
+api.add_resource(Login, '/login', methods=['POST'])
 
 
 class CurrentUser(Resource):
     @login_required
     def get(self):
+        user_id = session.get("user_id")
         return make_response(current_user.to_dict(), 200)
 
 api.add_resource(CurrentUser, '/currentuser')
