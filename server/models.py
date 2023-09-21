@@ -7,7 +7,6 @@ from validate_email import validate_email
 from datetime import date
 from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
-# from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, url_for,redirect
 from flask_sqlalchemy import SQLAlchemy
 
@@ -34,19 +33,6 @@ class User(db.Model, SerializerMixin):
 
     def is_active(self):
         return self.is_active
-
-    # @hybrid_property
-    # def password(self):
-    #     raise Exception('Password hashes may not be viewed.')
-
-    # @password.setter
-    # def password(self, password):
-    #     password_hash = bcrypt.generate_password_hash(password.encode('utf-8'))
-    #     self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    # def authenticate(self, password):
-    #     return bcrypt.check_password_hash(
-    #         self.password_hash, password.encode('utf-8'))
             
     def is_authenticated(self):
         return True
@@ -91,18 +77,3 @@ class CrimeCategory(db.Model, SerializerMixin):
     category = db.Column(db.String(120), nullable=False)
     
     serialize_rules = ('-users', '-locations' '-crimes',)
-
-
-
-
-    # @property
-    # def password(self):
-    #     # raise AttributeError('password is not a readable attr')
-    
-    # @password_hash.setter
-    # def password(self, password):
-    #     # pwhash = bcrypt.hashpw(pw.encode('utf8'), bcrypt.gensalt())
-    #     self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
-    # def verify_password(self, password):
-    #     return bcrypt.check_password_hash(self.password_hash, password)

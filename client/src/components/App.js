@@ -13,6 +13,7 @@ import { UserContext } from "./UserProvider";
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
   let user = useContext(UserContext);
 
@@ -21,6 +22,20 @@ function App() {
       .then((r) => r.json())
       .then((r) => {
         setUsers(r);
+
+        fetch("http://127.0.0.1:5555/check_login_status")
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+          })
+          .then((data) => {
+            setLoggedIn(loggedIn);
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Error checking login status:", error);
+          });
 
         fetch("http://127.0.0.1:5555/currentuser", {
           method: "GET",
@@ -59,13 +74,13 @@ function App() {
   return (
     <BrowserRouter>
       <main>
-        <NavBar />
+        <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route exact path="/login">
-            <Login users={users} />
+            <Login users={users} loggedIn={loggedIn} />
           </Route>
           <Route exact path="/signup">
             <Signup handleAddUser={handleAddUser} />

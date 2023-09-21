@@ -14,7 +14,6 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email, Length
 from webforms import LoginForm, PasswordForm, RegistrationForm
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-# from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS, cross_origin
 from flask_session import Session
 
@@ -101,19 +100,17 @@ class Login(Resource):
             return make_response({"message": "Invalid request data"}, 400)
 
         password = data['password']
-        print(user)
-
-
 
         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
             login_user(user, remember=True)
             print(user)
+            session['logged_in'] = True
             return make_response("You're logged in!", 200)
+
 
         if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
 
-        
 
 api.add_resource(Login, '/login', methods=['POST'])
 
@@ -133,6 +130,7 @@ def logout():
         if current_user:
             logout_user()
             session.pop('user_id', None)
+            session['logged_in'] = False
 
             return make_response({}, 204)
         else:
@@ -141,18 +139,25 @@ def logout():
         return make_response({"error": str(e)}, 500) 
 
 
-class CheckSession(Resource):
-    def get(self):
-
-        if session.get('user_id'):
+# class CheckSession(Resource):
+#     def get(self):
+#         if session.get('user_id'):
             
-            user = User.query.filter(User.id == session['user_id']).first()
+#             user = User.query.filter(User.id == session['user_id']).first()
             
-            return user.to_dict(), 200
+#             return user.to_dict(), 200
 
-        return {}, 204
+#         return {}, 204
 
-api.add_resource(CheckSession, '/check_session')
+# api.add_resource(CheckSession, '/check_session')
+
+
+@app.route('/check_login_status', methods=['GET'])
+def check_login_status():
+    if 'logged_in' in session and session['logged_in']:
+        return jsonify({'logged_in': True}), 200
+    else:
+        return jsonify({'logged_in': False}), 200
 
 
 class Users(Resource):

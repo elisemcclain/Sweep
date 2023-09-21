@@ -7,10 +7,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 import bcrypt
 
-# from werkzeug.security import generate_password_hash, check_password_hash
-
-
-
 # Instantiate app, set attributes
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -33,7 +29,6 @@ db.init_app(app)
 # Instantiate REST API
 api = Api(app)
 
-# bcrypt = Bcrypt(app)
 
 
 

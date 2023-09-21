@@ -28,10 +28,9 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <h1>hi</h1>
       <div>
-        <h2>{/* Welcome, {user.first_name} {user.last_name} */}</h2>
-        {/* <p>Email: {currentUserData.email}</p> */}
+        <h2>Welcome, {user.first_name}</h2>
+        <p>Email: {user.email}</p>
         <button onClick={handleEditProfile}>Edit Profile</button>
         <button onClick={handleLogout}>Logout</button>
       </div>

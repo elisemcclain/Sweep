@@ -3,9 +3,26 @@ import React, { useEffect, useState, useContext } from "react";
 import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
-function NavBar() {
-  const [loggedIn, setLoggedIn] = useState(false);
+function NavBar({ loggedIn, setLoggedIn }) {
+  // const [loggedIn, setLoggedIn] = useState(false);
   let user = useContext(UserContext);
+
+  // useEffect(() => {
+  //   fetch("http://127.0.0.1:5555/check_login_status")
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         return response.json();
+  //       }
+  //       throw new Error("Network response was not ok");
+  //     })
+  //     .then((data) => {
+  //       setLoggedIn(data.logged_in);
+  //       console.log(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error finding if logged in:", error);
+  //     });
+  // }, []);
 
   return (
     <div>
@@ -61,7 +78,7 @@ function NavBar() {
                   </li>
                   <li className="nav-item active">
                     <Link
-                      to={`profile/{first_name}`}
+                      // to={`/profile/${user.first_name}`}
                       type="button"
                       className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
                     >
