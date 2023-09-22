@@ -19,7 +19,7 @@ from flask_session import Session
 
 
 app.config.from_object(__name__)
-server_session = Session(app)
+Session(app)
 db.init_app(app)
 
 with app.app_context():
@@ -86,12 +86,18 @@ class Signup(Resource):
             location_id=location['id']
         )
 
+        new_user.authenticated=True
         db.session.add(new_user)
         db.session.commit()
-            
+        login_user(new_user, remember=True)
+
+        # session["user_id"] = new_user.id
+
+
         return new_user.to_dict(), 201
 
 api.add_resource(Signup, '/signup')
+
 
 class Login(Resource):
     def post(self):
@@ -104,10 +110,13 @@ class Login(Resource):
         password = data['password']
 
         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+            user.authenticated=True
+            db.session.add(user)
+            db.session.commit()
             login_user(user, remember=True)
             return make_response({"success": "You're logged in!"}, 200)
 
-        session["user_id"] = user.id
+        # session["user_id"] = user.id
 
         if not user.password(data['password']):
             return make_response({"message": "Invalid login"}, 401)
@@ -115,14 +124,48 @@ class Login(Resource):
 
 api.add_resource(Login, '/login', methods=['POST'])
 
+# class Login(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         user = User.query.filter(User.email==data['email']).first()
+
+#         if not user:
+#             return make_response({"message": "user not found"}, 404)
+
+#         password = data['password']
+
+#         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+#             login_user(user, remember=True)
+#             return make_response({"success": "You're logged in!"}, 200)
+
+#         session["user_id"] = user.id
+
+#         if not user.password(data['password']):
+#             return make_response({"message": "Invalid login"}, 401)
+
+
+# api.add_resource(Login, '/login', methods=['POST'])
+
 
 class CurrentUser(Resource):
     @login_required
     def get(self):
-        user_id = session.get("user_id")
-        return make_response(current_user.to_dict(), 200)
+        user = current_user
+        if user:
+            return make_response(user.to_dict(), 200)
+        else:
+            return make_responsse({"message": "user not found"}, 404)
 
 api.add_resource(CurrentUser, '/currentuser')
+
+# class CurrentUser(Resource):
+#     @login_required
+#     def get(self):
+#         user_id = session.get("user_id")
+#         session["user_id"] = user.id
+#         return make_response(current_user.to_dict(), 200)
+
+# api.add_resource(CurrentUser, '/currentuser')
 
 
 class Logout(Resource):

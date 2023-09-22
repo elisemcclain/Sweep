@@ -51,9 +51,9 @@ const Signup = ({ handleAddUser, handleLogin }) => {
         const data = await response.json();
         // setUser(data);
         console.log(data);
-        console.log(user);
+        // console.log(user);
 
-        history.push(`/profile/${user.first_name}`);
+        history.push("/");
         console.log("User registered successfully!!");
       } else {
         const responseData = await response.json();
@@ -82,7 +82,7 @@ const Signup = ({ handleAddUser, handleLogin }) => {
             <div className="row d-flex justify-content-center">
               <div className="col-lg-8">
                 <h2 className="fw-bold mb-5">Create Account</h2>
-                
+
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
