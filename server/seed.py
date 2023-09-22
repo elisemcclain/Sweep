@@ -67,7 +67,5 @@ if __name__ == '__main__':
     #  see crime activity on map
     #  update my address
     #  login, logout, create account, delete account, edit account
-    #  5 routes: home, profile, login, map, crimereport - DONE
-    #  use useContext or Redux
 
     # can't do fucking shit without current_user being set on login

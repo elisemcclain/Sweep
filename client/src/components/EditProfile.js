@@ -15,34 +15,34 @@ function EditProfile() {
 
   const history = useHistory();
 
-  useEffect(() => {
-    fetch("http://localhost:5555/currentuserpy", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          history.push("/login");
-        }
-      })
-      .then((data) => {
-        setFormData({
-          first_name: data.first_name,
-          last_name: data.last_name,
-          email: data.email,
-          address: data.address,
-          password: data.password,
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, [history]);
+  // useEffect(() => {
+  //   fetch("http://localhost:5555/currentuserpy", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     credentials: "include",
+  //   })
+  //     .then((response) => {
+  //       if (response.status === 200) {
+  //         return response.json();
+  //       } else {
+  //         history.push("/login");
+  //       }
+  //     })
+  //     .then((data) => {
+  //       setFormData({
+  //         first_name: data.first_name,
+  //         last_name: data.last_name,
+  //         email: data.email,
+  //         address: data.address,
+  //         password: data.password,
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }, [history]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

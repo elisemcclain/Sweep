@@ -9,8 +9,7 @@ function Home() {
   const history = useHistory();
   console.log(user);
   function handleClick() {
-    const path = "/login";
-    history.push(path);
+    history.push("/signup");
   }
 
   return (

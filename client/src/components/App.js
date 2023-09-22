@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  useHistory,
-  useParams,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
 
 import Home from "./Home";
 import Login from "./Login";
@@ -22,7 +16,6 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
   let user = useContext(UserContext);
-  const { id } = useParams();
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")
@@ -64,7 +57,7 @@ function App() {
           <Route exact path="/crimemap">
             <CrimeMap />
           </Route>
-          <Route exact path="/profile/:id">
+          <Route exact path="/profile/:first_name" component={Profile}>
             <Profile />
           </Route>
           <Route exact path="/crimereport">

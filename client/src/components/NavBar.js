@@ -6,7 +6,6 @@ import { UserContext } from "./UserProvider";
 function NavBar() {
   const [loggedIn, setLoggedIn] = useState(false);
   let user = useContext(UserContext);
-  const params = useParams();
 
   return (
     <div>
@@ -62,7 +61,7 @@ function NavBar() {
                   </li>
                   <li className="nav-item active">
                     <Link
-                      to={"/profile/:id"}
+                      to={`/profile/${user.id}`}
                       type="button"
                       className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
                     >
