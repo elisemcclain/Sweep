@@ -2,11 +2,12 @@ import { useHistory } from "react-router-dom";
 import { useContext } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { UserContext } from "./UserProvider";
 
 function Home() {
-
+  let user = useContext(UserContext);
   const history = useHistory();
-
+  console.log(user);
   function handleClick() {
     const path = "/login";
     history.push(path);

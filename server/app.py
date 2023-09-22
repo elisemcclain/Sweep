@@ -26,7 +26,7 @@ with app.app_context():
     db.create_all()
 
 # Instantiate CORS
-CORS(app, supports_credentials=True)
+cors = CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 
 login_manager = LoginManager()
@@ -102,12 +102,10 @@ class Login(Resource):
             return make_response({"message": "user not found"}, 404)
 
         password = data['password']
-        print(user)
 
         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
             login_user(user, remember=True)
-            # print(user)
-            return make_response("You're logged in!", 200)
+            return make_response({"success": "You're logged in!"}, 200)
 
         session["user_id"] = user.id
 
@@ -134,17 +132,6 @@ class Logout(Resource):
         return make_response("youre logged out!!", 200)
 api.add_resource(Logout, '/logout')
 
-# class CheckSession(Resource):
-#     def get(self):
-#         if session.get('user_id'):
-            
-#             user = User.query.filter(User.id == session['user_id']).first()
-            
-#             return user.to_dict(), 200
-
-#         return {}, 204
-
-# api.add_resource(CheckSession, '/check_session')
 
 
 @app.route('/check_login_status', methods=['GET'])
@@ -203,7 +190,7 @@ class UsersById(Resource):
         return make_response({"error": "User not found"}, 404)
 
 
-api.add_resource(UsersById, '/users/<int:id>')
+api.add_resource(UsersById, '/profile/<int:id>')
 
 
 class Locations(Resource):

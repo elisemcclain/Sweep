@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Switch, Route, useHistory } from "react-router-dom";
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  useHistory,
+  useParams,
+} from "react-router-dom";
 
 import Home from "./Home";
 import Login from "./Login";
@@ -16,7 +22,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
   let user = useContext(UserContext);
-  // let loggedIn = useContext(UserContext);
+  const { id } = useParams();
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")
@@ -24,50 +30,6 @@ function App() {
       .then((r) => {
         setUsers(r);
         console.log(user);
-
-        // fetch("http://127.0.0.1:5555/check_login_status")
-        //   .then((response) => {
-        //     if (response.ok) {
-        //       return response.json();
-        //     }
-        //   })
-        //   .then((data) => {
-        //     if (data && data.user) {
-        //       setLoggedIn(true);
-        //       console.log(data);
-        //     } else {
-        //       setLoggedIn(false);
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     console.error("Error checking login status:", error);
-        //   });
-
-        //       fetch("http://127.0.0.1:5555/currentuser", {
-        //         method: "GET",
-        //         credentials: "include",
-        //       })
-        //         .then((response) => {
-        //           if (!response.ok) {
-        //             throw new Error("Request failed with status: " + response.status);
-        //           }
-        //           return response.text();
-        //         })
-        //         .then((userData) => {
-        //           if (userData.trim() !== "") {
-        //             try {
-        //               const userDataJSON = JSON.parse(userData);
-        //               console.log(userDataJSON);
-        //             } catch (error) {
-        //               console.error("Error parsing JSON:", error);
-        //             }
-        //           } else {
-        //             console.log("No JSON data received from check_session");
-        //           }
-        //         })
-        //         .catch((error) => {
-        //           console.error("Error checking session:", error);
-        //         });
       });
   }, []);
 
@@ -102,7 +64,7 @@ function App() {
           <Route exact path="/crimemap">
             <CrimeMap />
           </Route>
-          <Route exact path="/profile/:first_name">
+          <Route exact path="/profile/:id">
             <Profile />
           </Route>
           <Route exact path="/crimereport">

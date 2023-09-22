@@ -1,11 +1,28 @@
 import { useEffect, useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
 function Profile({ setLoggedIn }) {
   const history = useHistory();
   let user = useContext(UserContext);
-  
+  const [userData, setUserData] = useState({});
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:5555/profile/${id}`);
+        if (!response.ok) {
+          throw new Error("Request failed with status: " + response.status);
+        }
+        const userData = await response.json();
+        setUserData(userData);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+    fetchData();
+  }, [id]);
 
   const handleEditProfile = () => {
     history.push("/edit-profile");
@@ -32,10 +49,17 @@ function Profile({ setLoggedIn }) {
   return (
     <div className="profile-container">
       <div>
-        <h2>Welcome, {user.first_name}</h2>
-        <p>Email: {user.email}</p>
+        <h2>Welcome, {userData.first_name}</h2>
+        <p>Email: {userData.email}</p>
         <button onClick={handleEditProfile}>Edit Profile</button>
-        <button onClick={handleLogout}>Logout</button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            handleLogout();
+          }}
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
