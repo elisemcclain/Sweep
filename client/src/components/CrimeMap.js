@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
+// AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo;
 
-import {
-  GoogleMap,
-  useJsApiLoader,
-  useLoadScript,
-  Marker,
-  Autocomplete,
-  InfoBox,
-} from "@react-google-maps/api";
+import React, { useEffect, useState } from "react";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
+  const [coordinates, setCoordinates] = useState([]); // Store coordinates separately
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo",
   });
@@ -20,8 +15,6 @@ const CrimeMap = () => {
       .then((response) => response.json())
       .then((data) => {
         setAddresses(data);
-        console.log(addresses);
-        const addresses = data.map((location) => location.address);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -29,32 +22,34 @@ const CrimeMap = () => {
   }, []);
 
   useEffect(() => {
-    Promise.all(
-      addresses.map((address) =>
-        fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-            address.address
-          )}&key=AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo`
+    if (addresses.length > 0) {
+      // Only perform geocoding if there are addresses
+      Promise.all(
+        addresses.map((address) =>
+          fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+              address.address
+            )}&key=AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.results && data.results.length > 0) {
+                const { lat, lng } = data.results[0].geometry.location;
+                return { lat, lng };
+              } else {
+                return null;
+              }
+            })
         )
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.results && data.results.length > 0) {
-              const { lat, lng } = data.results[0].geometry.location;
-              return { lat, lng };
-            } else {
-              return null;
-            }
-          })
       )
-    )
-      .then((coordinates) => {
-        const validCoordinates = coordinates.filter((coord) => coord !== null);
-        setAddresses(validCoordinates);
-        console.log(validCoordinates);
-      })
-      .catch((error) => {
-        console.error("Error geocoding addresses:", error);
-      });
+        .then((coords) => {
+          const validCoords = coords.filter((coord) => coord !== null);
+          setCoordinates(validCoords); // Update coordinates separately
+        })
+        .catch((error) => {
+          console.error("Error geocoding addresses:", error);
+        });
+    }
   }, [addresses]);
 
   if (!isLoaded) {
@@ -73,11 +68,8 @@ const CrimeMap = () => {
         }}
         zoom={5}
       >
-        {addresses.map((location, index) => (
-          <Marker
-            key={index}
-            position={{ lat: location.lat, lng: location.lng }}
-          />
+        {coordinates.map((coord, index) => (
+          <Marker key={index} position={{ lat: coord.lat, lng: coord.lng }} />
         ))}
       </GoogleMap>
     </div>
@@ -142,7 +134,5 @@ export default CrimeMap;
 //     </div>
 //   );
 // };
-
-// export default CrimeMap;
 
 // export default CrimeMap;

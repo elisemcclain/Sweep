@@ -77,3 +77,9 @@ class CrimeCategory(db.Model, SerializerMixin):
     category = db.Column(db.String(120), nullable=False)
     
     serialize_rules = ('-users', '-locations' '-crimes',)
+
+crime_location_association = db.Table(
+    'crime_location_association',
+    db.Column('crime_id', db.Integer, db.ForeignKey('crimes.id')),
+    db.Column('location_id', db.Integer, db.ForeignKey('locations.id'))
+)

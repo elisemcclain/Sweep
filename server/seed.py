@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Sufsan', last_name='Gladiator', email='w11ee@gd13dlq.cm', password_hash='ssd1ed31qe11'),
-        User(first_name='Zefndaya', last_name='Holland', email='ee11e@1qd3d1.cm', password_hash='d1qe13dd12'),
+        User(first_name='Sufsan', last_name='Gladiator', email='w11ee@dgd13dlq.cm', password_hash='ssd1ed31qe11'),
+        User(first_name='Zefndaya', last_name='Holland', email='ee11e@1dqd3d1.cm', password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -18,8 +18,8 @@ def create_users():
 
 def create_locations():
     locations = [
-        Location(address='72 P Shermana Wallay Way, Sydney AU'),
-        Location(address='133 Rainbow Rd, Mario Land'),
+        Location(address='3089 W Mica St, Fayetteville, AR 72704'),
+        Location(address='3087 W Mica St, Fayetteville, AR 72704'),
         # Add more locations as needed
     ]
     db.session.add_all(locations)
