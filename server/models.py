@@ -11,7 +11,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from flask_sqlalchemy import SQLAlchemy
 
 crime_location_association = db.Table(
-    'crime_location_associations',
+    'crime_location_association',
+    # Base.metadata,
     db.Column('crime_id', db.Integer, db.ForeignKey('crimes.id')),
     db.Column('location_id', db.Integer, db.ForeignKey('locations.id'))
 )
@@ -57,19 +58,19 @@ class Location(db.Model, SerializerMixin):
     address = db.Column(db.String(120), nullable=False)
 
     users = db.relationship('User', backref='location', lazy=True)
-    crimes_in_loc = db.relationship(
-            'Crime',
-            secondary=crime_location_association,
-            backref='crimes_associated',
-            lazy='dynamic'
-        )
+    crimes_associated = db.relationship(
+        'Crime',
+        secondary=crime_location_association,
+        back_populates='locations',
+        lazy='dynamic'
+    )
     # serialize_rules = ('-users', '-crime_location_associations', '-crimes_in_loc')
     def to_dict(self):
         return {
             'id': self.id,
             'address': self.address,
             'users': [user.to_dict() for user in self.users],
-            'crimes_in_loc': [crime.to_dict() for crime in self.crimes_in_loc],
+            'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
         }
 
 class Crime(db.Model, SerializerMixin):
@@ -83,11 +84,10 @@ class Crime(db.Model, SerializerMixin):
 
     # location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    # crime_categories = db.relationship('CrimeCategory', backref='Crime', lazy=True)
     locations = db.relationship(
         'Location',
         secondary=crime_location_association,
-        backref='crimes',
+        back_populates='crimes_associated',
         lazy='dynamic'
     )
 

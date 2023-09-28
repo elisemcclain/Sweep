@@ -21,7 +21,7 @@ app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 # app.config["SESSION_TYPE"] = "redis"
 # app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_REDIS"] = redis.from_url("redis://127.0.0.1:6379")
+app.config["SESSION_REDIS"] = redis.StrictRedis(host="localhost", port=6379, db=0)
 
 app.config["SESSION_TYPE"] = "redis"
 app.config["SESSION_PERMANENT"] = False
@@ -37,7 +37,6 @@ metadata = MetaData(naming_convention={
 })
 db = SQLAlchemy(metadata=metadata)
 migrate = Migrate(app, db)
-# db.init_app(app)
 
 # Instantiate REST API
 api = Api(app)

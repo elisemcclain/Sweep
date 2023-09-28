@@ -56,7 +56,7 @@ const CrimeMap = () => {
     return "Loading...";
   }
 
-  const center = { lat: 36.0822, lng: 94.1719 };
+  const center = { lat: 36.0627, lng: -94.1606 };
 
   return (
     <div className="App">
@@ -66,7 +66,7 @@ const CrimeMap = () => {
           width: "100%",
           height: "400px",
         }}
-        zoom={5}
+        zoom={12}
       >
         {coordinates.map((coord, index) => (
           <Marker key={index} position={{ lat: coord.lat, lng: coord.lng }} />

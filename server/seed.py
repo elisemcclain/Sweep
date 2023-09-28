@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Sufsan', last_name='Gladiator', email='hi@hdfeir.cofm', password_hash='ssd1ed31qe11'),
-        User(first_name='Zefndaya', last_name='Holland', email='bye@dbyree.ffcom', password_hash='d1qe13dd12'),
+        User(first_name='Sufsan', last_name='Gladiator', email='hi@hdfseir.cofm', password_hash='ssd1ed31qe11'),
+        User(first_name='Zefndaya', last_name='Holland', email='bye@dbysree.ffcom', password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)

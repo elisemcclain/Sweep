@@ -20,7 +20,7 @@ function CrimeForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/crimes", {
+      const response = await fetch("http://127.0.0.1:5555/crimes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,6 +29,7 @@ function CrimeForm() {
       });
 
       if (response.ok) {
+        setCrimeData(crimeData);
         console.log("Report Submitted!");
       } else {
         console.error("Error creating crime");
