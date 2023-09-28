@@ -203,6 +203,7 @@ class UsersById(Resource):
         return make_response(jsonify(user.to_dict()), 200)
 
     def patch(self, id):
+        # can't patch address, only patches location id
         user = User.query.filter_by(id=id).first()
 
         if not user:
@@ -238,11 +239,12 @@ api.add_resource(UsersById, '/profile/<int:id>')
 
 class Locations(Resource):
     def get(self):
-        locations = [location.to_dict(rules=('-users','-crimes',)) for location in Location.query.all()]
+        locations = [location.to_dict() for location in Location.query.all()]
 
         return make_response(locations, 200)
 
     def post(self):
+        # doesn't post address, posts location id
         new_location = Location()
         data = request.get_json()
 
@@ -263,11 +265,12 @@ api.add_resource(Locations, '/locations')
 
 class Crimes(Resource):
     def get(self):
-        crimes = [crime.to_dict(rules=('-users', '-crime_categories',)) for crime in Crime.query.all()]
+        crimes = [crime.to_dict() for crime in Crime.query.all()]
 
         return make_response(crimes, 200)
 
     def post(self):
+        # doesn't post address, posts location id
         new_crime_rep = Crime()
         
         data = request.get_json()
@@ -312,7 +315,7 @@ api.add_resource(Crimes, '/crimes')
 
 class CrimeCategories(Resource):
     def get(self):
-        crime_categories = [crime_categories.to_dict(rules=('-crimes', '-locations', '-users',)) for crime_categories in CrimeCategory.query.all()]
+        crime_categories = [crime_categories.to_dict() for crime_categories in CrimeCategory.query.all()]
 
         return make_response(crime_categories, 200)
 

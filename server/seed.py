@@ -1,6 +1,6 @@
 # from config import db  # Import your SQLAlchemy instance from your Flask app
 from app import app, db
-from models import User, Location, Crime, CrimeCategory
+from models import User, Location, Crime, CrimeCategory, crime_location_association
 from random import randint, choice as rc
 from datetime import datetime
 from faker import Faker
@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Sufsan', last_name='Gladiator', email='w11ee@dgd13dlq.cm', password_hash='ssd1ed31qe11'),
-        User(first_name='Zefndaya', last_name='Holland', email='ee11e@1dqd3d1.cm', password_hash='d1qe13dd12'),
+        User(first_name='Sufsan', last_name='Gladiator', email='hi@hdfeir.cofm', password_hash='ssd1ed31qe11'),
+        User(first_name='Zefndaya', last_name='Holland', email='bye@dbyree.ffcom', password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -20,23 +20,20 @@ def create_locations():
     locations = [
         Location(address='3089 W Mica St, Fayetteville, AR 72704'),
         Location(address='3087 W Mica St, Fayetteville, AR 72704'),
-        # Add more locations as needed
     ]
     db.session.add_all(locations)
     db.session.commit()
 
 def create_crime():
-    crimes = [
-        Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17), location_id=1),
-        Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16), location_id=2),
-        # Add more crime reports as needed
-    ]
+    crime1 = Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17))
+    crime2 = Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16))
 
-    # for crime in crimes:
-    #     formatted_date = crime.format_date()
-    #     crime.date = formatted_date
+    # Append Location instances to the locations attribute of Crime
+    crime1.locations.append(Location.query.get(1))
+    crime2.locations.append(Location.query.get(2))
 
-    db.session.add_all(crimes)
+    # Add Crime instances to the database session
+    db.session.add_all([crime1, crime2])
     db.session.commit()
 
 def create_crime_category():
