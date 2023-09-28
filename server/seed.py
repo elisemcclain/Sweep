@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Sufsan', last_name='Gladiator', email='hi@hdfseir.cofm', password_hash='ssd1ed31qe11'),
-        User(first_name='Zefndaya', last_name='Holland', email='bye@dbysree.ffcom', password_hash='d1qe13dd12'),
+        User(first_name='Sufsan', last_name='Gladiator', email='hi@hddfseir.cofm', is_active=None, password_hash='ssd1ed31qe11'),
+        User(first_name='Zefndaya', last_name='Holland', email='bye@dbdysree.ffcom', is_active=None, password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -57,12 +57,15 @@ if __name__ == '__main__':
 # calendar dropdown
 # react datepicker
 
-# can't patch changes to profile if account created
-# can't logout
+
 
 # goals:
-    #  see crime activity on map
-    #  update my address
-    #  login, logout, create account, delete account, edit account
+    #  login/logout
+    #  patch profile info
+    #  delete profile
 
     # can't do fucking shit without current_user being set on login
+
+# stretch:
+    # see crime report details on map
+    # css

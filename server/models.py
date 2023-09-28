@@ -26,28 +26,31 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(200), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    # is_active = db.Column(db.Boolean, nullable=True)
+    is_active = db.Column(db.Boolean, nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
     # serialize_rules = ('-location', '-crimecategory', '-crime_location_associations')
 
     def get_id(self):
         return str(self.id)
-
-    # def is_active(self):
-    #     return self.is_active
             
     def is_authenticated(self):
         return True
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_location=True):
+        user_dict = {
             'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
-            'location': self.location.to_dict() if self.location else None,
         }
+        
+        if include_location and self.location:
+            user_dict['location'] = self.location.to_dict()
+        else:
+            user_dict['location'] = None
+        
+        return user_dict
 
 
 class Location(db.Model, SerializerMixin):
@@ -69,7 +72,7 @@ class Location(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'address': self.address,
-            'users': [user.to_dict() for user in self.users],
+            'users': [user.to_dict(include_location=False) for user in self.users],
             'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
         }
 

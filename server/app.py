@@ -2,20 +2,18 @@
 
 # Remote library imports
 import json
-from flask import request, Flask, jsonify, make_response, request, abort, flash, request, redirect, url_for, session
+from flask import request, Flask, jsonify, make_response, abort, flash, redirect, url_for, session
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask_cors import CORS, cross_origin
+from flask_session import Session
 
 # Local imports
 from config import app, db, api, bcrypt
 from models import User, Location, Crime, CrimeCategory
 from datetime import datetime
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, Length
-from webforms import LoginForm, PasswordForm, RegistrationForm
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from flask_cors import CORS, cross_origin
-from flask_session import Session
+
 
 
 app.config.from_object(__name__)
@@ -85,14 +83,15 @@ class Signup(Resource):
             last_name=data['last_name'],
             location_id=location['id']
         )
-
-        new_user.authenticated=True
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user, remember=True)
+        try:
+            new_user.authenticated=True
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user, remember=True)
 
         # session["user_id"] = new_user.id
-
+        except Exception as ex:
+            return make_response({"errors": [ex.__str__()]}, 422)
 
         return new_user.to_dict(), 201
 
@@ -114,6 +113,7 @@ class Login(Resource):
             db.session.add(user)
             db.session.commit()
             login_user(user, remember=True)
+            session["logged_in"] = True
             return make_response({"success": "You're logged in!"}, 200)
 
         # session["user_id"] = user.id
@@ -154,26 +154,18 @@ class CurrentUser(Resource):
         if user:
             return make_response(user.to_dict(), 200)
         else:
-            return make_responsse({"message": "user not found"}, 404)
+            return make_response({"message": "user not found"}, 404)
 
 api.add_resource(CurrentUser, '/currentuser')
 
-# class CurrentUser(Resource):
-#     @login_required
-#     def get(self):
-#         user_id = session.get("user_id")
-#         session["user_id"] = user.id
-#         return make_response(current_user.to_dict(), 200)
 
-# api.add_resource(CurrentUser, '/currentuser')
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    session["logged_in"] = False
+    return make_response("You're logged out!", 200)
 
-
-class Logout(Resource):
-    @login_required
-    def post(self):
-        logout_user()
-        return make_response("youre logged out!!", 200)
-api.add_resource(Logout, '/logout')
 
 
 
@@ -323,3 +315,4 @@ api.add_resource(CrimeCategories, '/crime_categories')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
+
