@@ -2,7 +2,7 @@
 
 # Remote library imports
 import json
-from flask import request, Flask, jsonify, make_response, abort, flash, redirect, url_for, session
+from flask import request, Flask, jsonify, make_response, abort, flash, redirect, url_for
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -17,13 +17,25 @@ from datetime import datetime
 
 
 app.config.from_object(__name__)
+
+app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SESSION_FILE_DIR'] = '/server/flask_session'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
+app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
+app.json.compact = False
+app.config['REMEMBER_COOKIE_DOMAIN']= "http://localhost:3000/"
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config["SESSION_PERMANENT"] = False
+
 Session(app)
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
-# Instantiate CORS
 cors = CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 
@@ -108,18 +120,20 @@ class Login(Resource):
 
         password = data['password']
 
-        if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-            user.authenticated=True
-            db.session.add(user)
-            db.session.commit()
-            login_user(user, remember=True)
+        if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+            if user.is_authenticated:
+                return make_response({"message": "user is already logged in"}, 200)
+            # user.authenticated=True
+            # db.session.add(user)
+            # db.session.commit()
+            login_user(user)
+            # login_user(user, remember=True)
             session["logged_in"] = True
-            return make_response({"success": "You're logged in!"}, 200)
+            return make_response(user.to_dict(), 200)
 
         # session["user_id"] = user.id
 
-        if not user.password(data['password']):
-            return make_response({"message": "Invalid login"}, 401)
+        return make_response({"message": "invalid login"}, 401)
 
 
 api.add_resource(Login, '/login', methods=['POST'])
@@ -147,16 +161,12 @@ api.add_resource(Login, '/login', methods=['POST'])
 # api.add_resource(Login, '/login', methods=['POST'])
 
 
-class CurrentUser(Resource):
-    @login_required
-    def get(self):
-        user = current_user
-        if user:
-            return make_response(user.to_dict(), 200)
-        else:
-            return make_response({"message": "user not found"}, 404)
-
-api.add_resource(CurrentUser, '/currentuser')
+@app.route('/currentuser', methods=['GET'])
+def get_current_user():
+    if 'logged_in' in session and session['logged_in']:
+        return jsonify(current_user.to_dict()), 200
+    else:
+        return jsonify({"message": "user not found"}), 404
 
 
 @app.route('/logout', methods=['GET', 'POST'])

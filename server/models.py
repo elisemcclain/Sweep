@@ -43,6 +43,7 @@ class User(db.Model, SerializerMixin):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'email': self.email,
+            # 'password_hash': self.password_hash
         }
         
         if include_location and self.location:
