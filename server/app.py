@@ -2,7 +2,7 @@
 
 # Remote library imports
 import json
-from flask import request, Flask, jsonify, make_response, abort, flash, redirect, url_for
+from flask import session, request, Flask, jsonify, make_response
 from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -19,22 +19,15 @@ from datetime import datetime
 app.config.from_object(__name__)
 
 app.config['SESSION_TYPE'] = 'filesystem'
-# app.config['SESSION_FILE_DIR'] = '/server/flask_session'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
 app.json.compact = False
-app.config['REMEMBER_COOKIE_DOMAIN']= "http://localhost:3000/"
-app.config["SESSION_COOKIE_SECURE"] = True
-app.config["SESSION_COOKIE_SAMESITE"] = "None"
-app.config["SESSION_PERMANENT"] = False
 
 Session(app)
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 cors = CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
@@ -55,126 +48,88 @@ def index():
     return ''
 
 
-class Signup(Resource):
-    def post(self):
-        data = request.get_json()
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
 
-        location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+    location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
 
-        if location:
-            location = location.__dict__
-            del location['_sa_instance_state'] 
+    if location:
+        location = location.__dict__
+        del location['_sa_instance_state'] 
      
-        else:
-            location = Location()
+    else:
+        location = Location()
     
-            location.address = data['address']
+        location.address = data['address']
 
-            db.session.add(location)
-            db.session.commit()
+        db.session.add(location)
+        db.session.commit()
 
-            location = location.to_dict()
+        location = location.to_dict()
             
-        email=data['email']
-        password=data['password']
-        first_name=data['first_name']
-        last_name=data['last_name']
+    email=data['email']
+    password=data['password']
+    first_name=data['first_name']
+    last_name=data['last_name']
+    location_id=location['id']
+
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+        return make_response({'error': 'Email already exists'}, 409)
+
+
+    new_user = User(
+        email=data['email'],
+        password_hash=hashed_password,
+        first_name=data['first_name'],
+        last_name=data['last_name'],
         location_id=location['id']
+    )
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({'message': 'User created successfully'}), 201
 
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
-        existing_user = User.query.filter_by(email=email).first()
-        if existing_user:
-            return make_response({'error': 'Email already exists'}, 409)
-
-
-        new_user = User(
-            email=data['email'],
-            password_hash=hashed_password,
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            location_id=location['id']
-        )
-        try:
-            new_user.authenticated=True
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-
-        # session["user_id"] = new_user.id
-        except Exception as ex:
-            return make_response({"errors": [ex.__str__()]}, 422)
-
-        return new_user.to_dict(), 201
-
-api.add_resource(Signup, '/signup')
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'message': 'user already exists'}), 400
 
 
-class Login(Resource):
-    def post(self):
-        data = request.get_json()
-        user = User.query.filter(User.email==data['email']).first()
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user = User.query.filter(User.email==data['email']).first()
 
-        if not user:
-            return make_response({"message": "user not found"}, 404)
+    if not user:
+        return make_response({"message": "user not found"}, 404)
 
-        password = data['password']
+    password = data['password']
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-            if user.is_authenticated:
-                return make_response({"message": "user is already logged in"}, 200)
-            # user.authenticated=True
-            # db.session.add(user)
-            # db.session.commit()
-            login_user(user)
-            # login_user(user, remember=True)
-            session["logged_in"] = True
-            return make_response(user.to_dict(), 200)
-
-        # session["user_id"] = user.id
-
-        return make_response({"message": "invalid login"}, 401)
-
-
-api.add_resource(Login, '/login', methods=['POST'])
-
-# class Login(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         user = User.query.filter(User.email==data['email']).first()
-
-#         if not user:
-#             return make_response({"message": "user not found"}, 404)
-
-#         password = data['password']
-
-#         if bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-#             login_user(user, remember=True)
-#             return make_response({"success": "You're logged in!"}, 200)
-
-#         session["user_id"] = user.id
-
-#         if not user.password(data['password']):
-#             return make_response({"message": "Invalid login"}, 401)
-
-
-# api.add_resource(Login, '/login', methods=['POST'])
+    if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
+        session['user_id'] = user.id
+        return jsonify({'message': 'Login successful'}), 200
+    else:
+        return jsonify({'message': 'Invalid email or password'}), 401
 
 
 @app.route('/currentuser', methods=['GET'])
 def get_current_user():
-    if 'logged_in' in session and session['logged_in']:
-        return jsonify(current_user.to_dict()), 200
+    user_id = session.get('user_id')
+    
+    if user_id:
+        user = User.query.get(user_id)
+        return jsonify({'email': user.email}), 200
     else:
-        return jsonify({"message": "user not found"}), 404
+        return jsonify({'message': 'User not logged in'}), 401
 
 
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
+@app.route('/logout', methods=['POST'])
 def logout():
-    logout_user()
-    session["logged_in"] = False
-    return make_response("You're logged out!", 200)
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logged out successfully'}), 200
 
 
 
@@ -324,5 +279,6 @@ class CrimeCategories(Resource):
 api.add_resource(CrimeCategories, '/crime_categories')
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(port=5555, debug=True)
 
