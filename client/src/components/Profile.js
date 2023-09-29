@@ -4,7 +4,8 @@ import { UserContext } from "./UserProvider";
 
 function Profile() {
   const history = useHistory();
-  const { user } = useContext(UserContext); // Use the user object from the context
+  let user = useContext(UserContext);
+  console.log(user);
 
   const [userData, setUserData] = useState({});
 
@@ -12,7 +13,7 @@ function Profile() {
     const fetchUserData = async () => {
       try {
         const response = await fetch("http://127.0.0.1:5555/currentuser", {
-          credentials: "include", // Include credentials (cookies) for authentication
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -40,7 +41,6 @@ function Profile() {
       .then((response) => {
         if (response.ok) {
           history.push("/");
-          // You can also clear the user context here if needed
         } else {
           throw new Error("Logout failed with status: " + response.status);
         }

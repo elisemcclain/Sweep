@@ -7,7 +7,7 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/currentuser", {
-      method: "GET",
+      // method: "GET",
       credentials: "include",
     })
       .then((response) => {

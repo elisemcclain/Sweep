@@ -6,7 +6,7 @@ import { UserContext } from "./UserProvider";
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
-  const user = useContext(UserContext);
+  // const user = useContext(UserContext);
   const initialValues = {
     email: "",
     password: "",
@@ -34,7 +34,7 @@ const Login = ({ onLogin }) => {
         history.push(`/profile/${userData.first_name}`);
         onLogin();
         console.log(userData);
-        console.log(user);
+        // console.log(user);
       } else {
         const responseData = await response.json();
         setErrors({ password: responseData.message });
