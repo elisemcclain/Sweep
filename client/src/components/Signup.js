@@ -6,7 +6,7 @@ import Profile from "./Profile";
 import { UserContext } from "./UserProvider";
 
 const Signup = ({ handleAddUser, handleLogin }) => {
-  const { user } = useContext(UserContext);
+  let user = useContext(UserContext);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),

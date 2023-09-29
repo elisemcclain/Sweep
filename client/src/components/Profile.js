@@ -2,49 +2,45 @@ import { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
-function Profile({ setLoggedIn }) {
+function Profile({ loggedIn, setLoggedIn }) {
   const history = useHistory();
   let user = useContext(UserContext);
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:5555/currentuser");
-        if (!response.ok) {
-          throw new Error("Request failed with status: " + response.status);
-        }
-        const userData = await response.json();
-        setUserData(userData);
-        console.log(userData);
-      } catch (error) {
-        console.error("Error:", error);
+    const fetchUserData = async () => {
+      const response = await fetch("http://127.0.0.1:5555/currentuser");
+      if (response.status === 200) {
+        const userInfo = await response.json();
+        setUserData(userInfo);
+      } else {
+        console.error("Failed to fetch user data");
       }
     };
-    fetchData();
-  }, [userData]);
+    fetchUserData();
+  }, []);
 
   const handleEditProfile = () => {
     history.push("/edit-profile");
   };
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(`http://127.0.0.1:5555/logout`, {
-        method: "POST",
-        credentials: "include",
+  function handleLogout() {
+    fetch("http://127.0.0.1:5555/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((response) => {
+        if (response.ok) {
+          history.push("/");
+          setLoggedIn(false);
+        } else {
+          throw new Error("Logout failed with status: " + response.status);
+        }
+      })
+      .catch((error) => {
+        console.error("Logout Error:", error);
       });
-
-      if (response.status === 200) {
-        history.push("/");
-        setLoggedIn(false);
-      } else {
-        console.error("Logout failed:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  }
 
   return (
     <div className="profile-container">

@@ -9,8 +9,8 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Sufsan', last_name='Gladiator', email='hi@hddfseir.cofm', is_active=None, password_hash='ssd1ed31qe11'),
-        User(first_name='Zefndaya', last_name='Holland', email='bye@dbdysree.ffcom', is_active=None, password_hash='d1qe13dd12'),
+        User(first_name='Sufsan', last_name='Gladiator', email='hi@hdedddffseir.cofm', is_active=None, password_hash='ssd1ed31qe11'),
+        User(first_name='Zefndaya', last_name='Holland', email='bye@dedbdfdysree.ffcom', is_active=None, password_hash='d1qe13dd12'),
         # Add more users as needed
     ]
     db.session.add_all(users)
@@ -25,16 +25,21 @@ def create_locations():
     db.session.commit()
 
 def create_crime():
-    crime1 = Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17))
-    crime2 = Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16))
+    with app.app_context():
+        session = db.session
 
-    # Append Location instances to the locations attribute of Crime
-    crime1.locations.append(Location.query.get(1))
-    crime2.locations.append(Location.query.get(2))
+        location1 = session.get(Location, 1)
+        location2 = session.get(Location, 2)
 
-    # Add Crime instances to the database session
-    db.session.add_all([crime1, crime2])
-    db.session.commit()
+        if location1 and location2:
+            crime1 = Crime(name='Steal', desc='Stole my favorite cat', date=datetime(2021, 12, 17))
+            crime2 = Crime(name='bump in the night', desc='Yodeling at 3am', date=datetime(2021, 10, 16))
+
+            crime1.locations.append(location1)
+            crime2.locations.append(location2)
+
+            session.add_all([crime1, crime2])
+            session.commit()
 
 def create_crime_category():
     crime_categories = [

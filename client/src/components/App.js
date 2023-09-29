@@ -15,7 +15,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
-  let user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")
@@ -32,20 +32,20 @@ function App() {
     console.log({ updatedUserArray });
   };
 
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
   return (
     <BrowserRouter>
       <main>
-        <NavBar />
+        <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         <Switch>
           <Route exact path="/">
             <Home />
           </Route>
           <Route exact path="/login">
-            <Login
-              users={users}
-              loggedIn={loggedIn}
-              setLoggedIn={setLoggedIn}
-            />
+            <Login users={users} onLogin={handleLogin} />
           </Route>
           <Route exact path="/signup">
             <Signup
@@ -58,7 +58,7 @@ function App() {
             <CrimeMap />
           </Route>
           <Route exact path="/profile/:first_name">
-            <Profile />
+            <Profile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           </Route>
           <Route exact path="/crimereport">
             <CrimeForm />

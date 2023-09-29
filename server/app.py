@@ -26,9 +26,6 @@ app.json.compact = False
 Session(app)
 db.init_app(app)
 
-# with app.app_context():
-#     db.create_all()
-
 cors = CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 

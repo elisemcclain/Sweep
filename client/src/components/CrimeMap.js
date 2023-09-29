@@ -5,7 +5,7 @@ import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
-  const [coordinates, setCoordinates] = useState([]); // Store coordinates separately
+  const [coordinates, setCoordinates] = useState([]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo",
   });

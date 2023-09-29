@@ -5,7 +5,7 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const fetchUserData = () => {
+  useEffect(() => {
     fetch("http://127.0.0.1:5555/currentuser", {
       method: "GET",
       credentials: "include",
@@ -24,14 +24,10 @@ export const UserProvider = ({ children }) => {
         console.error("Error fetching current user:", error);
         setUser(null);
       });
-  };
-
-  useEffect(() => {
-    fetchUserData();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, fetchUserData }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

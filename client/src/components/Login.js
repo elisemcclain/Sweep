@@ -4,9 +4,9 @@ import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import { UserContext } from "./UserProvider";
 
-const Login = ({ setLoggedIn }) => {
+const Login = ({ onLogin }) => {
   const history = useHistory();
-  let user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const initialValues = {
     email: "",
     password: "",
@@ -29,9 +29,10 @@ const Login = ({ setLoggedIn }) => {
       });
 
       if (response.status == 200) {
-        response.json();
+        const userData = await response.json();
         history.push("/");
-        setLoggedIn(true);
+        onLogin();
+        console.log(userData);
         console.log(user);
       } else {
         console.error("Login failed. Please check the problem.");

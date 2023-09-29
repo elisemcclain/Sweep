@@ -3,8 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
-function NavBar() {
-  const [loggedIn, setLoggedIn] = useState(false);
+function NavBar({ loggedIn }) {
   let user = useContext(UserContext);
 
   return (
@@ -52,7 +51,7 @@ function NavBar() {
                   HELP
                 </a>
               </li>
-              {user != null ? (
+              {loggedIn ? (
                 <>
                   <li className="nav-item active">
                     <Link to="/crimereport" className="nav-link">
