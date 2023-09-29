@@ -16,7 +16,7 @@ function EditProfile() {
   const history = useHistory();
 
   // useEffect(() => {
-  //   fetch("http://localhost:5555/currentuserpy", {
+  //   fetch("hhttp://127.0.0.1:5555/currentuserpy", {
   //     method: "GET",
   //     headers: {
   //       "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function EditProfile() {
     })
       .then((response) => {
         if (response.status === 200) {
-          history.push(`profile/{first_name}`);
+          history.push(`profile/${user.first_name}`);
         } else {
           console.error("Error updating profile:", response.statusText);
         }

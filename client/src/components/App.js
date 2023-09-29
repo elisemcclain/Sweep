@@ -57,7 +57,7 @@ function App() {
           <Route exact path="/crimemap">
             <CrimeMap />
           </Route>
-          <Route exact path="/profile/:first_name" component={Profile}>
+          <Route exact path="/profile/:first_name">
             <Profile />
           </Route>
           <Route exact path="/crimereport">

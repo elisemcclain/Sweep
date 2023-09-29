@@ -10,7 +10,7 @@ function Profile({ setLoggedIn }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5555/currentuser`);
+        const response = await fetch("http://127.0.0.1:5555/currentuser");
         if (!response.ok) {
           throw new Error("Request failed with status: " + response.status);
         }
@@ -22,7 +22,7 @@ function Profile({ setLoggedIn }) {
       }
     };
     fetchData();
-  }, []);
+  }, [userData]);
 
   const handleEditProfile = () => {
     history.push("/edit-profile");
@@ -30,7 +30,7 @@ function Profile({ setLoggedIn }) {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(`http://localhost:5555/logout`, {
+      const response = await fetch(`http://127.0.0.1:5555/logout`, {
         method: "POST",
         credentials: "include",
       });

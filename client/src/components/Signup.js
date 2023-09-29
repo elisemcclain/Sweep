@@ -6,7 +6,7 @@ import Profile from "./Profile";
 import { UserContext } from "./UserProvider";
 
 const Signup = ({ handleAddUser, handleLogin }) => {
-  let user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
@@ -39,7 +39,7 @@ const Signup = ({ handleAddUser, handleLogin }) => {
     try {
       setSubmitting(true);
 
-      const response = await fetch("http://localhost:5555/signup", {
+      const response = await fetch("http://127.0.0.1:5555/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
