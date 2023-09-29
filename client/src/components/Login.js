@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
@@ -6,7 +6,7 @@ import { UserContext } from "./UserProvider";
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
-  const [user, setUser] = useContext(UserContext);
+  const user = useContext(UserContext);
   const initialValues = {
     email: "",
     password: "",
@@ -17,28 +17,30 @@ const Login = ({ onLogin }) => {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      const response = await fetch("http://127.0.0.1:5555/login", {
+      setSubmitting(true);
+
+      const response = await fetch("http://localhost:5555/login", {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values, null, 2),
+        body: JSON.stringify(values),
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         const userData = await response.json();
-        history.push("/");
+        history.push(`/profile/${userData.first_name}`);
         onLogin();
         console.log(userData);
         console.log(user);
       } else {
-        console.error("Login failed. Please check the problem.");
+        const responseData = await response.json();
+        setErrors({ password: responseData.message });
       }
     } catch (error) {
-      console.error("Error occurred:", error);
+      console.error("Error during login-FE:", error);
     } finally {
       setSubmitting(false);
     }

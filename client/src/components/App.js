@@ -8,21 +8,21 @@ import CrimeMap from "./CrimeMap";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
-import Styles from "./Styles.css";
+// import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
 function App() {
   const [users, setUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
-  const [user, setUser] = useContext(UserContext);
+  // const [user, setUser] = useContext(UserContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")
       .then((r) => r.json())
       .then((r) => {
         setUsers(r);
-        console.log(user);
+        // console.log(user);
       });
   }, []);
 

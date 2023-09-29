@@ -88,7 +88,7 @@ def signup():
     try:
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({'message': 'User created successfully'}), 201
+        return jsonify({'message': 'User made successfully'}), 201
 
     except IntegrityError:
         db.session.rollback()
@@ -107,7 +107,8 @@ def login():
 
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
         session['user_id'] = user.id
-        return jsonify({'message': 'Login successful'}), 200
+        login_user(user, remember=True)
+        return make_response(user.to_dict(), 200)
     else:
         return jsonify({'message': 'Invalid email or password'}), 401
 
@@ -126,6 +127,7 @@ def get_current_user():
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
+    logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
 
 

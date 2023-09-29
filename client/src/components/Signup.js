@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useContext } from "react";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
-import Profile from "./Profile";
+// import Profile from "./Profile";
 import { UserContext } from "./UserProvider";
 
-const Signup = ({ handleAddUser, handleLogin }) => {
-  let user = useContext(UserContext);
+const Signup = ({ handleAddUser }) => {
+  const { setUser } = useContext(UserContext);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
@@ -49,11 +49,10 @@ const Signup = ({ handleAddUser, handleLogin }) => {
 
       if (response.status === 201) {
         const data = await response.json();
-        // setUser(data);
+        setUser(data);
         console.log(data);
         // console.log(user);
-
-        history.push("/");
+        history.push(`/profile/${data.first_name}`);
         console.log("User registered successfully!!");
       } else {
         const responseData = await response.json();

@@ -1,20 +1,28 @@
-import { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
-function Profile({ loggedIn, setLoggedIn }) {
+function Profile() {
   const history = useHistory();
-  let user = useContext(UserContext);
+  const { user } = useContext(UserContext); // Use the user object from the context
+
   const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await fetch("http://127.0.0.1:5555/currentuser");
-      if (response.status === 200) {
-        const userInfo = await response.json();
-        setUserData(userInfo);
-      } else {
-        console.error("Failed to fetch user data");
+      try {
+        const response = await fetch("http://127.0.0.1:5555/currentuser", {
+          credentials: "include", // Include credentials (cookies) for authentication
+        });
+
+        if (response.ok) {
+          const userInfo = await response.json();
+          setUserData(userInfo);
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (error) {
+        console.error("Fetch Error:", error);
       }
     };
     fetchUserData();
@@ -24,7 +32,7 @@ function Profile({ loggedIn, setLoggedIn }) {
     history.push("/edit-profile");
   };
 
-  function handleLogout() {
+  const handleLogout = () => {
     fetch("http://127.0.0.1:5555/logout", {
       method: "POST",
       credentials: "include",
@@ -32,7 +40,7 @@ function Profile({ loggedIn, setLoggedIn }) {
       .then((response) => {
         if (response.ok) {
           history.push("/");
-          setLoggedIn(false);
+          // You can also clear the user context here if needed
         } else {
           throw new Error("Logout failed with status: " + response.status);
         }
@@ -40,7 +48,7 @@ function Profile({ loggedIn, setLoggedIn }) {
       .catch((error) => {
         console.error("Logout Error:", error);
       });
-  }
+  };
 
   return (
     <div className="profile-container">
@@ -48,14 +56,7 @@ function Profile({ loggedIn, setLoggedIn }) {
         <h2>Welcome, {userData.first_name}</h2>
         <p>Email: {userData.email}</p>
         <button onClick={handleEditProfile}>Edit Profile</button>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleLogout();
-          }}
-        >
-          Logout
-        </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ function NavBar({ loggedIn }) {
                   HELP
                 </a>
               </li>
-              {loggedIn ? (
+              {user ? (
                 <>
                   <li className="nav-item active">
                     <Link to="/crimereport" className="nav-link">
