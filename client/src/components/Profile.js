@@ -12,13 +12,13 @@ function Profile() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:5555/currentuser", {
+        const response = await fetch("http://127.0.0.1:5555/current_user", {
           credentials: "include",
         });
 
         if (response.ok) {
           const userInfo = await response.json();
-          setUserData(userInfo);
+          setUser(userInfo);
         } else {
           console.error("Failed to fetch user data");
         }
@@ -53,8 +53,8 @@ function Profile() {
   return (
     <div className="profile-container">
       <div>
-        <h2>Welcome, {userData.first_name}</h2>
-        <p>Email: {userData.email}</p>
+        <h2>Welcome, {user.first_name}</h2>
+        <p>Email: {user.email}</p>
         <button onClick={handleEditProfile}>Edit Profile</button>
         <button onClick={handleLogout}>Logout</button>
       </div>

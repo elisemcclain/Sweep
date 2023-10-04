@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
 const Signup = ({ handleAddUser }) => {
-  let user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const formSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").max(100),
@@ -49,8 +49,8 @@ const Signup = ({ handleAddUser }) => {
 
       if (response.status === 201) {
         const data = await response.json();
-          console.log(data);
-        // console.log(user);
+        console.log(data);
+        setUser(data);
         history.push(`/profile/${data.first_name}`);
         console.log("User registered successfully!!");
       } else {

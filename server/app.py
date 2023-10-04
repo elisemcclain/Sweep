@@ -27,7 +27,7 @@ app.json.compact = False
 # Session(app)
 db.init_app(app)
 
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
 
 login_manager = LoginManager()
@@ -115,9 +115,11 @@ def login():
 
 
 @app.route('/current_user', methods=['GET'])
+@cross_origin(supports_credentials=True)
+@login_required
 def get():
     print(current_user)
-    if current_user:
+    if current_user.is_authenticated:
         return make_response(current_user.to_dict(), 200)
     else:
         return jsonify({'message': 'User not logged in'}), 401

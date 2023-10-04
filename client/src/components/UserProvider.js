@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/currentuser", {
+    fetch("http://127.0.0.1:5555/current_user", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -17,23 +17,23 @@ export const UserProvider = ({ children }) => {
       },
     })
       .then((response) => {
-        // if (response.ok) {
-        return response.json();
-        // } else {
-        //   throw new Error("User not authenticated");
-        // }
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("User not authenticated");
+        }
       })
       .then((userData) => {
         setUser(userData);
         setLoading(false);
         setError(null);
+      })
+      .catch((error) => {
+        console.error("Error fetching current user:", error);
+        setUser(null);
+        setError("Failed to fetch user data.");
+        setLoading(false);
       });
-    // .catch((error) => {
-    //   console.error("Error fetching current user:", error);
-    //   setUser(null);
-    //   setError("Failed to fetch user data.");
-    //   setLoading(false);
-    // });
   }, []);
 
   return (
