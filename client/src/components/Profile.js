@@ -7,8 +7,6 @@ function Profile() {
   const { user, setUser } = useContext(UserContext);
   // console.log(user);
 
-  const [userData, setUserData] = useState({});
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {

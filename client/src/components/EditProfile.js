@@ -1,142 +1,69 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
 
 function EditProfile() {
-  const params = useParams();
-  let user = useContext(UserContext);
-  const [formData, setFormData] = useState({
-    email: "",
-    first_name: "",
-    last_name: "",
-    address: "",
-    password: "",
-  });
-
-  const history = useHistory();
-
-  // useEffect(() => {
-  //   fetch("hhttp://127.0.0.1:5555/currentuserpy", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     credentials: "include",
-  //   })
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         return response.json();
-  //       } else {
-  //         history.push("/login");
-  //       }
-  //     })
-  //     .then((data) => {
-  //       setFormData({
-  //         first_name: data.first_name,
-  //         last_name: data.last_name,
-  //         email: data.email,
-  //         address: data.address,
-  //         password: data.password,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // }, [history]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const initialValues = {
+    email: user.email,
+    address: user.address,
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Required"),
+    address: Yup.string().required("Required"),
+  });
 
-    fetch("/users/<int:id>", {
+  const handleSubmit = (values, { setSubmitting }) => {
+    // Send a PATCH request to update the user's information
+    fetch("http://127.0.0.1:5555/current_user", {
       method: "PATCH",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
-      body: JSON.stringify(formData),
+      body: JSON.stringify(values),
     })
       .then((response) => {
-        if (response.status === 200) {
-          history.push(`profile/${user.first_name}`);
+        if (response.ok) {
+          response.json().then((userInfo) => {
+            setUser(userInfo);
+          });
         } else {
-          console.error("Error updating profile:", response.statusText);
+          throw new Error("Update failed with status: " + response.status);
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("Update Error:", error);
+      })
+      .finally(() => {
+        setSubmitting(false);
       });
   };
 
   return (
-    <div className="edit-profile-container">
-      <h2>Edit Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="first_name">First Name</label>
-          <input
-            type="text"
-            id="first_name"
-            name="first_name"
-            value={formData.first_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="last_name">Last Name</label>
-          <input
-            type="text"
-            id="last_name"
-            name="last_name"
-            value={formData.last_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="address">Address</label>
-          <input
-            type="address"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit">Save Changes</button>
-      </form>
-    </div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <div>
+            <label>Email:</label>
+            <Field type="text" name="email" />
+            <ErrorMessage name="email" component="div" />
+          </div>
+          <div>
+            <label>Address:</label>
+            <Field type="text" name="address" />
+            <ErrorMessage name="address" component="div" />
+          </div>
+          <button type="submit" disabled={isSubmitting}>
+            Save
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 }
 

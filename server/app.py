@@ -114,33 +114,47 @@ def login():
         return jsonify({'message': 'Invalid email or password - BE'}), 401
 
 
-@app.route('/current_user', methods=['GET'])
+@app.route('/current_user', methods=['GET', 'PATCH', 'DELETE'])
 @cross_origin(supports_credentials=True)
 @login_required
 def get():
     print(current_user)
     if current_user.is_authenticated:
-        return make_response(current_user.to_dict(), 200)
+        if request.method == 'GET':
+            return make_response(current_user.to_dict(), 200)
+
+        elif request.method == 'PATCH':
+                data = request.get_json()
+                if 'email' in data:
+                    current_user.email = data['email']
+                    # current_user.first_name = data['first_name']
+                    # current_user.last_name = data['last_name']
+                    # current_user.address = data['location_id']
+                    db.session.commit()
+                    return jsonify({'message': 'Email updated successfully'}), 200
+                else:
+                    return jsonify({'message': 'Invalid request data'}), 400
+
+        elif request.method == 'DELETE':
+            db.session.delete(current_user)
+            db.session.commit()
+            return jsonify({'message': 'User deleted successfully'}), 200
     else:
         return jsonify({'message': 'User not logged in'}), 401
-    # user_id = session.get('user_id')
-    # print(f"User ID from session: {user_id}")
-    
-    # if user_id:
-    #     user = User.query.get(user_id)
-    #     print(f"User found in DB: {user}")
-    #     return jsonify({'email': user.email}), 200
+
+
+
+    # print(current_user)
+    # if current_user.is_authenticated:
+    #     return make_response(current_user.to_dict(), 200)
     # else:
     #     return jsonify({'message': 'User not logged in'}), 401
-
 
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('user_id', None)
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
-
-
 
 
 @app.route('/check_login_status', methods=['GET'])
