@@ -48,7 +48,7 @@ function NavBar({ loggedIn }) {
                   HELP
                 </a>
               </li>
-              {!user ? (
+              {user ? (
                 <>
                   <li className="nav-item active">
                     <Link to="/crimereport" className="nav-link">

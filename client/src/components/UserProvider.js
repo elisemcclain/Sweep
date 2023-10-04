@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/current_user", {
+    fetch("http://localhost:5555/current_user", {
       method: "GET",
       credentials: "include",
       headers: {
