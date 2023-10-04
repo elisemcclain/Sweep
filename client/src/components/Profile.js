@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "./UserProvider";
+import EditProfile from "./EditProfile";
 
 function Profile() {
   const history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  // console.log(user);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,7 +28,7 @@ function Profile() {
   }, []);
 
   const handleEditProfile = () => {
-    history.push("/edit-profile");
+    history.push("/profile/edit");
   };
 
   const handleLogout = () => {

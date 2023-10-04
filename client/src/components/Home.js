@@ -4,6 +4,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 function Home() {
   const history = useHistory();
+
   function handleClick() {
     history.push("/signup");
   }

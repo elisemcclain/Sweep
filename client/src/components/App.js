@@ -8,6 +8,8 @@ import CrimeMap from "./CrimeMap";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
+import EditProfile from "./EditProfile";
+
 // import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
@@ -59,6 +61,9 @@ function App() {
           </Route>
           <Route exact path="/profile/:first_name">
             <Profile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+          </Route>
+          <Route exact path="/profile/edit">
+            <EditProfile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           </Route>
           <Route exact path="/crimereport">
             <CrimeForm />

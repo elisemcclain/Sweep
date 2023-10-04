@@ -4,15 +4,12 @@ import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
 function NavBar({ loggedIn }) {
-  let user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   return (
     <div>
       <nav className="navbar navbar-expand-sm">
         <div className="container">
-          {/* <div>
-            <img className="magnify" src="./magnify.png" alt="Sweep-logo" />
-          </div> */}
           <ul className="navbar-brand mb-0 h1">
             <Link to="/" className="d-inline-block align-top" width="140">
               SWEEP
@@ -51,7 +48,7 @@ function NavBar({ loggedIn }) {
                   HELP
                 </a>
               </li>
-              {user ? (
+              {!user ? (
                 <>
                   <li className="nav-item active">
                     <Link to="/crimereport" className="nav-link">
