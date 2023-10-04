@@ -14,24 +14,26 @@ from config import app, db, api, bcrypt
 from models import User, Location, Crime, CrimeCategory
 from datetime import datetime
 
-
-
 app.config.from_object(__name__)
 
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "None"
+app.config['REMEMBER_COOKIE_DOMAIN']= "http://localhost:3000/"
+
 app.json.compact = False
 
-Session(app)
+# Session(app)
 db.init_app(app)
 
-cors = CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+# login_manager.login_view = 'login'
 
 
 @login_manager.user_loader
@@ -90,7 +92,7 @@ def signup():
         db.session.commit()
         return jsonify({'message': 'User made successfully'}), 201
 
-    except IntegrityError:
+    except Exception as e:
         db.session.rollback()
         return jsonify({'message': 'user already exists'}), 400
 
@@ -106,24 +108,29 @@ def login():
     password = data['password']
 
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
-        session['user_id'] = user.id
+        # session['user_id'] = user.id
         login_user(user, remember=True)
         return make_response(user.to_dict(), 200)
     else:
-        return jsonify({'message': 'Invalid email or password'}), 401
+        return jsonify({'message': 'Invalid email or password - BE'}), 401
 
 
-@app.route('/currentuser', methods=['GET'])
-def get_current_user():
-    user_id = session.get('user_id')
-    print(f"User ID from session: {user_id}")
-    
-    if user_id:
-        user = User.query.get(user_id)
-        print(f"User found in DB: {user}")
-        return jsonify({'email': user.email}), 200
+@app.route('/current_user', methods=['GET'])
+def get():
+    print(current_user)
+    if current_user:
+        return make_response(current_user.to_dict(), 200)
     else:
         return jsonify({'message': 'User not logged in'}), 401
+    # user_id = session.get('user_id')
+    # print(f"User ID from session: {user_id}")
+    
+    # if user_id:
+    #     user = User.query.get(user_id)
+    #     print(f"User found in DB: {user}")
+    #     return jsonify({'email': user.email}), 200
+    # else:
+    #     return jsonify({'message': 'User not logged in'}), 401
 
 
 @app.route('/logout', methods=['POST'])
@@ -137,7 +144,7 @@ def logout():
 
 @app.route('/check_login_status', methods=['GET'])
 def check_login_status():
-    if 'logged_in' in session and session['logged_in']:
+    if current_user.is_authenticated:
         return jsonify({'logged_in': True}), 200
     else:
         return jsonify({'logged_in': False}), 200

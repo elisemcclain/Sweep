@@ -12,28 +12,28 @@ export const UserProvider = ({ children }) => {
       method: "GET",
       credentials: "include",
       headers: {
-        "Content-Type": "application/json; charset=UTF-8",
+        "Content-Type": "application/json",
         Accept: "application/json",
       },
     })
       .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("User not authenticated");
-        }
+        // if (response.ok) {
+        return response.json();
+        // } else {
+        //   throw new Error("User not authenticated");
+        // }
       })
       .then((userData) => {
         setUser(userData);
         setLoading(false);
         setError(null);
-      })
-      .catch((error) => {
-        console.error("Error fetching current user:", error);
-        setUser(null);
-        setError("Failed to fetch user data.");
-        setLoading(false);
       });
+    // .catch((error) => {
+    //   console.error("Error fetching current user:", error);
+    //   setUser(null);
+    //   setError("Failed to fetch user data.");
+    //   setLoading(false);
+    // });
   }, []);
 
   return (

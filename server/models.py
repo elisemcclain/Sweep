@@ -22,14 +22,14 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(80), nullable=False)
-    last_name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(200), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
+    first_name = db.Column(db.String(80), nullable=True)
+    last_name = db.Column(db.String(80), nullable=True)
+    email = db.Column(db.String(200), unique=True, nullable=True)
+    password_hash = db.Column(db.String(128), nullable=True)
     is_active = db.Column(db.Boolean, nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    # serialize_rules = ('-location', '-crimecategory', '-crime_location_associations')
+    serialize_rules = ('-location',)
 
     def get_id(self):
         return str(self.id)
@@ -37,21 +37,21 @@ class User(db.Model, SerializerMixin):
     def is_authenticated(self):
         return True
 
-    def to_dict(self, include_location=True):
-        user_dict = {
-            'id': self.id,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'email': self.email,
-            # 'password_hash': self.password_hash
-        }
+    # def to_dict(self, include_location=True):
+    #     user_dict = {
+    #         'id': self.id,
+    #         'first_name': self.first_name,
+    #         'last_name': self.last_name,
+    #         'email': self.email,
+    #         # 'password_hash': self.password_hash
+    #     }
         
-        if include_location and self.location:
-            user_dict['location'] = self.location.to_dict()
-        else:
-            user_dict['location'] = None
+        # if include_location and self.location:
+        #     user_dict['location'] = self.location.to_dict()
+        # else:
+        #     user_dict['location'] = None
         
-        return user_dict
+        # return user_dict
 
 
 class Location(db.Model, SerializerMixin):
@@ -68,14 +68,14 @@ class Location(db.Model, SerializerMixin):
         back_populates='locations',
         lazy='dynamic'
     )
-    # serialize_rules = ('-users', '-crime_location_associations', '-crimes_in_loc')
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'address': self.address,
-            'users': [user.to_dict(include_location=False) for user in self.users],
-            'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
-        }
+    serialize_rules = ('-users', '-crime_location_associations', '-crimes_in_loc', '-crimes_associated.locations',)
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'address': self.address,
+    #         'users': [user.to_dict(include_location=False) for user in self.users],
+    #         'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
+    #     }
 
 class Crime(db.Model, SerializerMixin):
     # get, post
@@ -95,14 +95,14 @@ class Crime(db.Model, SerializerMixin):
         lazy='dynamic'
     )
 
-    # serialize_rules = ('-locations',)
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'desc': self.desc,
-            'date': self.date,
-        }
+    serialize_rules = ('-locations',)
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'desc': self.desc,
+    #         'date': self.date,
+    #     }
 
 
 class CrimeCategory(db.Model, SerializerMixin):
@@ -113,10 +113,10 @@ class CrimeCategory(db.Model, SerializerMixin):
     crime_id = db.Column(db.Integer, db.ForeignKey('crimes.id'), nullable=False)
     category = db.Column(db.String(120), nullable=False)
     
-    # serialize_rules = ('-crimes',)
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'crime_id': self.crime_id if self.crime_id else None,
-            'category': self.category
-        }
+    serialize_rules = ('-crimes',)
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'crime_id': self.crime_id if self.crime_id else None,
+    #         'category': self.category
+    #     }
