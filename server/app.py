@@ -116,9 +116,11 @@ def login():
 @app.route('/currentuser', methods=['GET'])
 def get_current_user():
     user_id = session.get('user_id')
+    print(f"User ID from session: {user_id}")
     
     if user_id:
         user = User.query.get(user_id)
+        print(f"User found in DB: {user}")
         return jsonify({'email': user.email}), 200
     else:
         return jsonify({'message': 'User not logged in'}), 401

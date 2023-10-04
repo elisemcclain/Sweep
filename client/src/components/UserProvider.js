@@ -1,14 +1,20 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/currentuser", {
-      // method: "GET",
+      method: "GET",
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Accept: "application/json",
+      },
     })
       .then((response) => {
         if (response.ok) {
@@ -19,12 +25,20 @@ export const UserProvider = ({ children }) => {
       })
       .then((userData) => {
         setUser(userData);
+        setLoading(false);
+        setError(null);
       })
       .catch((error) => {
         console.error("Error fetching current user:", error);
         setUser(null);
+        setError("Failed to fetch user data.");
+        setLoading(false);
       });
   }, []);
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };

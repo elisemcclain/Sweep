@@ -6,7 +6,7 @@ import { UserContext } from "./UserProvider";
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
-  // const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const initialValues = {
     email: "",
     password: "",
@@ -17,33 +17,39 @@ const Login = ({ onLogin }) => {
     password: Yup.string().required("Password is required"),
   });
 
-  const handleSubmit = async (values, { setSubmitting, setErrors }) => {
-    try {
-      setSubmitting(true);
+  function handleUser(x) {
+    setUser(x);
+    history.push(`/profile/${x.first_name}`);
+  }
 
-      const response = await fetch("http://localhost:5555/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+  const handleSubmit = (values) => {
+    fetch("http://localhost:5555/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error during login-FE:");
+        }
+      })
+      .then((data) => {
+        handleUser(data);
+        console.log(data);
+        console.log(user);
+      })
+      .catch((error) => {
+        console.error("Error during login-FE:", error);
       });
-
-      if (response.status === 200) {
-        const userData = await response.json();
-        history.push(`/profile/${userData.first_name}`);
-        onLogin();
-        console.log(userData);
-        // console.log(user);
-      } else {
-        const responseData = await response.json();
-        setErrors({ password: responseData.message });
-      }
-    } catch (error) {
-      console.error("Error during login-FE:", error);
-    } finally {
-      setSubmitting(false);
-    }
   };
 
   return (

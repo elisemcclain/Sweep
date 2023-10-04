@@ -4,8 +4,8 @@ import { UserContext } from "./UserProvider";
 
 function Profile() {
   const history = useHistory();
-  let user = useContext(UserContext);
-  console.log(user);
+  const { user, setUser } = useContext(UserContext);
+  // console.log(user);
 
   const [userData, setUserData] = useState({});
 
