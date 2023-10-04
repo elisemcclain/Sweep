@@ -16,8 +16,7 @@ from datetime import datetime
 
 app.config.from_object(__name__)
 
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
 app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
@@ -109,7 +108,7 @@ def login():
 
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password_hash):
         # session['user_id'] = user.id
-        login_user(user, remember=True)
+        login_user(user, remember=True, force=True)
         return make_response(user.to_dict(), 200)
     else:
         return jsonify({'message': 'Invalid email or password - BE'}), 401

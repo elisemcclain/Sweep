@@ -22,10 +22,10 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(80), nullable=True)
-    last_name = db.Column(db.String(80), nullable=True)
-    email = db.Column(db.String(200), unique=True, nullable=True)
-    password_hash = db.Column(db.String(128), nullable=True)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(200), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     is_active = db.Column(db.Boolean, nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 

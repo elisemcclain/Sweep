@@ -9,7 +9,7 @@ import bcrypt
 
 # Instantiate app, set attributes
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_ECHO'] = True
 # app.config["SECRET_KEY"] = "asdhjfpiuqwhf984uinaslkdjfw"
@@ -18,7 +18,6 @@ app = Flask(__name__)
 # app.config['REMEMBER_COOKIE_DOMAIN']= "http://localhost:3000/"
 # app.config["SESSION_COOKIE_SECURE"] = True
 # app.config["SESSION_COOKIE_SAMESITE"] = "None"
-# # app.config["SESSION_TYPE"] = "filesystem"
 # app.config["SESSION_PERMANENT"] = False
 
 
