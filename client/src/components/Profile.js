@@ -72,6 +72,28 @@ function Profile() {
     setEditMode(!editMode);
   };
 
+  const handleDeleteAccount = () => {
+    if (window.confirm("Are you sure you want to delete your account?")) {
+      fetch("http://localhost:5555/current_user", {
+        method: "DELETE",
+        credentials: "include",
+      })
+        .then((response) => {
+          if (response.ok) {
+            setUser(null);
+            history.push("/");
+          } else {
+            throw new Error(
+              "Delete account failed with status: " + response.status
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Delete Account Error:", error);
+        });
+    }
+  };
+
   const handleLogout = () => {
     fetch("http://127.0.0.1:5555/logout", {
       method: "POST",
@@ -148,6 +170,9 @@ function Profile() {
               </Form>
             )}
           </Formik>
+          <button type="button" onClick={handleDeleteAccount}>
+            Delete Account
+          </button>
         </div>
       ) : null}
     </div>
