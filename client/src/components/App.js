@@ -62,9 +62,7 @@ function App() {
           <Route exact path="/profile/:first_name">
             <Profile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           </Route>
-          <Route exact path="/profile/edit">
-            <EditProfile loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-          </Route>
+          {/* <Route exact path="/profile/edit" component={EditProfile}></Route> */}
           <Route exact path="/crimereport">
             <CrimeForm />
           </Route>

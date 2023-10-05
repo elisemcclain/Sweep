@@ -44,9 +44,8 @@ const Login = ({ onLogin }) => {
       })
       .then((data) => {
         handleUser(data);
-        console.log(data);
-        console.log(user);
-      
+        // console.log(data);
+        // console.log(user);
       })
       .catch((error) => {
         console.error("Error during login-FE:", error);

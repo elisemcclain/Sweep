@@ -16,7 +16,7 @@ function EditProfile() {
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
-    fetch("http://127.0.0.1:5555/current_user", {
+    fetch("http://localhost:5555/current_user", {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -33,7 +33,7 @@ function EditProfile() {
       })
       .then((userInfo) => {
         setUser(userInfo);
-        history.push(`/profile/${user.first_name}`);
+        history.push(`/profile/${userInfo.first_name}`);
       })
       .catch((error) => {
         console.error("Update Error:", error);
@@ -49,6 +49,9 @@ function EditProfile() {
       <Formik
         initialValues={{
           email: user.email,
+          address: user.address,
+          first_name: user.first_name,
+          last_name: user.last_name,
           address: user.address,
         }}
         validationSchema={validationSchema}

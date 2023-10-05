@@ -6,8 +6,6 @@ import { UserContext } from "./UserProvider";
 function NavBar({ loggedIn }) {
   const { user, setUser } = useContext(UserContext);
 
-  console.log("NavBar rendering. User:", user);
-
   return (
     <div>
       <nav className="navbar navbar-expand-sm">

@@ -89,7 +89,7 @@ def signup():
     try:
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({'message': 'User made successfully'}), 201
+        return make_response(new_user.to_dict(), 201)
 
     except Exception as e:
         db.session.rollback()
@@ -118,7 +118,6 @@ def login():
 @cross_origin(supports_credentials=True)
 @login_required
 def get():
-    print(current_user)
     if current_user.is_authenticated:
         if request.method == 'GET':
             return make_response(current_user.to_dict(), 200)
@@ -127,18 +126,18 @@ def get():
                 data = request.get_json()
                 if 'email' in data:
                     current_user.email = data['email']
-                    # current_user.first_name = data['first_name']
-                    # current_user.last_name = data['last_name']
+                    current_user.first_name = data['first_name']
+                    current_user.last_name = data['last_name']
                     # current_user.address = data['location_id']
                     db.session.commit()
-                    return jsonify({'message': 'Email updated successfully'}), 200
+                    return make_response(current_user.to_dict(), 200)
                 else:
                     return jsonify({'message': 'Invalid request data'}), 400
 
         elif request.method == 'DELETE':
             db.session.delete(current_user)
             db.session.commit()
-            return jsonify({'message': 'User deleted successfully'}), 200
+            return jsonify({'message': 'User deleted successfully'}), 204
     else:
         return jsonify({'message': 'User not logged in'}), 401
 
