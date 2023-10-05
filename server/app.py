@@ -143,16 +143,8 @@ def get():
         return jsonify({'message': 'User not logged in'}), 401
 
 
-
-    # print(current_user)
-    # if current_user.is_authenticated:
-    #     return make_response(current_user.to_dict(), 200)
-    # else:
-    #     return jsonify({'message': 'User not logged in'}), 401
-
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.pop('user_id', None)
     logout_user()
     return jsonify({'message': 'Logged out successfully'}), 200
 

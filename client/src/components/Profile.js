@@ -38,6 +38,7 @@ function Profile() {
     })
       .then((response) => {
         if (response.ok) {
+          setUser(null);
           history.push("/");
         } else {
           throw new Error("Logout failed with status: " + response.status);
