@@ -160,7 +160,7 @@ function Profile() {
                   <ErrorMessage name="last_name" component="div" />
                 </div>
                 <div>
-                  <label>Address:</label>
+                  a<label>Address:</label>
                   <Field type="text" name="address" />
                   <ErrorMessage name="address" component="div" />
                 </div>
