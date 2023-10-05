@@ -73,3 +73,8 @@ function App() {
 }
 
 export default App;
+
+// submission page for crime report
+// stylize/csss
+// address patch/new user address
+// crime report info on map

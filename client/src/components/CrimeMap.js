@@ -1,11 +1,18 @@
 // AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo;
 
 import React, { useEffect, useState } from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
+  const [selectedMarker, setSelectedMarker] = useState(null);
+
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyB3uMb2taYq7oVoUNYjQ9dE3HbIdGKq9Lo",
   });
@@ -23,7 +30,6 @@ const CrimeMap = () => {
 
   useEffect(() => {
     if (addresses.length > 0) {
-      // Only perform geocoding if there are addresses
       Promise.all(
         addresses.map((address) =>
           fetch(
@@ -45,6 +51,7 @@ const CrimeMap = () => {
         .then((coords) => {
           const validCoords = coords.filter((coord) => coord !== null);
           setCoordinates(validCoords);
+          // console.log(validCoords);
         })
         .catch((error) => {
           console.error("Error geocoding addresses:", error);
@@ -69,8 +76,31 @@ const CrimeMap = () => {
         zoom={12}
       >
         {coordinates.map((coord, index) => (
-          <Marker key={index} position={{ lat: coord.lat, lng: coord.lng }} />
+          <Marker
+            key={index}
+            position={{ lat: coord.lat, lng: coord.lng }}
+            onClick={() => {
+              setSelectedMarker(index);
+            }}
+          />
         ))}
+
+        {selectedMarker !== null && (
+          <InfoWindow
+            position={{
+              lat: coordinates[selectedMarker].lat,
+              lng: coordinates[selectedMarker].lng,
+            }}
+            onCloseClick={() => {
+              setSelectedMarker(null);
+            }}
+          >
+            <div>
+              <p>Address: {addresses[selectedMarker].address}</p>
+              <p>Crime: {addresses[selectedMarker].crimeDate}</p>
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </div>
   );
