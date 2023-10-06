@@ -137,7 +137,6 @@ function Profile() {
               address: user.address,
               first_name: user.first_name,
               last_name: user.last_name,
-              address: user.address,
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
@@ -146,31 +145,51 @@ function Profile() {
               <Form>
                 <div>
                   <label>Email:</label>
-                  <Field type="text" name="email" />
-                  <ErrorMessage name="email" component="div" />
+                  <Field type="text" name="email" className="form-control" />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-danger"
+                  />
                 </div>
                 <div>
                   <label>First Name:</label>
-                  <Field type="text" name="first_name" />
+                  <Field
+                    type="text"
+                    name="first_name"
+                    className="form-control"
+                  />
                   <ErrorMessage name="first_name" component="div" />
                 </div>
                 <div>
                   <label>Last Name:</label>
-                  <Field type="text" name="last_name" />
+                  <Field
+                    type="text"
+                    name="last_name"
+                    className="form-control"
+                  />
                   <ErrorMessage name="last_name" component="div" />
                 </div>
                 <div>
-                  a<label>Address:</label>
-                  <Field type="text" name="address" />
+                  <label>Address:</label>
+                  <Field type="text" name="address" className="form-control" />
                   <ErrorMessage name="address" component="div" />
                 </div>
-                <button type="submit" disabled={isSubmitting}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn btn-success"
+                >
                   Save
                 </button>
               </Form>
             )}
           </Formik>
-          <button type="button" onClick={handleDeleteAccount}>
+          <button
+            type="button"
+            onClick={handleDeleteAccount}
+            className="btn btn-danger"
+          >
             Delete Account
           </button>
         </div>

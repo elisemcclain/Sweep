@@ -8,7 +8,6 @@ import CrimeMap from "./CrimeMap";
 import CrimeForm from "./CrimeForm";
 import Profile from "./Profile";
 import Signup from "./Signup";
-import EditProfile from "./EditProfile";
 
 // import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
