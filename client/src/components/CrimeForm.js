@@ -126,8 +126,30 @@ function CrimeForm() {
           </div>
         </div>
       ) : (
-        <div>
-          <h3>Your report has been submitted!</h3>
+        <div className="crime-form-container">
+          <section className="text-center">
+            <div
+              className="p-5 bg-image"
+              style={{
+                height: "130px",
+              }}
+            ></div>
+
+            <div
+              className="card mx-4 mx-md-5 shadow-5-strong"
+              style={{
+                marginTop: "-100px",
+                background: "hsla(0, 0%, 100%, 0.8)",
+                backdropFilter: "blur(30px)",
+              }}
+            >
+              <div className="card-body py-5 px-md-5">
+                <h3 className="fw-bold mb-5">
+                  Your report has been submitted!
+                </h3>
+              </div>
+            </div>
+          </section>
         </div>
       )}
     </div>
