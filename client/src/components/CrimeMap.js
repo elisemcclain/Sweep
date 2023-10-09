@@ -10,6 +10,8 @@ import {
 
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
+  const [selectedCrime, setSelectedCrime] = useState(null);
+  const [crimes, setCrimes] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
 
@@ -29,7 +31,20 @@ const CrimeMap = () => {
   }, []);
 
   useEffect(() => {
-    if (addresses.length > 0) {
+    fetch("http://127.0.0.1:5555/crimes")
+      .then((response) => response.json())
+      .then((data) => {
+        setCrimes(data);
+        // console.log(crimes);
+        console.log(crimes);
+      })
+      .catch((error) => {
+        console.error("Error fetching crime data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (addresses.length > 0 || crimes.length > 0) {
       Promise.all(
         addresses.map((address) =>
           fetch(
@@ -57,7 +72,7 @@ const CrimeMap = () => {
           console.error("Error geocoding addresses:", error);
         });
     }
-  }, [addresses]);
+  }, [addresses, crimes]);
 
   if (!isLoaded) {
     return "Loading...";
@@ -81,6 +96,8 @@ const CrimeMap = () => {
             position={{ lat: coord.lat, lng: coord.lng }}
             onClick={() => {
               setSelectedMarker(index);
+              setSelectedCrime(crimes[index]);
+              console.log(selectedCrime);
             }}
           />
         ))}
@@ -93,11 +110,18 @@ const CrimeMap = () => {
             }}
             onCloseClick={() => {
               setSelectedMarker(null);
+              setSelectedCrime(null);
             }}
           >
             <div>
               <p>Address: {addresses[selectedMarker].address}</p>
-              <p>Crime: {addresses[selectedMarker].crimeDate}</p>
+              {selectedCrime !== null && (
+                <div>
+                  <p>Crime Name: {selectedCrime.name}</p>
+                  <p>Crime Description: {selectedCrime.desc}</p>
+                  <p>Crime Date: {selectedCrime.date}</p>
+                </div>
+              )}
             </div>
           </InfoWindow>
         )}
