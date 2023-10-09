@@ -123,16 +123,18 @@ def get():
             return make_response(current_user.to_dict(), 200)
 
         elif request.method == 'PATCH':
-                data = request.get_json()
-                if 'email' in data:
-                    current_user.email = data['email']
-                    current_user.first_name = data['first_name']
-                    current_user.last_name = data['last_name']
-                    # current_user.address = data['location_id']
-                    db.session.commit()
-                    return make_response(current_user.to_dict(), 200)
-                else:
-                    return jsonify({'message': 'Invalid request data'}), 400
+            data = request.get_json()
+            # location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+
+            if 'email' in data:
+                current_user.email = data['email']
+                current_user.first_name = data['first_name']
+                current_user.last_name = data['last_name']
+                current_user.address = data['address']
+                db.session.commit()
+                return make_response(current_user.to_dict(), 200)
+            else:
+                return jsonify({'message': 'Invalid request data'}), 400
 
         elif request.method == 'DELETE':
             db.session.delete(current_user)
@@ -241,7 +243,6 @@ class Crimes(Resource):
         return make_response(crimes, 200)
 
     def post(self):
-        # doesn't post address, posts location id
         new_crime_rep = Crime()
         
         data = request.get_json()
