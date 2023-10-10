@@ -21,8 +21,9 @@ function CrimeForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://127.0.0.1:5555/crimes", {
+      const response = await fetch("http://localhost:5555/crimes", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

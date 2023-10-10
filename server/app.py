@@ -262,43 +262,28 @@ class Crimes(Resource):
         crimes = [crime.to_dict() for crime in Crime.query.all()]
 
         return make_response(crimes, 200)
-
     def post(self):
-        new_crime_rep = Crime()
-        
         data = request.get_json()
-        crime_data = {}
         
-        location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+        location = db.session.query(Location).filter_by(address=data['address']).one_or_none()        
         
-        if location:
-            location = location.__dict__
-            del location['_sa_instance_state'] 
-     
-        else:
+        if not location:
             location = Location()
-    
             location.address = data['address']
-
-            db.session.add(location)
-            db.session.commit()
-
-            location = location.to_dict()
-            # del location['_sa_instance_state']
-
-        crime_data['name']=data['name']
-        crime_data['desc']=data['desc']
-        crime_data['location_id']=location['id']
-        crime_data['date']=datetime.strptime(data['date'], '%Y-%m-%d').date()
+        
+        new_crime = Crime(
+            name=data['name'],
+            desc=data['desc'],
+            date=datetime.strptime(data['date'], '%Y-%m-%d').date()
+        )
+        # Associate the location with the crime
+        new_crime.locations.append(location)
         
         try:
-            for key in crime_data:
-                setattr(new_crime_rep, key, crime_data[key])
-            
-            db.session.add(new_crime_rep)
+            db.session.add(new_crime)
             db.session.commit()
 
-            return make_response(jsonify(new_crime_rep.to_dict()), 201)
+            return make_response(jsonify(new_crime.to_dict()), 201)
         
         except ValueError as e:
             return make_response(jsonify({'error': str(e)}), 400)
