@@ -16,7 +16,6 @@ function App() {
   const [users, setUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const history = useHistory();
-  // const [user, setUser] = useContext(UserContext);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5555/users")

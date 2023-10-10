@@ -11,12 +11,12 @@ import {
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedCrime, setSelectedCrime] = useState(null);
-
   const [locationsWithCrimes, setLocationsWithCrimes] = useState([]);
-
   const [crimes, setCrimes] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [mapCenter, setMapCenter] = useState({ lat: 36.0627, lng: -94.1606 }); // Initial map center
+
   const filteredCoordinates = coordinates.filter((coord, index) => {
     return crimes[index] !== null;
   });
@@ -25,51 +25,58 @@ const CrimeMap = () => {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/crime_location_association")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Access the "associations" property and set it as locationsWithCrimes
-        setLocationsWithCrimes(data.associations);
-        console.log(data.associations); // Log the associations data
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    const fetchData = () => {
+      fetch("http://127.0.0.1:5555/crime_location_association")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setLocationsWithCrimes(data.associations);
+          console.log(data.associations);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/locations")
-      .then((response) => response.json())
-      .then((data) => {
-        // Use locationsWithCrimes here
-        const filteredAddresses = data.filter((address) => {
-          const crimeIndex = locationsWithCrimes.findIndex(
-            (crimeLocation) => crimeLocation.location_id === address.id
-          );
-          return crimeIndex !== -1;
+    const fetchData = () => {
+      fetch("http://127.0.0.1:5555/locations")
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredAddresses = data.filter((address) => {
+            const crimeIndex = locationsWithCrimes.findIndex(
+              (crimeLocation) => crimeLocation.location_id === address.id
+            );
+            return crimeIndex !== -1;
+          });
+          setAddresses(filteredAddresses);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
         });
-        setAddresses(filteredAddresses);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    };
+
+    fetchData();
   }, [locationsWithCrimes]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5555/crimes")
-      .then((response) => response.json())
-      .then((data) => {
-        setCrimes(data);
-        console.log(crimes);
-      })
-      .catch((error) => {
-        console.error("Error fetching crime data:", error);
-      });
+    const fetchData = () => {
+      fetch("http://127.0.0.1:5555/crimes")
+        .then((response) => response.json())
+        .then((data) => {
+          setCrimes(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching crime data:", error);
+        });
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -107,17 +114,27 @@ const CrimeMap = () => {
     return "Loading...";
   }
 
-  const center = { lat: 36.0627, lng: -94.1606 };
+  const handleMapLoad = (map) => {
+    map.addListener("dragend", () => handleMapDrag(map));
+  };
+
+  const handleMapDrag = (map) => {
+    setMapCenter({
+      lat: map.getCenter().lat(),
+      lng: map.getCenter().lng(),
+    });
+  };
 
   return (
     <div className="App">
       <GoogleMap
-        center={center}
+        center={mapCenter}
         mapContainerStyle={{
           width: "100%",
           height: "400px",
         }}
         zoom={12}
+        onLoad={handleMapLoad}
       >
         {filteredCoordinates.map((coord, index) => (
           <Marker
