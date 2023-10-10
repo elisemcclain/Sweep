@@ -48,7 +48,8 @@ const Signup = ({ handleAddUser }) => {
       if (response.status === 201) {
         const data = await response.json();
         setUser(data);
-        history.push(`/profile/${data.first_name}`);
+        const profileUrl = `/profile/${data.first_name}`;
+        history.push(profileUrl);
         console.log("User registered successfully!!");
         console.log(data);
         console.log(user);

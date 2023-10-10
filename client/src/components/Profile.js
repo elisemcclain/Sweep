@@ -10,6 +10,13 @@ function Profile() {
   const { user, setUser } = useContext(UserContext);
   const [editMode, setEditMode] = useState(false);
 
+  const initialValues = {
+    email: user.email || "",
+    first_name: user.first_name || "",
+    last_name: user.last_name || "",
+    address: user.address || "",
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -28,8 +35,10 @@ function Profile() {
         console.error("Fetch Error:", error);
       }
     };
-    fetchUserData();
-  }, []);
+    if (!user) {
+      fetchUserData();
+    }
+  }, [user, setUser]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -37,13 +46,6 @@ function Profile() {
     last_name: Yup.string().required("Last name is required").max(20),
     // address: Yup.string().required("Address is required").max(200),
   });
-
-  const initialValues = {
-    email: user.email || "",
-    first_name: user.first_name || "",
-    last_name: user.last_name || "",
-    address: user.address || "",
-  };
 
   const handleSubmit = (values, { setSubmitting }) => {
     fetch("http://localhost:5555/current_user", {
