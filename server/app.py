@@ -11,7 +11,7 @@ from flask_session import Session
 
 # Local imports
 from config import app, db, api, bcrypt
-from models import User, Location, Crime, CrimeCategory
+from models import User, Location, Crime, CrimeCategory, crime_location_association
 from datetime import datetime
 
 app.config.from_object(__name__)
@@ -167,6 +167,17 @@ def check_login_status():
     else:
         return jsonify({'logged_in': False}), 200
 
+
+
+@app.route('/crime_location_association', methods=['GET'])
+def get_crime_location_association():
+    try:
+        associations = db.session.query(crime_location_association).all()
+        association_list = [{"crime_id": association.crime_id, "location_id": association.location_id} for association in associations]
+        return jsonify({"associations": association_list}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 class Users(Resource):
     def get(self):
