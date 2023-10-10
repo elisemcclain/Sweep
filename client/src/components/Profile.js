@@ -20,6 +20,7 @@ function Profile() {
         if (response.ok) {
           const userInfo = await response.json();
           setUser(userInfo);
+          console.log(user);
         } else {
           console.error("Failed to fetch user data");
         }
@@ -34,8 +35,15 @@ function Profile() {
     email: Yup.string().email("Invalid email").required("Required"),
     first_name: Yup.string().required("First name is required").max(20),
     last_name: Yup.string().required("Last name is required").max(20),
-    address: Yup.string().required("Address is required").max(200),
+    // address: Yup.string().required("Address is required").max(200),
   });
+
+  const initialValues = {
+    email: user.email || "",
+    first_name: user.first_name || "",
+    last_name: user.last_name || "",
+    address: user.address || "",
+  };
 
   const handleSubmit = (values, { setSubmitting }) => {
     fetch("http://localhost:5555/current_user", {
@@ -121,7 +129,7 @@ function Profile() {
             <p>Email: {user.email}</p>
             <p>First Name: {user.first_name}</p>
             <p>Last Name: {user.last_name}</p>
-            <p>Address: {user.address}</p>
+            <p>Address: {user.location && user.location.address}</p>
             <button onClick={toggleEditMode}>Edit Profile</button>
             <button onClick={handleLogout}>Logout</button>
           </div>
@@ -132,12 +140,7 @@ function Profile() {
         <div>
           <h2>Edit Profile</h2>
           <Formik
-            initialValues={{
-              email: user.email,
-              address: user.address,
-              first_name: user.first_name,
-              last_name: user.last_name,
-            }}
+            initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
@@ -170,11 +173,11 @@ function Profile() {
                   />
                   <ErrorMessage name="last_name" component="div" />
                 </div>
-                <div>
+                {/* <div>
                   <label>Address:</label>
                   <Field type="text" name="address" className="form-control" />
                   <ErrorMessage name="address" component="div" />
-                </div>
+                </div> */}
                 <button
                   type="submit"
                   disabled={isSubmitting}

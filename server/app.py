@@ -76,7 +76,7 @@ def signup():
 
     existing_user = User.query.filter_by(email=email).first()
     if existing_user:
-        return make_response({'error': 'Email already exists'}, 409)
+        return make_response({'error': 'Email already exists'}, 400)
 
 
     new_user = User(
@@ -130,7 +130,7 @@ def get():
                 current_user.email = data['email']
                 current_user.first_name = data['first_name']
                 current_user.last_name = data['last_name']
-                current_user.address = data['address']
+                # current_user.address = data['address']
                 db.session.commit()
                 return make_response(current_user.to_dict(), 200)
             else:

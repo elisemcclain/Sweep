@@ -29,7 +29,7 @@ class User(db.Model, SerializerMixin):
     is_active = db.Column(db.Boolean, nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'))
 
-    serialize_rules = ('-location',)
+    serialize_rules = ('-location.address',)
 
     def get_id(self):
         return str(self.id)
@@ -37,21 +37,21 @@ class User(db.Model, SerializerMixin):
     def is_authenticated(self):
         return True
 
-    # def to_dict(self, include_location=True):
-    #     user_dict = {
-    #         'id': self.id,
-    #         'first_name': self.first_name,
-    #         'last_name': self.last_name,
-    #         'email': self.email,
-    #         # 'password_hash': self.password_hash
-    #     }
+    def to_dict(self, include_location=True):
+        user_dict = {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            # 'password_hash': self.password_hash
+        }
         
-        # if include_location and self.location:
-        #     user_dict['location'] = self.location.to_dict()
-        # else:
-        #     user_dict['location'] = None
+        if include_location and self.location:
+            user_dict['location'] = self.location.to_dict()
+        else:
+            user_dict['location'] = None
         
-        # return user_dict
+        return user_dict
 
 
 class Location(db.Model, SerializerMixin):
@@ -69,13 +69,13 @@ class Location(db.Model, SerializerMixin):
         lazy='dynamic'
     )
     serialize_rules = ('-users', '-crime_location_associations', '-crimes_in_loc', '-crimes_associated.locations',)
-    # def to_dict(self):
-    #     return {
-    #         'id': self.id,
-    #         'address': self.address,
-    #         'users': [user.to_dict(include_location=False) for user in self.users],
-    #         'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
-    #     }
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'address': self.address,
+            'users': [user.to_dict(include_location=False) for user in self.users],
+            'crimes_associated': [crime.to_dict() for crime in self.crimes_associated],
+        }
 
 class Crime(db.Model, SerializerMixin):
     # get, post
