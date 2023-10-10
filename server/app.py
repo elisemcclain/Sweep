@@ -45,55 +45,65 @@ def load_user(user_id):
 def index():
     return ''
 
+class Signups(Resource):
+    def post(self):
+        data = request.get_json()
+        location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
 
-@app.route('/signup', methods=['POST'])
-def signup():
-    data = request.get_json()
+        if location:
+            location = location.__dict__
+            del location['_sa_instance_state'] 
+        
+        else:
+            location = Location()
+            location.address = data['address']
+            db.session.add(location)
+            db.session.commit()
+            location = location.to_dict()
 
-    location = db.session.query(Location).filter_by(address=data['address']).one_or_none()
+        email = request.json.get('email', None)
+        password = request.json.get('password', None)
+        first_name = request.json.get('first_name', None)
+        last_name = request.json.get('last_name', None)
+        address = request.json.get('address', None)
 
-    if location:
-        location = location.__dict__
-        del location['_sa_instance_state'] 
-     
-    else:
-        location = Location()
-    
-        location.address = data['address']
+        if not email:
+            return 'Missing Email', 400
+        if not password:
+            return 'Missing password', 400
+        if not first_name:
+            return 'Missing first name', 400
+        if not last_name:
+            return 'Missing last name', 400
+        if not address:
+            return 'Missing address', 400
 
-        db.session.add(location)
-        db.session.commit()
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return make_response({'error': 'Email already exists'}, 400)
+        
+        new_user = User(
+            email=data['email'],
+            password_hash=hashed_password,
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            location_id=location['id']
+        )
 
-        location = location.to_dict()
-            
-    email=data['email']
-    password=data['password']
-    first_name=data['first_name']
-    last_name=data['last_name']
-    location_id=location['id']
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user, remember=True, force=True)
+            return make_response(new_user.to_dict(), 201)
 
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'message': 'user already exists'}), 400
 
-    existing_user = User.query.filter_by(email=email).first()
-    if existing_user:
-        return make_response({'error': 'Email already exists'}, 400)
+api.add_resource(Signups, '/signup')
 
 
-    new_user = User(
-        email=data['email'],
-        password_hash=hashed_password,
-        first_name=data['first_name'],
-        last_name=data['last_name'],
-        location_id=location['id']
-    )
-    try:
-        db.session.add(new_user)
-        db.session.commit()
-        return make_response(new_user.to_dict(), 201)
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'message': 'user already exists'}), 400
 
 
 @app.route('/login', methods=['POST'])

@@ -31,13 +31,13 @@ export const UserProvider = ({ children }) => {
       .catch((error) => {
         console.error("Error fetching current user:", error);
         setUser(null);
-        setError("Failed to fetch user data.");
+        setError(error.message);
         setLoading(false);
       });
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading, error }}>
       {children}
     </UserContext.Provider>
   );

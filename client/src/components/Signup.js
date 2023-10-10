@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
@@ -7,14 +7,7 @@ import { UserContext } from "./UserProvider";
 
 const Signup = ({ handleAddUser }) => {
   const { user, setUser } = useContext(UserContext);
-
-  const formSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").max(100),
-    first_name: Yup.string().required("First name is required").max(20),
-    last_name: Yup.string().required("Last name is required").max(20),
-    address: Yup.string().required("Address is required").max(200),
-    password: Yup.string().required("Password is required").max(100),
-  });
+  const history = useHistory();
   const initialValues = {
     email: "",
     first_name: "",
@@ -22,6 +15,12 @@ const Signup = ({ handleAddUser }) => {
     address: "",
     password: "",
   };
+
+  // useEffect(() => {
+  //   if (user) {
+  //     console.log("User data:", user);
+  //   }
+  // }, [user]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -33,14 +32,13 @@ const Signup = ({ handleAddUser }) => {
     address: Yup.string().required("Address is required").max(200),
   });
 
-  const history = useHistory();
-
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
       setSubmitting(true);
 
       const response = await fetch("http://127.0.0.1:5555/signup", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -52,6 +50,8 @@ const Signup = ({ handleAddUser }) => {
         setUser(data);
         history.push(`/profile/${data.first_name}`);
         console.log("User registered successfully!!");
+        console.log(data);
+        console.log(user);
       } else {
         const responseData = await response.json();
         if (responseData.error) {
