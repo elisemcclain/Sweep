@@ -11,6 +11,7 @@ import {
 const CrimeMap = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedCrime, setSelectedCrime] = useState(null);
+
   const [crimes, setCrimes] = useState([]);
   const [coordinates, setCoordinates] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -35,7 +36,6 @@ const CrimeMap = () => {
       .then((response) => response.json())
       .then((data) => {
         setCrimes(data);
-        // console.log(crimes);
         console.log(crimes);
       })
       .catch((error) => {
@@ -97,7 +97,7 @@ const CrimeMap = () => {
             onClick={() => {
               setSelectedMarker(index);
               setSelectedCrime(crimes[index]);
-              console.log(selectedCrime);
+              console.log(crimes[index]);
             }}
           />
         ))}
@@ -117,9 +117,9 @@ const CrimeMap = () => {
               <p>Address: {addresses[selectedMarker].address}</p>
               {selectedCrime !== null && (
                 <div>
-                  <p>Crime Name: {selectedCrime.name}</p>
-                  <p>Crime Description: {selectedCrime.desc}</p>
-                  <p>Crime Date: {selectedCrime.date}</p>
+                  <p>Name: {selectedCrime.name}</p>
+                  <p>Description: {selectedCrime.desc}</p>
+                  <p>Date: {selectedCrime.date}</p>
                 </div>
               )}
             </div>
