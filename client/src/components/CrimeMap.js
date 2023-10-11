@@ -128,8 +128,8 @@ const CrimeMap = () => {
       <GoogleMap
         center={mapCenter}
         mapContainerStyle={{
-          width: "100%",
-          height: "400px",
+          width: "100vw",
+          height: "85vh",
         }}
         zoom={12}
         onLoad={handleMapLoad}
