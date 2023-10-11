@@ -27,6 +27,7 @@ function Profile() {
         if (response.ok) {
           const userInfo = await response.json();
           setUser(userInfo);
+          console.log(user);
         } else {
           console.error("Failed to fetch user data");
         }
@@ -43,6 +44,7 @@ function Profile() {
     email: Yup.string().email("Invalid email").required("Required"),
     first_name: Yup.string().required("First name is required").max(20),
     last_name: Yup.string().required("Last name is required").max(20),
+    // address: Yup.string().required("Address is required").max(200),
   });
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -55,6 +57,7 @@ function Profile() {
       body: JSON.stringify(values),
     })
       .then((response) => {
+        console.log(response);
         if (response.ok) {
           return response.json();
         } else {
@@ -63,6 +66,7 @@ function Profile() {
       })
       .then((userInfo) => {
         setUser(userInfo);
+        console.log(user);
         console.log("Profile updated successfully:", userInfo);
         setEditMode(false);
       })
@@ -119,133 +123,133 @@ function Profile() {
   };
 
   return (
-    <div className="profile-container">
-      <section style={{ backgroundColor: "#33468a" }}>
-        <div className="container-fluid py-5">
-          <div className="row">
-            <div className="col-lg-4">
+    <div>
+      {!editMode ? (
+        <div className="profile-container">
+          <div className="form-container">
+            <section className="text-center">
+              {/* <div
+                className="p-5 bg-image"
+                style={{
+                  height: "130px",
+                }}
+              ></div> */}
+
               <div
-                className="card mb-4"
-                style={{ width: "100%", margin: "0 auto" }}
+                className="card mx-4 mx-md-5 shadow-5-strong"
+                style={{
+                  marginTop: "-100px",
+                  background: "hsla(0, 0%, 100%, 0.8)",
+                  backdropFilter: "blur(30px)",
+                }}
               >
-                <div
-                  className="card-body text-center"
-                  style={{ backgroundColor: "#e5e9fc" }}
-                >
-                  {!editMode ? (
-                    <>
-                      <h5
-                        className="my-3"
-                        style={{ color: "#33468a", fontSize: "30px" }}
-                      >
-                        {user.first_name} {user.last_name}
-                      </h5>
-                      <p className="text-muted mb-4">
-                        {user.location && user.location.address}
-                      </p>
-                      <p className="text-muted mb-4">email: {user.email}</p>
-                      <div className="d-flex justify-content-center mb-2">
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          style={{
-                            backgroundColor: "#33468a",
-                            color: "#fff",
-                            marginRight: "10px",
-                          }}
-                          onClick={toggleEditMode}
-                        >
-                          Edit Profile
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary"
-                          style={{ outlineColor: "#33468a", color: "#33468a" }}
-                          onClick={handleLogout}
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <h2 style={{ color: "#33468a" }}>Edit Profile</h2>
-                      <br></br>
-                      <Formik
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                      >
-                        {({ isSubmitting }) => (
-                          <Form>
-                            <div>
-                              <label style={{ color: "#33468a" }}>Email:</label>
-                              <Field
-                                type="text"
-                                name="email"
-                                className="form-control"
-                              />
-                              <ErrorMessage
-                                name="email"
-                                component="div"
-                                className="text-danger"
-                              />
-                            </div>
-                            <div>
-                              <label style={{ color: "#33468a" }}>
-                                First Name:
-                              </label>
-                              <Field
-                                type="text"
-                                name="first_name"
-                                className="form-control"
-                              />
-                              <ErrorMessage name="first_name" component="div" />
-                            </div>
-                            <div>
-                              <label style={{ color: "#33468a" }}>
-                                Last Name:
-                              </label>
-                              <Field
-                                type="text"
-                                name="last_name"
-                                className="form-control"
-                              />
-                              <ErrorMessage name="last_name" component="div" />
-                            </div>
-                            <button
-                              type="submit"
-                              disabled={isSubmitting}
-                              className="btn btn-primary btn-block mt-4"
-                              style={{
-                                backgroundColor: "#33468a",
-                                borderColor: "#33468a",
-                                color: "#fff",
-                                marginRight: "10px",
-                              }}
-                            >
-                              Save
-                            </button>
-                          </Form>
-                        )}
-                      </Formik>
-                      <button
-                        type="button"
-                        onClick={handleDeleteAccount}
-                        className="btn btn-danger btn-block mt-4"
-                      >
-                        Delete Account
-                      </button>
-                    </>
-                  )}
+                <div>
+                  <h2>Welcome, {user.first_name}</h2>
+                  <p>Email: {user.email}</p>
+                  <p>First Name: {user.first_name}</p>
+                  <p>Last Name: {user.last_name}</p>
+                  <p>Address: {user.location && user.location.address}</p>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4"
+                    onClick={toggleEditMode}
+                  >
+                    Edit Profile
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="col-lg-8" style={{ color: "#eef600" }}></div>
+            </section>
           </div>
         </div>
-      </section>
+      ) : (
+        <div>
+          <div className="form-container">
+            <h2 className="edit-prof">Edit Profile</h2>
+            <section className="text-center">
+              {/* <div
+                className="p-5 bg-image"
+                style={{
+                  height: "130px",
+                }}
+              ></div> */}
+
+              <div
+                className="card mx-4 mx-md-5 shadow-5-strong"
+                style={{
+                  marginTop: "-100px",
+                  background: "hsla(0, 0%, 100%, 0.8)",
+                  backdropFilter: "blur(30px)",
+                }}
+              >
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
+                >
+                  {({ isSubmitting }) => (
+                    <Form>
+                      <div className="form-group">
+                        <label>Email:</label>
+                        <Field
+                          type="text"
+                          name="email"
+                          className="form-control"
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-danger"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>First Name:</label>
+                        <Field
+                          type="text"
+                          name="first_name"
+                          className="form-control"
+                        />
+                        <ErrorMessage name="first_name" component="div" />
+                      </div>
+                      <div className="form-group">
+                        <label>Last Name:</label>
+                        <Field
+                          type="text"
+                          name="last_name"
+                          className="form-control"
+                        />
+                        <ErrorMessage name="last_name" component="div" />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="btn btn-primary btn-block mt-4"
+                      >
+                        Save
+                      </button>
+                    </Form>
+                  )}
+                </Formik>
+                <button
+                  type="button"
+                  onClick={handleDeleteAccount}
+                  className="btn btn-danger btn-block mt-4"
+                >
+                  Delete Account
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
 export default Profile;
