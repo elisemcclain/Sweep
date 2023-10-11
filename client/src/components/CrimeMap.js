@@ -35,7 +35,6 @@ const CrimeMap = () => {
         })
         .then((data) => {
           setLocationsWithCrimes(data.associations);
-          console.log(data.associations);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -102,7 +101,6 @@ const CrimeMap = () => {
         .then((coords) => {
           const validCoords = coords.filter((coord) => coord !== null);
           setCoordinates(validCoords);
-          // console.log(validCoords);
         })
         .catch((error) => {
           console.error("Error geocoding addresses:", error);
