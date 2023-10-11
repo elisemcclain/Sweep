@@ -123,82 +123,131 @@ function Profile() {
   };
 
   return (
-    <div className="profile-container">
-      <div>
-        {!editMode ? (
-          <div>
-            <h2>Welcome, {user.first_name}</h2>
-            <p>Email: {user.email}</p>
-            <p>First Name: {user.first_name}</p>
-            <p>Last Name: {user.last_name}</p>
-            <p>Address: {user.location && user.location.address}</p>
-            <button onClick={toggleEditMode}>Edit Profile</button>
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-        ) : null}
-      </div>
+    <div>
+      {!editMode ? (
+        <div className="profile-container">
+          <div className="form-container">
+            <section className="text-center">
+              {/* <div
+                className="p-5 bg-image"
+                style={{
+                  height: "130px",
+                }}
+              ></div> */}
 
-      {editMode ? (
-        <div>
-          <h2>Edit Profile</h2>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form>
+              <div
+                className="card mx-4 mx-md-5 shadow-5-strong"
+                style={{
+                  marginTop: "-100px",
+                  background: "hsla(0, 0%, 100%, 0.8)",
+                  backdropFilter: "blur(30px)",
+                }}
+              >
                 <div>
-                  <label>Email:</label>
-                  <Field type="text" name="email" className="form-control" />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-danger"
-                  />
+                  <h2>Welcome, {user.first_name}</h2>
+                  <p>Email: {user.email}</p>
+                  <p>First Name: {user.first_name}</p>
+                  <p>Last Name: {user.last_name}</p>
+                  <p>Address: {user.location && user.location.address}</p>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4"
+                    onClick={toggleEditMode}
+                  >
+                    Edit Profile
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-block mt-4"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </div>
-                <div>
-                  <label>First Name:</label>
-                  <Field
-                    type="text"
-                    name="first_name"
-                    className="form-control"
-                  />
-                  <ErrorMessage name="first_name" component="div" />
-                </div>
-                <div>
-                  <label>Last Name:</label>
-                  <Field
-                    type="text"
-                    name="last_name"
-                    className="form-control"
-                  />
-                  <ErrorMessage name="last_name" component="div" />
-                </div>
-                {/* <div>
-                  <label>Address:</label>
-                  <Field type="text" name="address" className="form-control" />
-                  <ErrorMessage name="address" component="div" />
-                </div> */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="btn btn-success"
-                >
-                  Save
-                </button>
-              </Form>
-            )}
-          </Formik>
-          <button
-            type="button"
-            onClick={handleDeleteAccount}
-            className="btn btn-danger"
-          >
-            Delete Account
-          </button>
+              </div>
+            </section>
+          </div>
         </div>
-      ) : null}
+      ) : (
+        <div>
+          <div className="form-container">
+            <h2 className="edit-prof">Edit Profile</h2>
+            <section className="text-center">
+              {/* <div
+                className="p-5 bg-image"
+                style={{
+                  height: "130px",
+                }}
+              ></div> */}
+
+              <div
+                className="card mx-4 mx-md-5 shadow-5-strong"
+                style={{
+                  marginTop: "-100px",
+                  background: "hsla(0, 0%, 100%, 0.8)",
+                  backdropFilter: "blur(30px)",
+                }}
+              >
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
+                >
+                  {({ isSubmitting }) => (
+                    <Form>
+                      <div className="form-group">
+                        <label>Email:</label>
+                        <Field
+                          type="text"
+                          name="email"
+                          className="form-control"
+                        />
+                        <ErrorMessage
+                          name="email"
+                          component="div"
+                          className="text-danger"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label>First Name:</label>
+                        <Field
+                          type="text"
+                          name="first_name"
+                          className="form-control"
+                        />
+                        <ErrorMessage name="first_name" component="div" />
+                      </div>
+                      <div className="form-group">
+                        <label>Last Name:</label>
+                        <Field
+                          type="text"
+                          name="last_name"
+                          className="form-control"
+                        />
+                        <ErrorMessage name="last_name" component="div" />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="btn btn-primary btn-block mt-4"
+                      >
+                        Save
+                      </button>
+                    </Form>
+                  )}
+                </Formik>
+                <button
+                  type="button"
+                  onClick={handleDeleteAccount}
+                  className="btn btn-danger btn-block mt-4"
+                >
+                  Delete Account
+                </button>
+              </div>
+            </section>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

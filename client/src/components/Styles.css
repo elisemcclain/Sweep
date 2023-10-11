@@ -27,7 +27,7 @@ body {
 }
 
 .navbar {
-  background: #94a5e0;
+  background: #33468a;
   padding: 39px;
   border-bottom: 1px solid #eef600;
 }
@@ -54,7 +54,7 @@ body {
   top: 45%;
   transform: translate(0, -50%);
   text-align: left;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .description h2 {
@@ -108,7 +108,7 @@ body {
 }
 
 .text {
-  color: #ffff;
+  color: #eef600;
   justify-content: center;
   display: flex;
   padding-top: 70px;
@@ -142,4 +142,9 @@ body {
 .map-container {
   height: 100%;
   width: 100%;
+}
+
+.edit-prof {
+  justify-content: center;
+  margin: 0 auto;
 }
