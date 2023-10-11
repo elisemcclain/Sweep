@@ -121,14 +121,23 @@ function Profile() {
   return (
     <div className="profile-container">
       <section style={{ backgroundColor: "#33468a" }}>
-        <div className="container py-5">
+        <div className="container-fluid py-5">
           <div className="row">
             <div className="col-lg-4">
-              <div className="card mb-4">
-                <div className="card-body text-center">
+              <div
+                className="card mb-4"
+                style={{ width: "100%", margin: "0 auto" }}
+              >
+                <div
+                  className="card-body text-center"
+                  style={{ backgroundColor: "#e5e9fc" }}
+                >
                   {!editMode ? (
                     <>
-                      <h5 className="my-3" style={{ color: "#33468a" }}>
+                      <h5
+                        className="my-3"
+                        style={{ color: "#33468a", fontSize: "30px" }}
+                      >
                         {user.first_name} {user.last_name}
                       </h5>
                       <p className="text-muted mb-4">
@@ -139,14 +148,18 @@ function Profile() {
                         <button
                           type="button"
                           className="btn btn-primary"
-                          style={{ backgroundColor: "#33468a", color: "#fff" }}
+                          style={{
+                            backgroundColor: "#33468a",
+                            color: "#fff",
+                            marginRight: "10px",
+                          }}
                           onClick={toggleEditMode}
                         >
                           Edit Profile
                         </button>
                         <button
                           type="button"
-                          className="btn btn-outline-primary ms-1"
+                          className="btn btn-outline-secondary"
                           style={{ outlineColor: "#33468a", color: "#33468a" }}
                           onClick={handleLogout}
                         >
@@ -204,6 +217,12 @@ function Profile() {
                               type="submit"
                               disabled={isSubmitting}
                               className="btn btn-primary btn-block mt-4"
+                              style={{
+                                backgroundColor: "#33468a",
+                                borderColor: "#33468a",
+                                color: "#fff",
+                                marginRight: "10px",
+                              }}
                             >
                               Save
                             </button>
@@ -222,12 +241,7 @@ function Profile() {
                 </div>
               </div>
             </div>
-            <div className="col-lg-8" style={{ color: "#eef600" }}>
-              <div
-                className="card mb-4"
-                style={{ backgroundColor: "#eef600" }}
-              ></div>
-            </div>
+            <div className="col-lg-8" style={{ color: "#eef600" }}></div>
           </div>
         </div>
       </section>

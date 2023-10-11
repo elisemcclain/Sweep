@@ -64,7 +64,7 @@ const Login = ({ onLogin }) => {
           <div className="col-12 col-md-8 col-lg-6 col-xl-5">
             <div
               className="card bg-dark text-white"
-              style={{ borderRadius: "1rem", marginTop: "-100px" }}
+              style={{ borderRadius: "1rem", marginTop: "-0px" }}
             >
               <div
                 className="card-body p-5 text-center"

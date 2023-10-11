@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 
-function NavBar({ loggedIn }) {
+function NavBar() {
   const { user, setUser } = useContext(UserContext);
 
   return (
@@ -59,7 +59,7 @@ function NavBar({ loggedIn }) {
                     <Link
                       to={`/profile/${user.first_name}`}
                       type="button"
-                      className="btn btn-custom btn-block active btn btn-primarybtn-sm m1-2"
+                      className="btn btn-custom"
                     >
                       PROFILE
                     </Link>
@@ -68,11 +68,7 @@ function NavBar({ loggedIn }) {
               ) : (
                 <>
                   <li className="nav-item active">
-                    <Link
-                      to="/login"
-                      type="button"
-                      className="btn-custom btn-block active btn btn-primarybtn-sm m1-2"
-                    >
+                    <Link to="/login" type="button" className="btn btn-custom">
                       LOGIN
                     </Link>
                   </li>

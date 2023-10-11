@@ -62,7 +62,7 @@ function CrimeForm() {
                 className="card mx-4 mx-md-5 shadow-5-strong"
                 style={{
                   marginTop: "-100px",
-                  background: "hsla(0, 0%, 100%, 0.8)",
+                  background: "#e5e9fc",
                   backdropFilter: "blur(30px)",
                 }}
               >

@@ -17,13 +17,15 @@ body {
   color: #eef600;
 }
 .btn-custom {
-  color: yellow;
-  border-color: yellow;
+  background-color: #5566a0;
+  border-color: #5566a0;
+  color: #eef600;
   align-items: center;
   font-size: 17px;
 }
 .btn-custom:hover {
-  color: yellow;
+  background-color: #5566a0;
+  color: white;
 }
 
 .navbar {
@@ -41,6 +43,7 @@ body {
 .nav-link {
   margin-right: 1em !important;
 }
+
 .nav-link:hover {
   color: #96adfc;
 }
@@ -48,58 +51,27 @@ body {
   justify-content: flex-end;
 }
 
-.description {
-  left: 0;
+.front-page {
+  padding-left: 20px;
   position: absolute;
-  top: 45%;
-  transform: translate(0, -50%);
-  text-align: left;
-  padding-left: 10px;
+  padding-top: 200px;
 }
 
 .description h2 {
   color: #eef600;
   font-size: 1.3rem;
-  line-height: 1.5;
-  margin-bottom: 5px;
-}
-
-.description button {
-  border: 1px solid #eef600;
-  position: absolute;
-  background: #eef600;
-  border-radius: 0;
-  color: #eef600;
-  font-size: 1rem;
-}
-
-.description button:hover {
-  background: transparent;
+  line-height: 60px;
 }
 
 .btn-start {
-  left: 23%;
-  position: absolute;
-  margin-top: 600px;
   font-size: 15px;
-  text-align: left;
   background: transparent;
   color: #eef600;
   border: 1px solid #e3e676;
-  display: inline-flex;
-}
-.btn-start:hover {
-  background-color: #eef600;
 }
 
-.btn-top {
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  width: 600px;
-  max-width: 600px;
-  align-items: center;
-  margin: 0 auto;
+.btn-start:hover {
+  background-color: #96adfc;
 }
 
 .text-center {
@@ -114,29 +86,8 @@ body {
   padding-top: 70px;
 }
 .world-main {
-  position: fixed;
-
-  z-index: -1; /* Place the image behind other content */
-  animation: spin 780s linear infinite; /* Adjust the duration and timing function as needed */
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.leaf-map {
-  border-radius: 10px;
-  margin-top: 28px;
-  justify-content: center;
-}
-.CrimeMap {
-  height: 100vh;
-  width: 100vw;
+  display: flex;
+  height: 900px;
 }
 
 .map-container {
