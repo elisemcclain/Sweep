@@ -138,9 +138,10 @@ def get():
 
             if 'email' in data:
                 current_user.email = data['email']
+            if 'first_name' in data:
                 current_user.first_name = data['first_name']
+            if 'last_name' in data:
                 current_user.last_name = data['last_name']
-                # current_user.address = data['address']
                 db.session.commit()
                 return make_response(current_user.to_dict(), 200)
             else:
