@@ -1,5 +1,5 @@
-import { Link, useParams } from "react-router-dom";
-import React, { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import React, { useContext } from "react";
 import Styles from "./Styles.css";
 import { UserContext } from "./UserProvider";
 

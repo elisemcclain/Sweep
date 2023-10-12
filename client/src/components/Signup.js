@@ -16,6 +16,12 @@ const Signup = ({ handleAddUser }) => {
     password: "",
   };
 
+  // useEffect(() => {
+  //   if (user) {
+  //     console.log("User data:", user);
+  //   }
+  // }, [user]);
+
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
@@ -30,7 +36,7 @@ const Signup = ({ handleAddUser }) => {
     try {
       setSubmitting(true);
 
-      const response = await fetch("http://127.0.0.1:5555/signup", {
+      const response = await fetch("http://localhost:5555/signup", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -45,6 +51,8 @@ const Signup = ({ handleAddUser }) => {
         const profileUrl = `/profile/${data.first_name}`;
         history.push(profileUrl);
         console.log("User registered successfully!!");
+        console.log(data);
+        console.log(user);
       } else {
         const responseData = await response.json();
         if (responseData.error) {
@@ -67,21 +75,11 @@ const Signup = ({ handleAddUser }) => {
   return (
     <div>
       <section className="text-center">
-        <div
-          className="card mx-4 mx-md-5 shadow-5-strong"
-          style={{
-            borderRadius: "1rem",
-            backgroundColor: "#e5e9fc",
-            marginTop: "70px",
-            marginBottom: "84px",
-          }}
-        >
+        <div className="card mx-4 mx-md-5 shadow-5-strong">
           <div className="card-body py-5 px-md-5">
             <div className="row d-flex justify-content-center">
               <div className="col-lg-8">
-                <h2 className="fw-bold mb-5" style={{ color: "#33468a" }}>
-                  CREATE ACCOUNT
-                </h2>
+                <h2 className="fw-bold mb-5">Create Account</h2>
 
                 <Formik
                   initialValues={initialValues}
@@ -103,7 +101,6 @@ const Signup = ({ handleAddUser }) => {
                             <label
                               className="form-label"
                               htmlFor="form3Example1"
-                              style={{ color: "#33468a" }}
                             >
                               First name
                             </label>
@@ -121,7 +118,6 @@ const Signup = ({ handleAddUser }) => {
                             <label
                               className="form-label"
                               htmlFor="form3Example2"
-                              style={{ color: "#33468a" }}
                             >
                               Last name
                             </label>
@@ -137,11 +133,7 @@ const Signup = ({ handleAddUser }) => {
                           className="form-control"
                           placeholder="Address"
                         />
-                        <label
-                          className="form-label"
-                          htmlFor="form3Example3"
-                          style={{ color: "#33468a" }}
-                        >
+                        <label className="form-label" htmlFor="form3Example3">
                           Address
                         </label>
                       </div>
@@ -154,11 +146,7 @@ const Signup = ({ handleAddUser }) => {
                           className="form-control"
                           placeholder="Email"
                         />
-                        <label
-                          className="form-label"
-                          htmlFor="form3Example3"
-                          style={{ color: "#33468a" }}
-                        >
+                        <label className="form-label" htmlFor="form3Example3">
                           Email
                         </label>
                       </div>
@@ -171,11 +159,7 @@ const Signup = ({ handleAddUser }) => {
                           className="form-control"
                           placeholder="Password"
                         />
-                        <label
-                          className="form-label"
-                          htmlFor="form3Example4"
-                          style={{ color: "#33468a" }}
-                        >
+                        <label className="form-label" htmlFor="form3Example4">
                           Password
                         </label>
                       </div>
@@ -183,7 +167,6 @@ const Signup = ({ handleAddUser }) => {
                       <button
                         type="submit"
                         className="btn btn-primary btn-block mb-4"
-                        style={{ backgroundColor: "#33468a", color: "#fff" }}
                       >
                         Sign up
                       </button>
@@ -193,7 +176,6 @@ const Signup = ({ handleAddUser }) => {
                 <button
                   type="submit"
                   className="btn btn-primary btn-block mb-4"
-                  style={{ backgroundColor: "#33468a", color: "#fff" }}
                   onClick={handleSwitch}
                 >
                   Back to login
