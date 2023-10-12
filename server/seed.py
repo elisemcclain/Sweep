@@ -9,14 +9,14 @@ from config import db, app
 
 def create_users():
     users = [
-        User(first_name='Susan', last_name='Gladiator', email='3456susan@susan.com', is_active=None, password_hash='ssd1ed31qe11'),
-        User(first_name='Zendaya', last_name='Holland', email='2546zendaya@dedbdfdysree.com', is_active=None, password_hash='d1qe13dd12'),
-        User(first_name='Margaret', last_name='Bulle', email='2356maggie@himaggie.com,', is_active=None, password_hash='kkkkkk'),
-        User(first_name='Barbara', last_name='Shank', email='2346de@deshank.com', is_active=None, password_hash='dddddd'),
-        User(first_name='Benjamin', last_name='Button', email='2356benjamin@button.com', is_active=None, password_hash='d1qe13dsd12'),
-        User(first_name='Glen', last_name='Dale', email='3456glen@glendale.com,', is_active=None, password_hash='kkkkakk'),
-        User(first_name='Billy Bob', last_name='Buccee', email='356billybob@buccees.com', is_active=None, password_hash='ssd1ead31qe11'),
-        User(first_name='Azelia', last_name='Thorn', email='2356azelias@thorn.com', is_active=None, password_hash='vdasdt345'),
+        User(first_name='Susan', last_name='Gladiator', email='456susan@susan.com', is_active=None, password_hash='ssd1ed31qe11'),
+        User(first_name='Zendaya', last_name='Holland', email='246zendaya@dedbdfdysree.com', is_active=None, password_hash='d1qe13dd12'),
+        User(first_name='Margaret', last_name='Bulle', email='236maggie@himaggie.com,', is_active=None, password_hash='kkkkkk'),
+        User(first_name='Barbara', last_name='Shank', email='246de@deshank.com', is_active=None, password_hash='dddddd'),
+        User(first_name='Benjamin', last_name='Button', email='356benjamin@button.com', is_active=None, password_hash='d1qe13dsd12'),
+        User(first_name='Glen', last_name='Dale', email='356glen@glendale.com,', is_active=None, password_hash='kkkkakk'),
+        User(first_name='Billy Bob', last_name='Buccee', email='56billybob@buccees.com', is_active=None, password_hash='ssd1ead31qe11'),
+        User(first_name='Azelia', last_name='Thorn', email='256azelias@thorn.com', is_active=None, password_hash='vdasdt345'),
     ]
     db.session.add_all(users)
     db.session.commit()
