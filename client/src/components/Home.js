@@ -11,20 +11,22 @@ function Home() {
   }
 
   return (
-    <div className="front-page">
-      <div className="description">
-        <h2>Keep yourself informed of what crime is happening around you.</h2>
-      </div>
-      <div className="btn-top">
-        <button
-          onClick={handleClick}
-          className="btn-start btn-outline-secondary btn-lg"
-        >
-          Click here to get started.
-        </button>
-        <div className="world">
-          <img className="world-main" src={"/world.png"} alt="world-logo" />
+    <div>
+      <div className="front-page">
+        <div className="description">
+          <h2>Keep yourself informed of what crime is happening around you.</h2>
         </div>
+        <div className="btn-top">
+          <button
+            onClick={handleClick}
+            className="btn-start btn-outline-secondary btn-lg"
+          >
+            Click here to get started.
+          </button>
+        </div>
+      </div>
+      <div className="world">
+        <img className="world-main" src={"/world.png"} alt="world-logo" />
       </div>
     </div>
   );

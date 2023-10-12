@@ -88,6 +88,7 @@ body {
 .world-main {
   display: flex;
   height: 900px;
+  align-items: right;
 }
 
 .map-container {
