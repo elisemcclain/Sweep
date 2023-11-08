@@ -18,22 +18,27 @@ Follow these steps to get started with Sweep:
 1. **Fork and Clone**: Fork this repository and clone it to your local machine.
 
 2. **Install Dependencies**:
+
    - In your terminal, run the following command to set up the Python environment:
+
      ```bash
      pipenv install && pipenv shell
      ```
 
    - Navigate to the server directory:
+
      ```bash
      cd server
      ```
 
    - Run the backend server:
+
      ```bash
      python app.py
      ```
 
    - In a separate terminal, install dependencies for the client:
+
      ```bash
      npm install --prefix client
      ```
@@ -47,4 +52,4 @@ Follow these steps to get started with Sweep:
 
 Make sure the backend server is running on port 5555.
 
-We hope you find Sweep helpful for your community's safety and awareness.
+We hope you find Sweep helpful for your community's safety and awareness!
