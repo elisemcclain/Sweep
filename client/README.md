@@ -21,30 +21,30 @@ Follow these steps to get started with Sweep:
 
    - In your terminal, run the following command to set up the Python environment:
 
-     ```bash
+     ```console
      pipenv install && pipenv shell
      ```
 
    - Navigate to the server directory:
 
-     ```bash
+     ```console
      cd server
      ```
 
    - Run the backend server:
 
-     ```bash
+     ```console
      python app.py
      ```
 
    - In a separate terminal, install dependencies for the client:
 
-     ```bash
+     ```console
      npm install --prefix client
      ```
 
    - Start the frontend client:
-     ```bash
+     ```console
      npm start --prefix client
      ```
 
